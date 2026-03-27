@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ワードウルフ</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&display=swap');
+:root{
+  --bg:#0e0e14;--surface:#16161f;--card:#1e1e2e;
+  --accent:#e74c3c;--green:#2ecc71;--gold:#f1c40f;
+  --purple:#9b59b6;--text:#f0f0f5;--muted:#888899;--border:#2a2a3e;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{background:var(--bg);color:var(--text);font-family:'Zen Maru Gothic',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:
+  radial-gradient(1px 1px at 12% 18%,rgba(255,255,255,.35) 0%,transparent 100%),
+  radial-gradient(1px 1px at 35% 75%,rgba(255,255,255,.25) 0%,transparent 100%),
+  radial-gradient(1px 1px at 55% 38%,rgba(255,255,255,.45) 0%,transparent 100%),
+  radial-gradient(1px 1px at 72% 12%,rgba(255,255,255,.3) 0%,transparent 100%),
+  radial-gradient(2px 2px at 90% 55%,rgba(255,255,255,.2) 0%,transparent 100%);
+  pointer-events:none;z-index:0;}
+#app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 16px 48px;}
+.screen{display:none;width:100%;max-width:480px;}
+.screen.active{display:flex;flex-direction:column;align-items:center;}
+
+/* TITLE */
+#title-screen{justify-content:center;min-height:100vh;text-align:center;gap:0;}
+.moon{font-size:72px;display:block;animation:pulse 3s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(241,196,15,.5));}
+.title-main{font-size:48px;font-weight:900;letter-spacing:.1em;background:linear-gradient(135deg,#f1c40f,#e74c3c,#9b59b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1;margin-top:8px;}
+.title-sub{font-size:13px;color:var(–muted);letter-spacing:.3em;margin-top:8px;margin-bottom:40px;}
+.btn-start{background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;border:none;border-radius:50px;padding:18px 60px;font-size:20px;font-weight:700;font-family:inherit;cursor:pointer;box-shadow:0 8px 30px rgba(231,76,60,.4);transition:transform .15s;letter-spacing:.1em;}
+.btn-start:active{transform:scale(.95);}
+
+/* SETUP */
+#setup-screen{padding-top:40px;gap:18px;}
+.screen-title{font-size:22px;font-weight:900;text-align:center;letter-spacing:.05em;}
+.section-card{background:var(–card);border:1px solid var(–border);border-radius:20px;padding:20px;width:100%;}
+.section-label{font-size:13px;color:var(–muted);letter-spacing:.2em;margin-bottom:14px;}
+.count-row{display:flex;align-items:center;justify-content:center;gap:20px;}
+.count-btn{width:48px;height:48px;border-radius:50%;border:2px solid var(–border);background:var(–surface);color:var(–text);font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-family:inherit;}
+.count-btn:active{background:var(–accent);border-color:var(–accent);}
+.count-display{font-size:48px;font-weight:900;width:80px;text-align:center;color:var(–gold);}
+
+/* Player rows */
+.player-inputs{display:flex;flex-direction:column;gap:8px;width:100%;}
+.player-row{display:flex;align-items:center;gap:8px;background:var(–surface);border:2px solid var(–border);border-radius:12px;padding:4px 8px 4px 4px;transition:border-color .2s,box-shadow .2s;touch-action:none;}
+.player-row.drag-active{border-color:var(–gold);box-shadow:0 6px 24px rgba(0,0,0,.5);opacity:.9;z-index:10;position:relative;}
+.player-row.drag-over{border-color:var(–purple);}
+.drag-handle{font-size:20px;padding:8px 6px;color:var(–muted);flex-shrink:0;cursor:grab;user-select:none;touch-action:none;}
+.row-num{font-size:12px;color:var(–muted);min-width:18px;text-align:center;flex-shrink:0;}
+.player-input{background:transparent;border:none;color:var(–text);font-size:16px;font-family:inherit;flex:1;padding:10px 4px;outline:none;}
+
+.timer-options{display:flex;gap:8px;flex-wrap:wrap;}
+.timer-btn{flex:1;min-width:58px;background:var(–surface);border:2px solid var(–border);border-radius:12px;padding:10px 6px;color:var(–muted);font-size:14px;font-family:inherit;cursor:pointer;transition:all .2s;text-align:center;}
+.timer-btn.selected{border-color:var(–gold);color:var(–gold);background:rgba(241,196,15,.1);}
+
+/* Reversal */
+.reversal-toggle{display:flex;align-items:center;justify-content:space-between;background:var(–surface);border:2px solid var(–border);border-radius:14px;padding:14px 16px;cursor:pointer;transition:all .2s;width:100%;}
+.reversal-toggle.on{border-color:var(–purple);background:rgba(155,89,182,.1);}
+.toggle-switch{width:48px;height:26px;border-radius:13px;background:var(–border);position:relative;transition:background .3s;flex-shrink:0;pointer-events:none;}
+.toggle-switch.on{background:var(–purple);}
+.toggle-switch::after{content:’’;position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .3s;box-shadow:0 2px 4px rgba(0,0,0,.3);}
+.toggle-switch.on::after{transform:translateX(22px);}
+.reversal-options{display:none;flex-direction:column;gap:8px;margin-top:10px;}
+.reversal-options.visible{display:flex;}
+.reversal-opt{background:var(–surface);border:2px solid var(–border);border-radius:12px;padding:12px 14px;cursor:pointer;transition:all .2s;}
+.reversal-opt.selected{border-color:var(–purple);background:rgba(155,89,182,.1);}
+.reversal-opt-title{font-weight:700;font-size:14px;margin-bottom:3px;}
+.reversal-opt-desc{font-size:12px;color:var(–muted);}
+
+.btn-primary{background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;border:none;border-radius:16px;padding:16px;font-size:18px;font-weight:700;font-family:inherit;cursor:pointer;width:100%;transition:transform .15s;letter-spacing:.05em;}
+.btn-primary:active{transform:scale(.97);}
+.btn-secondary{background:transparent;color:var(–muted);border:1px solid var(–border);border-radius:16px;padding:14px;font-size:16px;font-family:inherit;cursor:pointer;width:100%;transition:background .2s;}
+.btn-secondary:active{background:var(–card);}
+
+/* DEAL */
+#deal-screen{padding-top:40px;gap:18px;text-align:center;}
+.deal-instruction{font-size:15px;color:var(–muted);line-height:1.6;}
+.progress-dots{display:flex;gap:6px;justify-content:center;}
+.dot{width:8px;height:8px;border-radius:50%;background:var(–border);transition:all .3s;}
+.dot.done{background:var(–gold);}
+.dot.current{background:var(–accent);transform:scale(1.4);}
+.wolf-count-badge{background:rgba(231,76,60,.15);border:1px solid rgba(231,76,60,.3);border-radius:12px;padding:10px 16px;font-size:14px;color:var(–muted);width:100%;text-align:center;}
+.wolf-count-badge span{color:var(–accent);font-weight:700;}
+.reversal-info-badge{background:rgba(155,89,182,.15);border:1px solid rgba(155,89,182,.3);border-radius:12px;padding:10px 16px;font-size:13px;color:#bb8de8;width:100%;text-align:center;}
+.player-card{background:var(–card);border:1px solid var(–border);border-radius:20px;padding:28px 20px;width:100%;cursor:pointer;transition:transform .15s;}
+.player-card:active{transform:scale(.98);}
+.player-card-name{font-size:26px;font-weight:900;margin-bottom:6px;}
+.player-card-hint{font-size:13px;color:var(–muted);}
+.tap-icon{font-size:28px;margin-top:8px;}
+
+/* OVERLAY */
+.overlay{position:fixed;inset:0;background:var(–bg);z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:24px;text-align:center;}
+.overlay.hidden{display:none;}
+.overlay-player{font-size:13px;color:var(–muted);letter-spacing:.2em;}
+.overlay-name{font-size:30px;font-weight:900;color:var(–gold);}
+.overlay-word{font-size:58px;font-weight:900;line-height:1.1;}
+.overlay-role{font-size:15px;color:var(–muted);}
+.overlay-note{font-size:13px;color:var(–muted);background:var(–card);border-radius:12px;padding:12px 20px;line-height:1.6;}
+
+/* DISCUSSION */
+#discussion-screen{padding-top:40px;gap:20px;text-align:center;}
+.timer-circle{width:160px;height:160px;position:relative;margin:0 auto;}
+.timer-svg{width:100%;height:100%;transform:rotate(-90deg);}
+.timer-bg{fill:none;stroke:var(–border);stroke-width:8;}
+.timer-arc{fill:none;stroke:var(–gold);stroke-width:8;stroke-linecap:round;stroke-dasharray:440;stroke-dashoffset:0;transition:stroke-dashoffset 1s linear,stroke .5s;}
+.timer-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:44px;font-weight:900;color:var(–gold);}
+.discussion-hint{font-size:14px;color:var(–muted);line-height:1.7;background:var(–card);border-radius:16px;padding:16px;width:100%;text-align:left;}
+.hint-title{font-weight:700;color:var(–text);margin-bottom:6px;font-size:15px;}
+
+/* VOTE */
+#vote-screen{padding-top:40px;gap:16px;}
+.vote-instruction{font-size:15px;color:var(–muted);text-align:center;}
+.vote-list{width:100%;display:flex;flex-direction:column;gap:10px;}
+.vote-item{background:var(–card);border:2px solid var(–border);border-radius:16px;padding:18px 20px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:space-between;user-select:none;-webkit-user-select:none;}
+.vote-item.voted{border-color:var(–accent);background:rgba(231,76,60,.12);}
+.vote-name{font-size:18px;font-weight:700;}
+.vote-count{font-size:24px;font-weight:900;color:var(–accent);min-width:36px;text-align:right;}
+
+/* REVERSAL */
+#reversal-screen{min-height:100vh;justify-content:center;text-align:center;gap:20px;padding:30px 16px;}
+.reversal-banner{background:linear-gradient(135deg,rgba(155,89,182,.2),rgba(231,76,60,.2));border:2px solid var(–purple);border-radius:24px;padding:24px 20px;width:100%;animation:glowPulse 2s ease-in-out infinite;}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 20px rgba(155,89,182,.3)}50%{box-shadow:0 0 50px rgba(155,89,182,.7)}}
+.reversal-big-title{font-size:32px;font-weight:900;color:var(–purple);margin-bottom:8px;}
+.reversal-desc{font-size:14px;color:var(–muted);line-height:1.6;white-space:pre-line;}
+.wolf-box{background:var(–card);border:2px solid rgba(155,89,182,.3);border-radius:20px;padding:20px;width:100%;}
+.wolf-box-name{font-size:24px;font-weight:900;color:var(–purple);}
+.wolf-box-hint{font-size:13px;color:var(–muted);margin-top:6px;}
+.guess-area{width:100%;display:flex;flex-direction:column;gap:12px;}
+.guess-label{font-size:14px;color:var(–muted);text-align:center;}
+.guess-input{background:var(–surface);border:2px solid var(–border);border-radius:12px;padding:16px;color:var(–text);font-size:20px;font-family:inherit;width:100%;text-align:center;outline:none;transition:border-color .2s;}
+.guess-input:focus{border-color:var(–purple);}
+.btn-purple{background:linear-gradient(135deg,#9b59b6,#6c3483);color:#fff;border:none;border-radius:16px;padding:16px;font-size:18px;font-weight:700;font-family:inherit;cursor:pointer;width:100%;transition:transform .15s;}
+.btn-purple:active{transform:scale(.97);}
+
+/* RESULT */
+#result-screen{min-height:100vh;justify-content:center;text-align:center;gap:20px;padding:30px 16px;}
+.result-emoji{font-size:80px;animation:bounce 1s ease;}
+.result-title{font-size:36px;font-weight:900;line-height:1.2;}
+.result-title.wolf-wins{color:var(–accent);}
+.result-title.citizen-wins{color:var(–green);}
+.result-title.reversal-wins{color:var(–purple);}
+.result-card{background:var(–card);border:1px solid var(–border);border-radius:20px;padding:20px;width:100%;}
+.result-word-row{display:flex;gap:10px;margin-top:12px;}
+.word-box{flex:1;border-radius:14px;padding:14px 10px;text-align:center;}
+.cbox{background:rgba(46,204,113,.1);border:1px solid rgba(46,204,113,.2);}
+.wbox{background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.2);}
+.box-label{font-size:11px;color:var(–muted);letter-spacing:.15em;margin-bottom:6px;}
+.box-word{font-size:22px;font-weight:900;}
+.cbox .box-word{color:#2ecc71;}
+.wbox .box-word{color:#e74c3c;}
+.wolf-row{margin-top:12px;padding-top:12px;border-top:1px solid var(–border);}
+.wolf-row-label{font-size:12px;color:var(–muted);margin-bottom:4px;}
+.wolf-row-names{font-size:16px;font-weight:700;color:var(–accent);}
+
+@keyframes fadeDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+@keyframes bounce{0%,100%{transform:translateY(0)}30%{transform:translateY(-20px)}60%{transform:translateY(-8px)}}
+@keyframes fadeIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+@keyframes shakeIn{0%{opacity:0;transform:translateX(-12px)}40%{transform:translateX(8px)}70%{transform:translateX(-4px)}100%{opacity:1;transform:translateX(0)}}
+.fade-in{animation:fadeIn .35s ease;}
+.shake-in{animation:shakeIn .5s ease;}
+</style>
+
+</head>
+<body>
+<div id="app">
+
+<!-- TITLE -->
+
+<div id="title-screen" class="screen active">
+  <div style="animation:fadeDown .8s ease;">
+    <span class="moon">🌕</span>
+    <div class="title-main">ワードウルフ</div>
+    <div class="title-sub">WORD WOLF</div>
+  </div>
+  <button class="btn-start" onclick="showSetup()">🐺 はじめる</button>
+</div>
+
+<!-- SETUP -->
+
+<div id="setup-screen" class="screen">
+  <div class="screen-title">⚙️ ゲーム設定</div>
+
+  <div class="section-card">
+    <div class="section-label">👥 プレイ人数</div>
+    <div class="count-row">
+      <button class="count-btn" onclick="changeCount(-1)">－</button>
+      <div class="count-display" id="count-display">4</div>
+      <button class="count-btn" onclick="changeCount(1)">＋</button>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-label">📝 プレイヤー名　<span style="font-size:11px;">☰ を長押し＆ドラッグで並べ替え</span></div>
+    <div class="player-inputs" id="player-inputs"></div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-label">⏱️ 話し合い時間</div>
+    <div class="timer-options">
+      <button class="timer-btn" onclick="selectTimer(this,120)">2分</button>
+      <button class="timer-btn selected" onclick="selectTimer(this,180)">3分</button>
+      <button class="timer-btn" onclick="selectTimer(this,300)">5分</button>
+      <button class="timer-btn" onclick="selectTimer(this,0)">なし</button>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-label">🌀 大逆転モード</div>
+    <div class="reversal-toggle" id="reversal-toggle" onclick="toggleReversal()">
+      <div>
+        <div style="font-size:15px;font-weight:700;">🐺 大逆転モード</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px;">追放後にウルフが逆転できる！</div>
+      </div>
+      <div class="toggle-switch" id="reversal-switch"></div>
+    </div>
+    <div class="reversal-options" id="reversal-options">
+      <div style="font-size:12px;color:var(--muted);margin:10px 0 4px;">逆転の条件：</div>
+      <div class="reversal-opt selected" id="ropt-guess" onclick="selectReversalType(event,'guess')">
+        <div class="reversal-opt-title">🎯 お題当て逆転</div>
+        <div class="reversal-opt-desc">追放後、市民のお題を当てたら逆転勝利！</div>
+      </div>
+      <div class="reversal-opt" id="ropt-confess" onclick="selectReversalType(event,'confess')">
+        <div class="reversal-opt-title">🙋 自白逆転</div>
+        <div class="reversal-opt-desc">「自分がウルフ！」と宣言してお題を当てたら逆転！</div>
+      </div>
+      <div class="reversal-opt" id="ropt-both" onclick="selectReversalType(event,'both')">
+        <div class="reversal-opt-title">✨ 両方あり</div>
+        <div class="reversal-opt-desc">どちらの方法でも逆転できる！</div>
+      </div>
+    </div>
+  </div>
+
+<button class="btn-primary" onclick="startGame()">🎮 ゲームスタート</button>
+<button class="btn-secondary" onclick="showScreen('title-screen')">← もどる</button>
+
+</div>
+
+<!-- DEAL -->
+
+<div id="deal-screen" class="screen">
+  <div class="screen-title">📋 お題配布</div>
+  <div class="deal-instruction">順番にタップして自分のお題を確認してください。<br>他の人に見せないように！</div>
+  <div class="progress-dots" id="progress-dots"></div>
+  <div class="wolf-count-badge" id="wolf-count-badge"></div>
+  <div class="reversal-info-badge" id="reversal-info-badge" style="display:none;">🌀 大逆転モード ON — 追放後にウルフの逆転チャンスあり！</div>
+  <div id="deal-cards" style="width:100%;"></div>
+</div>
+
+<!-- WORD OVERLAY -->
+
+<div id="word-overlay" class="overlay hidden">
+  <div class="overlay-player">あなたのお題</div>
+  <div class="overlay-name" id="overlay-name"></div>
+  <div class="overlay-word" id="overlay-word"></div>
+  <div class="overlay-role" id="overlay-role"></div>
+  <div class="overlay-note">📸 しっかり覚えたら閉じてください</div>
+  <button class="btn-primary" style="max-width:280px;" onclick="closeOverlay()">確認した ✓</button>
+</div>
+
+<!-- DISCUSSION -->
+
+<div id="discussion-screen" class="screen">
+  <div class="screen-title">💬 話し合い</div>
+  <div class="timer-circle">
+    <svg class="timer-svg" viewBox="0 0 160 160">
+      <circle class="timer-bg" cx="80" cy="80" r="70"/>
+      <circle class="timer-arc" id="timer-arc" cx="80" cy="80" r="70"/>
+    </svg>
+    <div class="timer-text" id="timer-text">3:00</div>
+  </div>
+  <div class="discussion-hint">
+    <div class="hint-title">💡 話し合いのヒント</div>
+    • 自分のお題について話す<br>
+    • ウルフかもしれない人を探す<br>
+    • でも自分のお題は直接言わない！<br>
+    • 怪しい人を観察しよう
+  </div>
+  <button class="btn-primary" onclick="goToVote()">🗳️ 投票する</button>
+  <button class="btn-secondary" id="pause-btn" onclick="pauseResume()">⏸ 一時停止</button>
+</div>
+
+<!-- VOTE -->
+
+<div id="vote-screen" class="screen">
+  <div class="screen-title">🗳️ 投票</div>
+  <div class="vote-instruction">ウルフだと思う人をタップ！（複数可）</div>
+  <div class="vote-list" id="vote-list"></div>
+  <button class="btn-primary" id="result-btn" style="margin-top:8px;" onclick="processVoteResult()" disabled>結果へ進む →</button>
+  <button class="btn-secondary" onclick="resetVotes()">リセット</button>
+</div>
+
+<!-- REVERSAL -->
+
+<div id="reversal-screen" class="screen">
+  <div class="reversal-banner shake-in">
+    <div style="font-size:48px;">🌀</div>
+    <div class="reversal-big-title">大逆転チャンス！</div>
+    <div class="reversal-desc" id="reversal-desc"></div>
+  </div>
+  <div class="wolf-box" id="wolf-box"></div>
+  <div class="guess-area" id="guess-area" style="display:none;">
+    <div class="guess-label">市民のお題は何だと思う？</div>
+    <input type="text" class="guess-input" id="guess-input" placeholder="お題を入力...">
+    <button class="btn-purple" onclick="checkGuess()">🎯 答える！</button>
+  </div>
+  <div class="guess-area" id="confess-area" style="display:none;">
+    <div class="guess-label">「自分がウルフ！」と宣言して市民のお題も当てよう！</div>
+    <input type="text" class="guess-input" id="confess-input" placeholder="市民のお題は...">
+    <button class="btn-purple" onclick="checkConfess()">🙋 宣言する！</button>
+  </div>
+  <button class="btn-secondary" onclick="showResult(false)">スキップ（逆転しない）</button>
+</div>
+
+<!-- RESULT -->
+
+<div id="result-screen" class="screen">
+  <div class="result-emoji" id="result-emoji"></div>
+  <div class="result-title" id="result-title"></div>
+  <div id="result-desc" style="font-size:15px;color:var(--muted);line-height:1.7;white-space:pre-line;"></div>
+  <div class="result-card">
+    <div style="font-size:13px;color:var(--muted);letter-spacing:.15em;margin-bottom:4px;">お題の答え</div>
+    <div class="result-word-row">
+      <div class="word-box cbox"><div class="box-label">市民のお題</div><div class="box-word" id="r-citizen"></div></div>
+      <div class="word-box wbox"><div class="box-label">ウルフのお題</div><div class="box-word" id="r-wolf-word"></div></div>
+    </div>
+    <div class="wolf-row">
+      <div class="wolf-row-label">🐺 ウルフは...</div>
+      <div class="wolf-row-names" id="r-wolf-names"></div>
+    </div>
+  </div>
+  <button class="btn-primary" onclick="playAgain()">🔄 もう一度遊ぶ</button>
+  <button class="btn-secondary" onclick="showScreen('title-screen')">🏠 タイトルへ</button>
+</div>
+
+</div>
+
+<script>
+/* ─────────────────────────────
+   WORD DATA
+───────────────────────────── */
+const WORD_PAIRS=[
+  ["ラーメン","うどん"],["すし","刺身"],["カレー","シチュー"],
+  ["コーヒー","紅茶"],["バーガー","ホットドッグ"],["ピザ","グラタン"],
+  ["アイスクリーム","シャーベット"],["ケーキ","プリン"],["チョコレート","キャラメル"],
+  ["おにぎり","サンドイッチ"],["焼肉","しゃぶしゃぶ"],["たこやき","お好み焼き"],
+  ["コーラ","サイダー"],["ビール","ワイン"],["いちご","さくらんぼ"],
+  ["犬","猫"],["ライオン","トラ"],["イルカ","クジラ"],
+  ["ハムスター","リス"],["カエル","トカゲ"],["パンダ","コアラ"],
+  ["ペンギン","アザラシ"],["キリン","シマウマ"],["タコ","イカ"],
+  ["海","プール"],["山","丘"],["電車","バス"],
+  ["飛行機","ヘリコプター"],["映画館","劇場"],["スーパー","コンビニ"],
+  ["図書館","書店"],["病院","クリニック"],["学校","塾"],
+  ["サッカー","ラグビー"],["野球","ソフトボール"],["テニス","バドミントン"],
+  ["マンガ","アニメ"],["ゲーム","おもちゃ"],["ギター","ベース"],
+  ["スマホ","タブレット"],["テレビ","パソコン"],["お風呂","シャワー"],
+  ["昼寝","仮眠"],["散歩","ジョギング"],["掃除","洗濯"],
+  ["桜","梅"],["雪","雨"],["温泉","銭湯"],["神社","お寺"],["新幹線","特急"],
+];
+
+/* ─────────────────────────────
+   STATE
+───────────────────────────── */
+const S={
+  playerCount:4, playerNames:[],
+  timerSecs:180, reversalEnabled:false, reversalType:'guess',
+  roles:[], citizenWord:'', wolfWord:'',
+  dealIdx:0,
+  timerHandle:null, remaining:0, paused:false,
+  votes:{}, mostVoted:[], wolfCaught:false,
+};
+
+/* ─────────────────────────────
+   LOCAL STORAGE
+───────────────────────────── */
+const LS='ww_names';
+function saveNames(a){try{localStorage.setItem(LS,JSON.stringify(a));}catch(_){}}
+function loadNames(){try{const v=localStorage.getItem(LS);return v?JSON.parse(v):[];}catch(_){return[];}}
+
+/* ─────────────────────────────
+   UTILS
+───────────────────────────── */
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+/* ─────────────────────────────
+   SETUP
+───────────────────────────── */
+function showSetup(){showScreen('setup-screen');renderPlayerInputs();}
+
+function changeCount(d){
+  S.playerCount=Math.max(3,Math.min(6,S.playerCount+d));
+  document.getElementById('count-display').textContent=S.playerCount;
+  renderPlayerInputs();
+}
+
+function renderPlayerInputs(){
+  const container=document.getElementById('player-inputs');
+  // capture currently typed values before wipe
+  const cur=Array.from(container.querySelectorAll('.player-input')).map(el=>el.value);
+  const saved=loadNames();
+  container.innerHTML='';
+  for(let i=0;i<S.playerCount;i++){
+    // priority: currently typed (even empty string kept) → saved → blank
+    const val=(cur.length>i)?cur[i]:(saved[i]||'');
+    const row=document.createElement('div');
+    row.className='player-row';
+    row.innerHTML=
+      `<span class="drag-handle" data-role="handle">☰</span>`+
+      `<span class="row-num">${i+1}</span>`+
+      `<input class="player-input" type="text" placeholder="プレイヤー ${i+1}" value="${esc(val)}">`;
+    container.appendChild(row);
+  }
+  attachTouchSort();
+}
+
+/* ─────────────────────────────
+   TOUCH DRAG-SORT
+   Works on iOS Safari / Android Chrome
+───────────────────────────── */
+function attachTouchSort(){
+  const container=document.getElementById('player-inputs');
+
+  let dragging=null;     // the row being dragged (clone shown visually)
+  let srcRow=null;       // original row (kept hidden)
+  let startY=0;
+  let offsetY=0;         // finger offset inside the handle
+  let ghost=null;        // floating visual clone
+
+  function getRows(){return Array.from(container.querySelectorAll('.player-row'));}
+
+  function createGhost(row){
+    const g=row.cloneNode(true);
+    const rect=row.getBoundingClientRect();
+    g.style.cssText=`
+      position:fixed;left:${rect.left}px;top:${rect.top}px;
+      width:${rect.width}px;pointer-events:none;z-index:999;
+      opacity:0.85;box-shadow:0 8px 32px rgba(0,0,0,.6);
+      border-color:var(--gold);transition:none;`;
+    document.body.appendChild(g);
+    return g;
+  }
+
+  function removeGhost(){if(ghost){ghost.remove();ghost=null;}}
+
+  container.addEventListener('touchstart',e=>{
+    const handle=e.target.closest('[data-role="handle"]');
+    if(!handle) return;
+    const row=handle.closest('.player-row');
+    if(!row) return;
+
+    srcRow=row;
+    const rect=row.getBoundingClientRect();
+    offsetY=e.touches[0].clientY-rect.top;
+    startY=e.touches[0].clientY;
+
+    ghost=createGhost(row);
+    row.style.opacity='0.3';
+    e.preventDefault();
+  },{passive:false});
+
+  container.addEventListener('touchmove',e=>{
+    if(!srcRow||!ghost) return;
+    e.preventDefault();
+
+    const ty=e.touches[0].clientY;
+    ghost.style.top=(ty-offsetY)+'px';
+
+    // find which row the finger is hovering over
+    const rows=getRows();
+    const midY=ty;
+    let target=null;
+    rows.forEach(r=>{
+      if(r===srcRow) return;
+      const rr=r.getBoundingClientRect();
+      if(midY>=rr.top && midY<=rr.bottom) target=r;
+    });
+
+    // clear previous highlight
+    rows.forEach(r=>r.classList.remove('drag-over'));
+    if(target) target.classList.add('drag-over');
+
+  },{passive:false});
+
+  container.addEventListener('touchend',e=>{
+    if(!srcRow) return;
+    removeGhost();
+    srcRow.style.opacity='';
+
+    // find highlighted target
+    const rows=getRows();
+    const target=rows.find(r=>r.classList.contains('drag-over'));
+    rows.forEach(r=>r.classList.remove('drag-over'));
+
+    if(target && target!==srcRow){
+      // determine insert position
+      const srcIdx=rows.indexOf(srcRow);
+      const tgtIdx=rows.indexOf(target);
+      if(srcIdx<tgtIdx){
+        container.insertBefore(srcRow,target.nextSibling);
+      } else {
+        container.insertBefore(srcRow,target);
+      }
+      renumberRows();
+    }
+
+    srcRow=null;
+  });
+}
+
+function renumberRows(){
+  document.querySelectorAll('#player-inputs .player-row').forEach((row,i)=>{
+    row.querySelector('.row-num').textContent=i+1;
+    row.querySelector('.player-input').placeholder=`プレイヤー ${i+1}`;
+  });
+}
+
+function selectTimer(btn,secs){
+  document.querySelectorAll('.timer-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  S.timerSecs=secs;
+}
+
+function toggleReversal(){
+  S.reversalEnabled=!S.reversalEnabled;
+  document.getElementById('reversal-switch').classList.toggle('on',S.reversalEnabled);
+  document.getElementById('reversal-toggle').classList.toggle('on',S.reversalEnabled);
+  document.getElementById('reversal-options').classList.toggle('visible',S.reversalEnabled);
+}
+
+function selectReversalType(e,t){
+  e.stopPropagation();
+  S.reversalType=t;
+  ['guess','confess','both'].forEach(x=>
+    document.getElementById('ropt-'+x).classList.toggle('selected',x===t)
+  );
+}
+
+/* ─────────────────────────────
+   GAME START
+───────────────────────────── */
+function startGame(){
+  S.playerNames=Array.from(document.querySelectorAll('#player-inputs .player-input'))
+    .map((el,i)=>el.value.trim()||`プレイヤー ${i+1}`);
+  S.playerCount=S.playerNames.length;
+  saveNames(S.playerNames);
+
+  const pair=WORD_PAIRS[Math.floor(Math.random()*WORD_PAIRS.length)];
+  if(Math.random()<0.5){S.citizenWord=pair[0];S.wolfWord=pair[1];}
+  else{S.citizenWord=pair[1];S.wolfWord=pair[0];}
+
+  const wolfCount=S.playerCount>=5?2:1;
+  S.roles=new Array(S.playerCount).fill('citizen');
+  const pool=[...Array(S.playerCount).keys()];
+  for(let w=0;w<wolfCount;w++){
+    const ri=Math.floor(Math.random()*pool.length);
+    S.roles[pool[ri]]='wolf';
+    pool.splice(ri,1);
+  }
+
+  S.dealIdx=0;
+  S.votes={};
+  S.mostVoted=[];
+  S.wolfCaught=false;
+  clearInterval(S.timerHandle);
+
+  setupDealScreen();
+  showScreen('deal-screen');
+}
+
+/* ─────────────────────────────
+   DEAL
+───────────────────────────── */
+function setupDealScreen(){
+  document.getElementById('progress-dots').innerHTML=
+    S.playerNames.map((_,i)=>`<div class="dot${i===0?' current':''}" id="dot-${i}"></div>`).join('');
+  const wc=S.roles.filter(r=>r==='wolf').length;
+  document.getElementById('wolf-count-badge').innerHTML=`🐺 ウルフは <span>${wc}人</span>います`;
+  document.getElementById('reversal-info-badge').style.display=S.reversalEnabled?'block':'none';
+  renderDealCard();
+}
+
+function renderDealCard(){
+  const el=document.getElementById('deal-cards');
+  if(S.dealIdx>=S.playerCount){
+    el.innerHTML=`<div class="section-card fade-in" style="text-align:center;display:flex;flex-direction:column;gap:16px;">
+      <div style="font-size:40px;">✅</div>
+      <div style="font-size:18px;font-weight:700;">全員確認完了！</div>
+      <div style="font-size:14px;color:var(--muted);">話し合いをはじめましょう</div>
+      <button class="btn-primary" onclick="startDiscussion()">💬 話し合い開始</button>
+    </div>`;
+    return;
+  }
+  const name=S.playerNames[S.dealIdx];
+  // store index in data attribute — no inline JS arguments
+  el.innerHTML=`<div class="player-card fade-in" id="deal-card" onclick="onDealTap()">
+    <div class="player-card-name">👤 ${esc(name)}</div>
+    <div class="player-card-hint">タップしてお題を確認</div>
+    <div class="tap-icon">👆</div>
+  </div>`;
+}
+
+function onDealTap(){
+  openWordOverlay(S.dealIdx);
+}
+
+function openWordOverlay(idx){
+  const role=S.roles[idx];
+  const word=role==='wolf'?S.wolfWord:S.citizenWord;
+  document.getElementById('overlay-name').textContent=S.playerNames[idx];
+  document.getElementById('overlay-word').textContent=word;
+  document.getElementById('overlay-word').style.color=role==='wolf'?'var(--accent)':'var(--green)';
+  document.getElementById('overlay-role').textContent=
+    role==='wolf'?'🐺 あなたはウルフかもしれない...':'😊 話し合いを楽しもう';
+  document.getElementById('word-overlay').classList.remove('hidden');
+}
+
+function closeOverlay(){
+  document.getElementById('word-overlay').classList.add('hidden');
+  const dot=document.getElementById(`dot-${S.dealIdx}`);
+  if(dot){dot.classList.remove('current');dot.classList.add('done');}
+  S.dealIdx++;
+  if(S.dealIdx<S.playerCount){
+    const nd=document.getElementById(`dot-${S.dealIdx}`);
+    if(nd) nd.classList.add('current');
+  }
+  renderDealCard();
+}
+
+/* ─────────────────────────────
+   DISCUSSION
+───────────────────────────── */
+function startDiscussion(){
+  S.remaining=S.timerSecs;
+  S.paused=false;
+  document.getElementById('pause-btn').textContent='⏸ 一時停止';
+  document.getElementById('pause-btn').style.display='';
+  document.getElementById('timer-arc').style.stroke='var(--gold)';
+  updateTimerDisplay();
+  showScreen('discussion-screen');
+  if(S.timerSecs>0){startTimerTick();}
+  else{
+    document.getElementById('timer-text').textContent='∞';
+    document.getElementById('timer-arc').style.strokeDashoffset='440';
+    document.getElementById('pause-btn').style.display='none';
+  }
+}
+
+function startTimerTick(){
+  clearInterval(S.timerHandle);
+  S.timerHandle=setInterval(()=>{
+    if(S.paused) return;
+    S.remaining--;
+    updateTimerDisplay();
+    if(S.remaining<=0){
+      clearInterval(S.timerHandle);
+      document.getElementById('timer-text').textContent='⏰';
+      document.getElementById('timer-arc').style.stroke='var(--accent)';
+    }
+  },1000);
+}
+
+function updateTimerDisplay(){
+  const t=S.remaining;
+  document.getElementById('timer-text').textContent=`${Math.floor(t/60)}:${String(t%60).padStart(2,'0')}`;
+  const frac=S.timerSecs>0?(t/S.timerSecs):1;
+  document.getElementById('timer-arc').style.strokeDashoffset=440*(1-frac);
+  if(t<=30&&t>0) document.getElementById('timer-arc').style.stroke='var(--accent)';
+}
+
+function pauseResume(){
+  S.paused=!S.paused;
+  document.getElementById('pause-btn').textContent=S.paused?'▶ 再開':'⏸ 一時停止';
+}
+
+function goToVote(){clearInterval(S.timerHandle);buildVoteScreen();showScreen('vote-screen');}
+
+/* ─────────────────────────────
+   VOTE
+   Key fix: vote items use data-name attribute.
+   onclick passes nothing — handler reads data-name.
+   Avoids ALL string-escaping issues.
+───────────────────────────── */
+function buildVoteScreen(){
+  S.votes={};
+  S.playerNames.forEach(n=>{S.votes[n]=0;});
+  renderVoteList();
+  document.getElementById('result-btn').disabled=true;
+}
+
+function renderVoteList(){
+  const list=document.getElementById('vote-list');
+  list.innerHTML=S.playerNames.map(name=>{
+    const cnt=S.votes[name]||0;
+    return `<div class="vote-item${cnt>0?' voted':''}" data-name="${esc(name)}" onclick="onVoteTap(this)">
+      <div class="vote-name">👤 ${esc(name)}</div>
+      <div class="vote-count">${cnt>0?cnt:''}</div>
+    </div>`;
+  }).join('');
+  // enable button if any votes exist
+  const total=Object.values(S.votes).reduce((a,b)=>a+b,0);
+  document.getElementById('result-btn').disabled=(total===0);
+}
+
+/* Handler reads name from DOM attribute — zero string-injection risk */
+function onVoteTap(el){
+  const name=el.dataset.name;
+  if(name===undefined||!(name in S.votes)) return;
+  S.votes[name]=S.votes[name]>0?0:1;  // toggle: 0 ↔ 1
+  renderVoteList();
+}
+
+function resetVotes(){
+  S.playerNames.forEach(n=>{S.votes[n]=0;});
+  renderVoteList();
+}
+
+/* ─────────────────────────────
+   PROCESS VOTE
+───────────────────────────── */
+function processVoteResult(){
+  let maxV=0;
+  S.playerNames.forEach(n=>{if(S.votes[n]>maxV) maxV=S.votes[n];});
+  S.mostVoted=S.playerNames.filter(n=>S.votes[n]===maxV&&maxV>0);
+  const wolves=S.playerNames.filter((_,i)=>S.roles[i]==='wolf');
+  S.wolfCaught=S.mostVoted.some(n=>wolves.includes(n));
+  if(S.reversalEnabled&&S.wolfCaught){showReversalScreen();}
+  else{showResult(false);}
+}
+
+/* ─────────────────────────────
+   REVERSAL
+───────────────────────────── */
+function showReversalScreen(){
+  const wolves=S.playerNames.filter((_,i)=>S.roles[i]==='wolf');
+  const caught=S.mostVoted.filter(n=>wolves.includes(n));
+  let boxHTML=caught.map(w=>`<div class="wolf-box-name">🐺 ${esc(w)}</div>`).join('');
+  if(S.reversalType==='guess'||S.reversalType==='both')
+    boxHTML+=`<div class="wolf-box-hint">市民のお題を当てれば大逆転勝利！</div>`;
+  if(S.reversalType==='confess'||S.reversalType==='both')
+    boxHTML+=`<div class="wolf-box-hint" style="margin-top:6px;">自白してお題を当てれば逆転！</div>`;
+  document.getElementById('wolf-box').innerHTML=boxHTML;
+  const dm={
+    guess:'追放されたウルフに最後のチャンス！\n市民のお題を当てれば大逆転勝利！',
+    confess:'ウルフが自白して市民のお題を当てれば逆転勝利！\n※ 自白なしは無効。',
+    both:'2つの方法で逆転可能！\n① お題を当てる　② 自白してお題を当てる',
+  };
+  document.getElementById('reversal-desc').textContent=dm[S.reversalType];
+  const ga=document.getElementById('guess-area');
+  const ca=document.getElementById('confess-area');
+  ga.style.display='none'; ca.style.display='none';
+  if(S.reversalType==='guess'||S.reversalType==='both'){ga.style.display='flex';document.getElementById('guess-input').value='';}
+  if(S.reversalType==='confess'||S.reversalType==='both'){ca.style.display='flex';document.getElementById('confess-input').value='';}
+  showScreen('reversal-screen');
+}
+
+function norm(s){return s.replace(/\s/g,'').toLowerCase();}
+function wordMatch(g){const a=norm(g),b=norm(S.citizenWord);return a===b||b.includes(a)||a.includes(b);}
+function checkGuess(){const g=document.getElementById('guess-input').value.trim();if(!g)return;showResult(wordMatch(g));}
+function checkConfess(){const g=document.getElementById('confess-input').value.trim();if(!g)return;showResult(wordMatch(g));}
+
+/* ─────────────────────────────
+   RESULT
+───────────────────────────── */
+function showResult(reversalWin){
+  const wolves=S.playerNames.filter((_,i)=>S.roles[i]==='wolf');
+  const emoji=document.getElementById('result-emoji');
+  const title=document.getElementById('result-title');
+  const desc=document.getElementById('result-desc');
+  if(reversalWin){
+    emoji.textContent='🌀';title.textContent='大逆転！ウルフの勝利！';
+    title.className='result-title reversal-wins';
+    desc.textContent=`ウルフが見事にお題を当てて大逆転！\n「${wolves.join('、')}」の勝利！`;
+  } else if(S.wolfCaught){
+    emoji.textContent='🎉';title.textContent='市民の勝利！';
+    title.className='result-title citizen-wins';
+    desc.textContent=`ウルフを見つけ出しました！\n「${S.mostVoted.join('、')}」が追放されました。`
+      +(S.reversalEnabled?'\nウルフは逆転に失敗しました...':'');
+  } else {
+    emoji.textContent='🐺';title.textContent='ウルフの勝利...';
+    title.className='result-title wolf-wins';
+    desc.textContent='ウルフは生き残りました！\nうまく市民に紛れ込んでいました。';
+  }
+  document.getElementById('r-citizen').textContent=S.citizenWord;
+  document.getElementById('r-wolf-word').textContent=S.wolfWord;
+  document.getElementById('r-wolf-names').textContent=wolves.join('、');
+  showScreen('result-screen');
+}
+
+function playAgain(){showSetup();}
+
+/* ─────────────────────────────
+   INIT
+───────────────────────────── */
+renderPlayerInputs();
+</script>
+
+</body>
+</html>
+
+edgeだと色がおかしくなるので調整してくれる？

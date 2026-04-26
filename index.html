@@ -4,845 +4,315 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ワードウルフ">
+<!-- ホーム画面アイコン（オオカミ絵文字をSVGでアイコン化） -->
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
 <title>ワードウルフ</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&display=swap');
 
-/* ── CSS変数（Edge対応：フォールバック付き） ── */
-:root {
-–bg:     #0e0e14;
-–surface:#16161f;
-–card:   #1e1e2e;
-–accent: #e74c3c;
-–green:  #2ecc71;
-–gold:   #f1c40f;
-–purple: #9b59b6;
-–text:   #f0f0f5;
-–muted:  #888899;
-–border: #2a2a3e;
-}
-
 - { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 
-html, body {
-min-height: 100%;
-}
-
 body {
-background: #0e0e14;
-background: var(–bg);
-color: #f0f0f5;
-color: var(–text);
-font-family: ‘Zen Maru Gothic’, ‘Hiragino Sans’, ‘Yu Gothic’, sans-serif;
-min-height: 100vh;
-overflow-x: hidden;
+background:#0e0e14; color:#f0f0f5;
+font-family:‘Zen Maru Gothic’,‘Hiragino Sans’,‘Yu Gothic’,sans-serif;
+min-height:100vh; overflow-x:hidden;
 }
-
-/* 星背景 — inset非対応Edge対策 */
 body::before {
-content: ‘’;
-position: fixed;
-top: 0; left: 0; right: 0; bottom: 0;
+content:’’; position:fixed; top:0;left:0;right:0;bottom:0;
 background-image:
-radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,0.35) 0%, transparent 100%),
-radial-gradient(1px 1px at 35% 75%, rgba(255,255,255,0.25) 0%, transparent 100%),
-radial-gradient(1px 1px at 55% 38%, rgba(255,255,255,0.45) 0%, transparent 100%),
-radial-gradient(1px 1px at 72% 12%, rgba(255,255,255,0.3)  0%, transparent 100%),
-radial-gradient(2px 2px at 90% 55%, rgba(255,255,255,0.2)  0%, transparent 100%);
-pointer-events: none;
-z-index: 0;
+radial-gradient(1px 1px at 12% 18%,rgba(255,255,255,.35) 0%,transparent 100%),
+radial-gradient(1px 1px at 35% 75%,rgba(255,255,255,.25) 0%,transparent 100%),
+radial-gradient(1px 1px at 55% 38%,rgba(255,255,255,.45) 0%,transparent 100%),
+radial-gradient(1px 1px at 72% 12%,rgba(255,255,255,.30) 0%,transparent 100%),
+radial-gradient(2px 2px at 90% 55%,rgba(255,255,255,.20) 0%,transparent 100%);
+pointer-events:none; z-index:0;
 }
-
 #app {
-position: relative;
-z-index: 1;
-min-height: 100vh;
-display: flex;
-flex-direction: column;
-align-items: center;
-padding: 0 16px 48px;
+position:relative; z-index:1; min-height:100vh;
+display:-webkit-box; display:-ms-flexbox; display:flex;
+-webkit-box-orient:vertical; -ms-flex-direction:column; flex-direction:column;
+-webkit-box-align:center; -ms-flex-align:center; align-items:center;
+padding:0 16px 48px;
+}
+.screen { display:none; width:100%; max-width:480px; }
+.screen.active {
+display:-webkit-box; display:-ms-flexbox; display:flex;
+-webkit-box-orient:vertical; -ms-flex-direction:column; flex-direction:column;
+-webkit-box-align:center; -ms-flex-align:center; align-items:center;
 }
 
-.screen { display: none; width: 100%; max-width: 480px; }
-.screen.active { display: flex; flex-direction: column; align-items: center; }
+/* ══ TITLE ══ */
+#title-screen { -webkit-box-pack:center; -ms-flex-pack:center; justify-content:center; min-height:100vh; text-align:center; }
+.logo-wrap { margin-bottom:32px; -webkit-animation:fadeDown .8s ease both; animation:fadeDown .8s ease both; }
+.moon { font-size:72px; display:block; -webkit-animation:pulse 3s ease-in-out infinite; animation:pulse 3s ease-in-out infinite; filter:drop-shadow(0 0 20px rgba(241,196,15,.5)); -webkit-filter:drop-shadow(0 0 20px rgba(241,196,15,.5)); }
+.title-main { font-size:48px; font-weight:900; letter-spacing:.1em; line-height:1.1; margin-top:8px; color:#f1c40f; background:linear-gradient(135deg,#f1c40f 0%,#e74c3c 50%,#9b59b6 100%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; display:inline-block; }
+.title-sub { font-size:13px; color:#888899; letter-spacing:.3em; margin-top:8px; margin-bottom:36px; display:block; }
+.btn-start { background:linear-gradient(135deg,#e74c3c,#c0392b); color:#fff; border:none; border-radius:50px; padding:18px 60px; font-size:20px; font-weight:700; font-family:inherit; cursor:pointer; box-shadow:0 8px 30px rgba(231,76,60,.4); -webkit-transition:-webkit-transform .15s; transition:transform .15s; letter-spacing:.1em; display:inline-block; -webkit-appearance:none; appearance:none; }
+.btn-start:active { -webkit-transform:scale(.95); transform:scale(.95); }
 
-/* ════════════════════════════
-TITLE
-════════════════════════════ */
-#title-screen {
-justify-content: center;
-min-height: 100vh;
-text-align: center;
+/* ══ SETUP ══ */
+#setup-screen { padding-top:40px; -webkit-box-align:stretch; -ms-flex-align:stretch; align-items:stretch; }
+#setup-screen > * { margin-bottom:16px; }
+#setup-screen > *:last-child { margin-bottom:0; }
+
+.screen-title { font-size:22px; font-weight:900; text-align:center; letter-spacing:.05em; color:#f0f0f5; }
+.section-card { background:#1e1e2e; border:1px solid #2a2a3e; border-radius:20px; padding:20px; }
+.section-label { font-size:13px; color:#888899; letter-spacing:.2em; margin-bottom:14px; display:block; }
+.section-label-row {
+display:-webkit-box; display:-ms-flexbox; display:flex;
+-webkit-box-align:center; -ms-flex-align:center; align-items:center;
+-webkit-box-pack:justify; -ms-flex-pack:justify; justify-content:space-between;
+margin-bottom:14px;
 }
+.section-label-row .section-label { margin-bottom:0; }
 
-.logo-wrap {
-margin-bottom: 40px;
--webkit-animation: fadeDown 0.8s ease;
-animation: fadeDown 0.8s ease;
+.count-row { display:-webkit-box; display:-ms-flexbox; display:flex; -webkit-box-align:center; -ms-flex-align:center; align-items:center; -webkit-box-pack:center; -ms-flex-pack:center; justify-content:center; }
+.count-btn { width:48px; height:48px; border-radius:50%; border:2px solid #2a2a3e; background:#16161f; color:#f0f0f5; font-size:24px; cursor:pointer; display:-webkit-box; display:-ms-flexbox; display:flex; -webkit-box-align:center; -ms-flex-align:center; align-items:center; -webkit-box-pack:center; -ms-flex-pack:center; justify-content:center; -webkit-transition:all .2s; transition:all .2s; font-family:inherit; margin:0 10px; -webkit-appearance:none; appearance:none; }
+.count-btn:active { background:#e74c3c; border-color:#e74c3c; }
+.count-display { font-size:48px; font-weight:900; width:80px; text-align:center; color:#f1c40f; }
+
+.player-inputs { display:-webkit-box; display:-ms-flexbox; display:flex; -webkit-box-orient:vertical; -ms-flex-direction:column; flex-direction:column; }
+.player-inputs > .player-row { margin-bottom:8px; }
+.player-inputs > .player-row:last-child { margin-bottom:0; }
+.player-row { display:-webkit-box; display:-ms-flexbox; display:flex; -webkit-box-align:center; -ms-flex-align:center; align-items:center; background:#16161f; border:2px solid #2a2a3e; border-radius:12px; padding:4px 8px 4px 4px; -webkit-transition:border-color .2s; transition:border-color .2s; touch-action:none; -ms-touch-action:none; }
+.player-row.drag-over { border-color:#9b59b6; }
+.drag-handle { font-size:20px; padding:8px 6px; color:#888899; -ms-flex-negative:0; flex-shrink:0; cursor:grab; -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; user-select:none; touch-action:none; -ms-touch-action:none; }
+.row-num { font-size:12px; color:#888899; min-width:18px; text-align:center; -ms-flex-negative:0; flex-shrink:0; margin-right:4px; }
+.player-input { background:transparent; border:none; color:#f0f0f5; font-size:16px; font-family:inherit; -webkit-box-flex:1; -ms-flex:1 1 0%; flex:1; padding:10px 4px; outline:none; min-width:0; -webkit-appearance:none; appearance:none; border-radius:0; }
+.player-input:-webkit-autofill { -webkit-box-shadow:0 0 0 100px #16161f inset; -webkit-text-fill-color:#f0f0f5; }
+
+.timer-options { display:-webkit-box; display:-ms-flexbox; display:flex; -ms-flex-wrap:wrap; flex-wrap:wrap; }
+.timer-btn { -webkit-box-flex:1; -ms-flex:1; flex:1; min-width:58px; background:#16161f; border:2px solid #2a2a3e; border-radius:12px; padding:10px 6px; color:#888899; font-size:14px; font-family:inherit; cursor:pointer; -webkit-transition:all .2s; transition:all .2s; text-align:center; margin-right:8px; -webkit-appearance:none; appearance:none; }
+.timer-btn:last-child { margin-right:0; }
+.timer-btn.selected { border-color:#f1c40f; color:#f1c40f; background:rgba(241,196,15,.1); }
+
+/* toggle */
+.toggle-row { display:-webkit-box; display:-ms-flexbox; display:flex; -webkit-box-align:center; -ms-flex-align:center; align-items:center; -webkit-box-pack:justify; -ms-flex-pack:justify; justify-content:space-between; background:#16161f; border:2px solid #2a2a3e; border-radius:14px; padding:14px 16px; cursor:pointer; -webkit-transition:border-color .2s,background .2s; transition:border-color .2s,background .2s; }
+.toggle-row.on { border-color:#9b59b6; background:rgba(155,89,182,.12); }
+.toggle-row+.toggle-row { margin-top:10px; }
+.toggle-label-wrap { -webkit-box-flex:1; -ms-flex:1; flex:1; }
+.toggle-label-main { font-size:15px; font-weight:700; color:#f0f0f5; }
+.toggle-label-sub { font-size:12px; color:#888899; margin-top:2px; }
+.toggle-switch { width:48px; height:26px; border-radius:13px; background:#444458; position:relative; -webkit-transition:background .3s; transition:background .3s; -ms-flex-negative:0; flex-shrink:0; pointer-events:none; margin-left:12px; }
+.toggle-switch.on { background:#9b59b6; }
+.toggle-switch::after { content:’’; position:absolute; top:3px; left:3px; width:20px; height:20px; border-radius:50%; background:#fff; -webkit-transition:-webkit-transform .3s; transition:transform .3s; box-shadow:0 2px 4px rgba(0,0,0,.4); }
+.toggle-switch.on::after { -webkit-transform:translateX(22px); transform:translateX(22px); }
+
+/* buttons */
+.btn-primary { background:linear-gradient(135deg,#e74c3c,#c0392b); color:#fff; border:none; border-radius:16px; padding:16px; font-size:18px; font-weight:700; font-family:inherit; cursor:pointer; width:100%; -webkit-transition:-webkit-transform .15s; transition:transform .15s; letter-spacing:.05em; display:block; text-align:center; -webkit-appearance:none; appearance:none; }
+.btn-primary:active { -webkit-transform:scale(.97); transform:scale(.97); }
+.btn-secondary { background:transparent; color:#888899; border:1px solid #2a2a3e; border-radius:16px; padding:14px; font-size:16px; font-family:inherit; cursor:pointer; width:100%; -webkit-transition:background .2s; transition:background .2s; display:block; text-align:center; -webkit-appearance:none; appearance:none; }
+.btn-secondary:active { background:#1e1e2e; }
+.btn-green { background:linear-gradient(135deg,#27ae60,#1e8449); color:#fff; border:none; border-radius:16px; padding:16px; font-size:17px; font-weight:700; font-family:inherit; cursor:pointer; -webkit-transition:-webkit-transform .15s; transition:transform .15s; display:block; text-align:center; -webkit-appearance:none; appearance:none; width:100%; }
+.btn-green:active { -webkit-transform:scale(.97); transform:scale(.97); }
+.btn-wolf { background:linear-gradient(135deg,#e74c3c,#c0392b); color:#fff; border:none; border-radius:16px; padding:16px; font-size:17px; font-weight:700; font-family:inherit; cursor:pointer; -webkit-transition:-webkit-transform .15s; transition:transform .15s; display:block; text-align:center; -webkit-appearance:none; appearance:none; width:100%; }
+.btn-wolf:active { -webkit-transform:scale(.97); transform:scale(.97); }
+.btn-sm { background:#16161f; color:#888899; border:1px solid #2a2a3e; border-radius:10px; padding:6px 12px; font-size:13px; font-family:inherit; cursor:pointer; -webkit-appearance:none; appearance:none; -webkit-transition:all .2s; transition:all .2s; white-space:nowrap; }
+.btn-sm:active { background:#2a2a3e; }
+.btn-sm-danger { background:rgba(231,76,60,.15); color:#e74c3c; border:1px solid rgba(231,76,60,.3); border-radius:10px; padding:6px 12px; font-size:13px; font-family:inherit; cursor:pointer; -webkit-appearance:none; appearance:none; }
+.btn-sm-danger:active { background:rgba(231,76,60,.3); }
+.btn-sm-add { background:rgba(46,204,113,.15); color:#2ecc71; border:1px solid rgba(46,204,113,.3); border-radius:10px; padding:6px 14px; font-size:13px; font-family:inherit; cursor:pointer; -webkit-appearance:none; appearance:none; font-weight:700; }
+.btn-sm-add:active { background:rgba(46,204,113,.3); }
+
+/* ══ WORD EDITOR ══ */
+#words-screen { padding-top:40px; -webkit-box-align:stretch; -ms-flex-align:stretch; align-items:stretch; }
+#words-screen > * { margin-bottom:16px; }
+#words-screen > *:last-child { margin-bottom:0; }
+
+.words-stats { font-size:13px; color:#888899; text-align:center; }
+.words-stats span { color:#f1c40f; font-weight:700; }
+
+.word-pair-list { display:-webkit-box; display:-ms-flexbox; display:flex; -webkit-box-orient:vertical; -ms-flex-direction:column; flex-direction:column; }
+.word-pair-list > .word-pair-row { margin-bottom:8px; }
+.word-pair-list > .word-pair-row:last-child { margin-bottom:0; }
+
+.word-pair-row { display:-webkit-box; display:-ms-flexbox; display:flex; -webkit-box-align:center; -ms-flex-align:center; align-items:center; background:#16161f; border:1px solid #2a2a3e; border-radius:12px; padding:8px 10px; }
+.word-pair-inputs { display:-webkit-box; display:-ms-flexbox; display:flex; -webkit-box-flex:1; -ms-flex:1; flex:1; -webkit-box-align:center; -ms-flex-align:center; align-items:center; min-width:0; }
+.word-input { background:transparent; border:none; color:#f0f0f5; font-size:15px; font-family:inherit; padding:6px 4px; outline:none; min-width:0; -webkit-box-flex:1; -ms-flex:1; flex:1; -webkit-appearance:none; appearance:none; border-radius:0; }
+.word-input:-webkit-autofill { -webkit-box-shadow:0 0 0 100px #16161f inset; -webkit-text-fill-color:#f0f0f5; }
+.word-sep { font-size:14px; color:#888899; padding:0 4px; -ms-flex-negative:0; flex-shrink:0; }
+
+/* 追加行 */
+.word-add-row { display:-webkit-box; display:-ms-flexbox; display:flex; -webkit-box-align:center; -ms-flex-align:center; align-items:center; background:rgba(46,204,113,.06); border:1px dashed rgba(46,204,113,.3); border-radius:12px; padding:8px 10px; }
+.word-add-row .word-input { color:#2ecc71; }
+.word-add-row .word-input::-webkit-input-placeholder { color:rgba(46,204,113,.4); }
+.word-add-row .word-input::placeholder { color:rgba(46,204,113,.4); }
+.word-add-row .word-sep { color:rgba(46,204,113,.5); }
+
+/* ══ DEAL ══ */
+#deal-screen { padding-top:40px; text-align:center; -webkit-box-align:stretch; -ms-flex-align:stretch; align-items:stretch; }
+#deal-screen > * { margin-bottom:16px; }
+#deal-screen > *:last-child { margin-bottom:0; }
+.deal-instruction { font-size:15px; color:#888899; line-height:1.6; }
+.progress-dots { display:-webkit-box; display:-ms-flexbox; display:flex; -webkit-box-pack:center; -ms-flex-pack:center; justify-content:center; }
+.progress-dots > .dot { margin:0 3px; }
+.dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:#2a2a3e; -webkit-transition:all .3s; transition:all .3s; }
+.dot.done { background:#f1c40f; }
+.dot.current { background:#e74c3c; -webkit-transform:scale(1.4); transform:scale(1.4); }
+.wolf-count-badge { background:rgba(231,76,60,.15); border:1px solid rgba(231,76,60,.3); border-radius:12px; padding:10px 16px; font-size:14px; color:#888899; text-align:center; }
+.wolf-count-badge span { color:#e74c3c; font-weight:700; }
+.reversal-info-badge { background:rgba(155,89,182,.15); border:1px solid rgba(155,89,182,.3); border-radius:12px; padding:10px 16px; font-size:13px; color:#bb8de8; text-align:center; }
+.player-card { background:#1e1e2e; border:1px solid #2a2a3e; border-radius:20px; padding:28px 20px; cursor:pointer; -webkit-transition:-webkit-transform .15s; transition:transform .15s; }
+.player-card:active { -webkit-transform:scale(.98); transform:scale(.98); }
+.player-card-name { font-size:26px; font-weight:900; margin-bottom:6px; color:#f0f0f5; }
+.player-card-hint { font-size:13px; color:#888899; }
+.tap-icon { font-size:28px; margin-top:8px; display:block; }
+.complete-card { background:#1e1e2e; border:1px solid #2a2a3e; border-radius:20px; padding:28px 20px; text-align:center; }
+.complete-icon  { font-size:40px; margin-bottom:12px; display:block; }
+.complete-title { font-size:18px; font-weight:700; margin-bottom:6px; color:#f0f0f5; }
+.complete-sub   { font-size:14px; color:#888899; margin-bottom:16px; }
+
+/* ══ OVERLAY ══ */
+.overlay { position:fixed; top:0;left:0;right:0;bottom:0; background:#0e0e14; z-index:200; display:-webkit-box; display:-ms-flexbox; display:flex; -webkit-box-orient:vertical; -ms-flex-direction:column; flex-direction:column; -webkit-box-align:center; -ms-flex-align:center; align-items:center; -webkit-box-pack:center; -ms-flex-pack:center; justify-content:center; padding:24px; text-align:center; }
+.overlay.hidden { display:none; }
+.overlay > * { margin-bottom:20px; max-width:340px; }
+.overlay > *:last-child { margin-bottom:0; }
+.overlay-player { font-size:13px; color:#888899; letter-spacing:.2em; }
+.overlay-name   { font-size:30px; font-weight:900; color:#f1c40f; }
+.overlay-word   { font-size:52px; font-weight:900; line-height:1.2; }
+.overlay-role   { font-size:15px; color:#888899; }
+.overlay-role.hidden-hint { display:none; }
+.overlay-note   { font-size:13px; color:#888899; background:#1e1e2e; border-radius:12px; padding:12px 20px; line-height:1.6; }
+
+/* ══ DISCUSSION ══ */
+#discussion-screen { padding-top:40px; text-align:center; -webkit-box-align:stretch; -ms-flex-align:stretch; align-items:stretch; }
+#discussion-screen > * { margin-bottom:20px; }
+#discussion-screen > *:last-child { margin-bottom:0; }
+.timer-circle { width:160px; height:160px; position:relative; margin:0 auto; }
+.timer-svg { width:100%; height:100%; -webkit-transform:rotate(-90deg); transform:rotate(-90deg); }
+.timer-bg  { fill:none; stroke:#2a2a3e; stroke-width:8; }
+.timer-arc { fill:none; stroke:#f1c40f; stroke-width:8; stroke-linecap:round; stroke-dasharray:440; stroke-dashoffset:0; -webkit-transition:stroke-dashoffset 1s linear,stroke .5s; transition:stroke-dashoffset 1s linear,stroke .5s; }
+.timer-text { position:absolute; top:0;left:0;right:0;bottom:0; display:-webkit-box; display:-ms-flexbox; display:flex; -webkit-box-align:center; -ms-flex-align:center; align-items:center; -webkit-box-pack:center; -ms-flex-pack:center; justify-content:center; font-size:44px; font-weight:900; color:#f1c40f; }
+.discussion-hint { font-size:14px; color:#888899; line-height:1.7; background:#1e1e2e; border-radius:16px; padding:16px; text-align:left; }
+.hint-title { font-weight:700; color:#f0f0f5; margin-bottom:6px; font-size:15px; }
+
+/* ══ VOTE ══ */
+#vote-screen { padding-top:40px; -webkit-box-align:stretch; -ms-flex-align:stretch; align-items:stretch; }
+#vote-screen > * { margin-bottom:16px; }
+#vote-screen > *:last-child { margin-bottom:0; }
+.vote-instruction { font-size:15px; color:#888899; text-align:center; }
+.vote-list { display:-webkit-box; display:-ms-flexbox; display:flex; -webkit-box-orient:vertical; -ms-flex-direction:column; flex-direction:column; }
+.vote-list > .vote-item { margin-bottom:10px; }
+.vote-list > .vote-item:last-child { margin-bottom:0; }
+.vote-item { background:#1e1e2e; border:2px solid #2a2a3e; border-radius:16px; padding:18px 20px; cursor:pointer; -webkit-transition:border-color .2s,background .2s; transition:border-color .2s,background .2s; display:-webkit-box; display:-ms-flexbox; display:flex; -webkit-box-align:center; -ms-flex-align:center; align-items:center; -webkit-box-pack:justify; -ms-flex-pack:justify; justify-content:space-between; -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; user-select:none; }
+.vote-item.voted { border-color:#e74c3c; background:rgba(231,76,60,.12); }
+.vote-name  { font-size:18px; font-weight:700; color:#f0f0f5; }
+.vote-count { font-size:24px; font-weight:900; color:#e74c3c; min-width:36px; text-align:right; }
+
+/* ══ REVERSAL ══ */
+#reversal-screen { min-height:100vh; -webkit-box-pack:center; -ms-flex-pack:center; justify-content:center; text-align:center; padding:30px 16px; -webkit-box-align:stretch; -ms-flex-align:stretch; align-items:stretch; }
+#reversal-screen > * { margin-bottom:20px; }
+#reversal-screen > *:last-child { margin-bottom:0; }
+.reversal-banner { background:linear-gradient(135deg,rgba(155,89,182,.2),rgba(231,76,60,.2)); border:2px solid #9b59b6; border-radius:24px; padding:24px 20px; -webkit-animation:glowPulse 2s ease-in-out infinite; animation:glowPulse 2s ease-in-out infinite; }
+@-webkit-keyframes glowPulse { 0%,100%{box-shadow:0 0 20px rgba(155,89,182,.3)}50%{box-shadow:0 0 50px rgba(155,89,182,.7)} }
+@keyframes glowPulse          { 0%,100%{box-shadow:0 0 20px rgba(155,89,182,.3)}50%{box-shadow:0 0 50px rgba(155,89,182,.7)} }
+.reversal-big-title { font-size:28px; font-weight:900; color:#9b59b6; margin-bottom:8px; }
+.reversal-sub { font-size:14px; color:#888899; line-height:1.6; }
+.wolf-answer-box { background:#1e1e2e; border:2px solid rgba(155,89,182,.4); border-radius:20px; padding:24px 20px; }
+.wolf-answer-label { font-size:12px; color:#888899; letter-spacing:.15em; margin-bottom:8px; }
+.wolf-answer-word  { font-size:42px; font-weight:900; color:#9b59b6; margin-bottom:4px; }
+.wolf-answer-hint  { font-size:13px; color:#888899; }
+.judge-row { display:-webkit-box; display:-ms-flexbox; display:flex; }
+.judge-row > * { -webkit-box-flex:1; -ms-flex:1; flex:1; }
+.judge-row > *:first-child { margin-right:10px; }
+.judge-who { font-size:14px; color:#888899; text-align:center; }
+
+/* ══ RESULT ══ */
+#result-screen { min-height:100vh; -webkit-box-pack:center; -ms-flex-pack:center; justify-content:center; text-align:center; padding:30px 16px; -webkit-box-align:stretch; -ms-flex-align:stretch; align-items:stretch; }
+#result-screen > * { margin-bottom:20px; }
+#result-screen > *:last-child { margin-bottom:0; }
+.result-emoji { font-size:80px; -webkit-animation:bounce 1s ease both; animation:bounce 1s ease both; display:block; }
+.result-title { font-size:36px; font-weight:900; line-height:1.2; }
+.result-title.wolf-wins     { color:#e74c3c; }
+.result-title.citizen-wins  { color:#2ecc71; }
+.result-title.reversal-wins { color:#9b59b6; }
+.result-desc { font-size:15px; color:#888899; line-height:1.7; white-space:pre-line; }
+.result-card { background:#1e1e2e; border:1px solid #2a2a3e; border-radius:20px; padding:20px; }
+.result-card-label { font-size:13px; color:#888899; letter-spacing:.15em; margin-bottom:4px; }
+.result-word-row { display:-webkit-box; display:-ms-flexbox; display:flex; margin-top:12px; }
+.result-word-row > .word-box { margin-right:10px; }
+.result-word-row > .word-box:last-child { margin-right:0; }
+.word-box { -webkit-box-flex:1; -ms-flex:1; flex:1; border-radius:14px; padding:14px 10px; text-align:center; }
+.cbox { background:rgba(46,204,113,.1); border:1px solid rgba(46,204,113,.2); }
+.wbox { background:rgba(231,76,60,.1);  border:1px solid rgba(231,76,60,.2); }
+.box-label { font-size:11px; color:#888899; letter-spacing:.15em; margin-bottom:6px; }
+.box-word  { font-size:22px; font-weight:900; }
+.cbox .box-word { color:#2ecc71; }
+.wbox .box-word { color:#e74c3c; }
+.wolf-row { margin-top:12px; padding-top:12px; border-top:1px solid #2a2a3e; }
+.wolf-row-label { font-size:12px; color:#888899; margin-bottom:4px; }
+.wolf-row-names { font-size:16px; font-weight:700; color:#e74c3c; }
+
+/* プレイヤー別お題一覧 */
+.player-result-list { display:-webkit-box; display:-ms-flexbox; display:flex; -webkit-box-orient:vertical; -ms-flex-direction:column; flex-direction:column; }
+.player-result-list > .player-result-row { margin-bottom:8px; }
+.player-result-list > .player-result-row:last-child { margin-bottom:0; }
+.player-result-row { display:-webkit-box; display:-ms-flexbox; display:flex; -webkit-box-align:center; -ms-flex-align:center; align-items:center; border-radius:14px; padding:12px 14px; border:2px solid transparent; }
+.player-result-row.is-wolf    { background:rgba(231,76,60,.1);  border-color:rgba(231,76,60,.35); }
+.player-result-row.is-citizen { background:rgba(46,204,113,.07); border-color:rgba(46,204,113,.2); }
+.pr-icon { font-size:22px; -ms-flex-negative:0; flex-shrink:0; margin-right:10px; }
+.pr-info { -webkit-box-flex:1; -ms-flex:1; flex:1; min-width:0; }
+.pr-name { font-size:16px; font-weight:700; color:#f0f0f5; }
+.pr-word { font-size:14px; margin-top:2px; }
+.pr-word.citizen-word { color:#2ecc71; }
+.pr-word.wolf-word    { color:#e74c3c; }
+.pr-badges { display:-webkit-box; display:-ms-flexbox; display:flex; -webkit-box-orient:vertical; -webkit-box-direction:normal; -ms-flex-direction:column; flex-direction:column; -webkit-box-align:end; -ms-flex-align:end; align-items:flex-end; -ms-flex-negative:0; flex-shrink:0; margin-left:8px; }
+.pr-tag { font-size:11px; font-weight:700; padding:2px 8px; border-radius:6px; margin-bottom:3px; white-space:nowrap; }
+.pr-tag:last-child { margin-bottom:0; }
+.tag-wolf   { background:rgba(231,76,60,.25);  color:#e74c3c; }
+.tag-voted  { background:rgba(241,196,15,.2);  color:#f1c40f; }
+
+/* 中止ボタン */
+.btn-abort {
+background:transparent; color:#555566; border:1px solid #333344;
+border-radius:12px; padding:8px 16px; font-size:13px; font-family:inherit;
+cursor:pointer; -webkit-appearance:none; appearance:none;
+-webkit-transition:all .2s; transition:all .2s; display:inline-block;
 }
+.btn-abort:active { background:rgba(231,76,60,.15); color:#e74c3c; border-color:rgba(231,76,60,.4); }
 
-.moon {
-font-size: 72px;
-display: block;
--webkit-animation: pulse 3s ease-in-out infinite;
-animation: pulse 3s ease-in-out infinite;
-filter: drop-shadow(0 0 20px rgba(241,196,15,0.5));
+/* 中止確認オーバーレイ */
+.abort-overlay {
+position:fixed; top:0;left:0;right:0;bottom:0;
+background:rgba(0,0,0,.75); z-index:300;
+display:-webkit-box; display:-ms-flexbox; display:flex;
+-webkit-box-align:center; -ms-flex-align:center; align-items:center;
+-webkit-box-pack:center; -ms-flex-pack:center; justify-content:center;
+padding:24px;
 }
-
-/* グラデーションテキスト — Edge Chromium対応 */
-.title-main {
-font-size: 48px;
-font-weight: 900;
-letter-spacing: 0.1em;
-line-height: 1.1;
-margin-top: 8px;
-/* フォールバック：グラデーション非対応時は金色 */
-color: #f1c40f;
-/* Chromium Edge / Chrome / Safari */
-background: linear-gradient(135deg, #f1c40f, #e74c3c, #9b59b6);
--webkit-background-clip: text;
-background-clip: text;
--webkit-text-fill-color: transparent;
+.abort-overlay.hidden { display:none; }
+.abort-dialog {
+background:#1e1e2e; border:1px solid #2a2a3e; border-radius:24px;
+padding:28px 24px; width:100%; max-width:320px; text-align:center;
 }
+.abort-dialog-title { font-size:20px; font-weight:900; color:#f0f0f5; margin-bottom:8px; }
+.abort-dialog-sub   { font-size:14px; color:#888899; margin-bottom:24px; line-height:1.6; }
+.abort-dialog-btns  { display:-webkit-box; display:-ms-flexbox; display:flex; }
+.abort-dialog-btns > * { -webkit-box-flex:1; -ms-flex:1; flex:1; }
+.abort-dialog-btns > *:first-child { margin-right:10px; }
 
-/* Edge Legacyなどclip非対応の場合は色だけ表示 */
-@supports not (-webkit-background-clip: text) {
-.title-main {
-color: #f1c40f;
-background: none;
+/* 画面タイトル行（中止ボタン付き） */
+.screen-title-row {
+display:-webkit-box; display:-ms-flexbox; display:flex;
+-webkit-box-align:center; -ms-flex-align:center; align-items:center;
+-webkit-box-pack:justify; -ms-flex-pack:justify; justify-content:space-between;
+width:100%;
 }
-}
-
-.title-sub {
-font-size: 13px;
-color: #888899;
-color: var(–muted);
-letter-spacing: 0.3em;
-margin-top: 8px;
-margin-bottom: 40px;
-}
-
-.btn-start {
-background: linear-gradient(135deg, #e74c3c, #c0392b);
-color: #ffffff;
-border: none;
-border-radius: 50px;
-padding: 18px 60px;
-font-size: 20px;
-font-weight: 700;
-font-family: inherit;
-cursor: pointer;
-box-shadow: 0 8px 30px rgba(231,76,60,0.4);
--webkit-transition: -webkit-transform 0.15s;
-transition: transform 0.15s;
-letter-spacing: 0.1em;
-display: inline-block;
-}
-.btn-start:active { -webkit-transform: scale(0.95); transform: scale(0.95); }
-
-/* ════════════════════════════
-SETUP
-════════════════════════════ */
-#setup-screen { padding-top: 40px; }
-#setup-screen > * { margin-bottom: 18px; }
-#setup-screen > *:last-child { margin-bottom: 0; }
-
-.screen-title {
-font-size: 22px;
-font-weight: 900;
-text-align: center;
-letter-spacing: 0.05em;
-width: 100%;
-}
-
-.section-card {
-background: #1e1e2e;
-background: var(–card);
-border: 1px solid #2a2a3e;
-border: 1px solid var(–border);
-border-radius: 20px;
-padding: 20px;
-width: 100%;
-}
-
-.section-label {
-font-size: 13px;
-color: #888899;
-color: var(–muted);
-letter-spacing: 0.2em;
-margin-bottom: 14px;
-display: block;
-}
-
-.count-row {
-display: -webkit-box;
-display: -ms-flexbox;
-display: flex;
--webkit-box-align: center;
--ms-flex-align: center;
-align-items: center;
--webkit-box-pack: center;
--ms-flex-pack: center;
-justify-content: center;
-}
-
-.count-btn {
-width: 48px;
-height: 48px;
-border-radius: 50%;
-border: 2px solid #2a2a3e;
-border: 2px solid var(–border);
-background: #16161f;
-background: var(–surface);
-color: #f0f0f5;
-color: var(–text);
-font-size: 24px;
-cursor: pointer;
-display: -webkit-box;
-display: -ms-flexbox;
-display: flex;
--webkit-box-align: center;
--ms-flex-align: center;
-align-items: center;
--webkit-box-pack: center;
--ms-flex-pack: center;
-justify-content: center;
--webkit-transition: all 0.2s;
-transition: all 0.2s;
-font-family: inherit;
-margin: 0 10px;
-}
-.count-btn:active { background: #e74c3c; background: var(–accent); border-color: #e74c3c; border-color: var(–accent); }
-
-.count-display {
-font-size: 48px;
-font-weight: 900;
-width: 80px;
-text-align: center;
-color: #f1c40f;
-color: var(–gold);
-}
-
-/* プレイヤー行 */
-.player-inputs {
-display: -webkit-box;
-display: -ms-flexbox;
-display: flex;
--webkit-box-orient: vertical;
--webkit-box-direction: normal;
--ms-flex-direction: column;
-flex-direction: column;
-width: 100%;
-}
-.player-inputs > .player-row { margin-bottom: 8px; }
-.player-inputs > .player-row:last-child { margin-bottom: 0; }
-
-.player-row {
-display: -webkit-box;
-display: -ms-flexbox;
-display: flex;
--webkit-box-align: center;
--ms-flex-align: center;
-align-items: center;
-background: #16161f;
-background: var(–surface);
-border: 2px solid #2a2a3e;
-border: 2px solid var(–border);
-border-radius: 12px;
-padding: 4px 8px 4px 4px;
--webkit-transition: border-color 0.2s, box-shadow 0.2s;
-transition: border-color 0.2s, box-shadow 0.2s;
-touch-action: none;
-}
-.player-row.drag-over { border-color: #9b59b6; border-color: var(–purple); }
-
-.drag-handle {
-font-size: 20px;
-padding: 8px 6px;
-color: #888899;
-color: var(–muted);
--ms-flex-negative: 0;
-flex-shrink: 0;
-cursor: grab;
--webkit-user-select: none;
--moz-user-select: none;
--ms-user-select: none;
-user-select: none;
-touch-action: none;
-}
-
-.row-num {
-font-size: 12px;
-color: #888899;
-color: var(–muted);
-min-width: 18px;
-text-align: center;
--ms-flex-negative: 0;
-flex-shrink: 0;
-margin-right: 4px;
-}
-
-.player-input {
-background: transparent;
-border: none;
-color: #f0f0f5;
-color: var(–text);
-font-size: 16px;
-font-family: inherit;
--webkit-box-flex: 1;
--ms-flex: 1;
-flex: 1;
-padding: 10px 4px;
-outline: none;
-min-width: 0; /* Edge flex overflow fix */
-}
-
-/* タイマーボタン */
-.timer-options {
-display: -webkit-box;
-display: -ms-flexbox;
-display: flex;
--ms-flex-wrap: wrap;
-flex-wrap: wrap;
-}
-.timer-btn {
--webkit-box-flex: 1;
--ms-flex: 1;
-flex: 1;
-min-width: 58px;
-background: #16161f;
-background: var(–surface);
-border: 2px solid #2a2a3e;
-border: 2px solid var(–border);
-border-radius: 12px;
-padding: 10px 6px;
-color: #888899;
-color: var(–muted);
-font-size: 14px;
-font-family: inherit;
-cursor: pointer;
--webkit-transition: all 0.2s;
-transition: all 0.2s;
-text-align: center;
-margin: 0 4px 0 0;
-}
-.timer-btn:last-child { margin-right: 0; }
-.timer-btn.selected {
-border-color: #f1c40f;
-border-color: var(–gold);
-color: #f1c40f;
-color: var(–gold);
-background: rgba(241,196,15,0.1);
-}
-
-/* 大逆転トグル */
-.reversal-toggle {
-display: -webkit-box;
-display: -ms-flexbox;
-display: flex;
--webkit-box-align: center;
--ms-flex-align: center;
-align-items: center;
--webkit-box-pack: justify;
--ms-flex-pack: justify;
-justify-content: space-between;
-background: #16161f;
-background: var(–surface);
-border: 2px solid #2a2a3e;
-border: 2px solid var(–border);
-border-radius: 14px;
-padding: 14px 16px;
-cursor: pointer;
--webkit-transition: all 0.2s;
-transition: all 0.2s;
-width: 100%;
-}
-.reversal-toggle.on {
-border-color: #9b59b6;
-border-color: var(–purple);
-background: rgba(155,89,182,0.1);
-}
-
-.toggle-label-wrap { -webkit-box-flex: 1; -ms-flex: 1; flex: 1; }
-.toggle-label-main { font-size: 15px; font-weight: 700; }
-.toggle-label-sub { font-size: 12px; color: #888899; color: var(–muted); margin-top: 2px; }
-
-.toggle-switch {
-width: 48px;
-height: 26px;
-border-radius: 13px;
-background: #2a2a3e;
-background: var(–border);
-position: relative;
--webkit-transition: background 0.3s;
-transition: background 0.3s;
--ms-flex-negative: 0;
-flex-shrink: 0;
-pointer-events: none;
-margin-left: 12px;
-}
-.toggle-switch.on { background: #9b59b6; background: var(–purple); }
-.toggle-switch::after {
-content: ‘’;
-position: absolute;
-top: 3px;
-left: 3px;
-width: 20px;
-height: 20px;
-border-radius: 50%;
-background: #ffffff;
--webkit-transition: -webkit-transform 0.3s;
-transition: transform 0.3s;
-box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-}
-.toggle-switch.on::after { -webkit-transform: translateX(22px); transform: translateX(22px); }
-
-.reversal-options { display: none; -webkit-box-orient: vertical; -webkit-box-direction: normal; -ms-flex-direction: column; flex-direction: column; margin-top: 10px; }
-.reversal-options.visible { display: -webkit-box; display: -ms-flexbox; display: flex; }
-.reversal-options > .reversal-opt { margin-bottom: 8px; }
-.reversal-options > .reversal-opt:last-child { margin-bottom: 0; }
-
-.reversal-opt {
-background: #16161f;
-background: var(–surface);
-border: 2px solid #2a2a3e;
-border: 2px solid var(–border);
-border-radius: 12px;
-padding: 12px 14px;
-cursor: pointer;
--webkit-transition: all 0.2s;
-transition: all 0.2s;
-}
-.reversal-opt.selected {
-border-color: #9b59b6;
-border-color: var(–purple);
-background: rgba(155,89,182,0.1);
-}
-.reversal-opt-title { font-weight: 700; font-size: 14px; margin-bottom: 3px; color: #f0f0f5; color: var(–text); }
-.reversal-opt-desc { font-size: 12px; color: #888899; color: var(–muted); }
-
-/* 共通ボタン */
-.btn-primary {
-background: linear-gradient(135deg, #e74c3c, #c0392b);
-color: #ffffff;
-border: none;
-border-radius: 16px;
-padding: 16px;
-font-size: 18px;
-font-weight: 700;
-font-family: inherit;
-cursor: pointer;
-width: 100%;
--webkit-transition: -webkit-transform 0.15s;
-transition: transform 0.15s;
-letter-spacing: 0.05em;
-display: block;
-text-align: center;
-margin-top: 0;
-}
-.btn-primary:active { -webkit-transform: scale(0.97); transform: scale(0.97); }
-
-.btn-secondary {
-background: transparent;
-color: #888899;
-color: var(–muted);
-border: 1px solid #2a2a3e;
-border: 1px solid var(–border);
-border-radius: 16px;
-padding: 14px;
-font-size: 16px;
-font-family: inherit;
-cursor: pointer;
-width: 100%;
--webkit-transition: background 0.2s;
-transition: background 0.2s;
-display: block;
-text-align: center;
-margin-top: 0;
-}
-.btn-secondary:active { background: #1e1e2e; background: var(–card); }
-
-/* Setup buttons spacing */
-#setup-screen .btn-primary,
-#setup-screen .btn-secondary { margin-top: 0; }
-
-/* ════════════════════════════
-DEAL
-════════════════════════════ */
-#deal-screen { padding-top: 40px; text-align: center; }
-#deal-screen > * { margin-bottom: 18px; width: 100%; }
-#deal-screen > *:last-child { margin-bottom: 0; }
-
-.deal-instruction { font-size: 15px; color: #888899; color: var(–muted); line-height: 1.6; }
-
-.progress-dots {
-display: -webkit-box;
-display: -ms-flexbox;
-display: flex;
--webkit-box-pack: center;
--ms-flex-pack: center;
-justify-content: center;
-}
-.progress-dots > .dot { margin: 0 3px; }
-
-.dot {
-width: 8px;
-height: 8px;
-border-radius: 50%;
-background: #2a2a3e;
-background: var(–border);
--webkit-transition: all 0.3s;
-transition: all 0.3s;
-display: inline-block;
-}
-.dot.done { background: #f1c40f; background: var(–gold); }
-.dot.current { background: #e74c3c; background: var(–accent); -webkit-transform: scale(1.4); transform: scale(1.4); }
-
-.wolf-count-badge {
-background: rgba(231,76,60,0.15);
-border: 1px solid rgba(231,76,60,0.3);
-border-radius: 12px;
-padding: 10px 16px;
-font-size: 14px;
-color: #888899;
-color: var(–muted);
-text-align: center;
-}
-.wolf-count-badge span { color: #e74c3c; color: var(–accent); font-weight: 700; }
-
-.reversal-info-badge {
-background: rgba(155,89,182,0.15);
-border: 1px solid rgba(155,89,182,0.3);
-border-radius: 12px;
-padding: 10px 16px;
-font-size: 13px;
-color: #bb8de8;
-text-align: center;
-}
-
-.player-card {
-background: #1e1e2e;
-background: var(–card);
-border: 1px solid #2a2a3e;
-border: 1px solid var(–border);
-border-radius: 20px;
-padding: 28px 20px;
-width: 100%;
-cursor: pointer;
--webkit-transition: -webkit-transform 0.15s;
-transition: transform 0.15s;
-}
-.player-card:active { -webkit-transform: scale(0.98); transform: scale(0.98); }
-.player-card-name { font-size: 26px; font-weight: 900; margin-bottom: 6px; }
-.player-card-hint { font-size: 13px; color: #888899; color: var(–muted); }
-.tap-icon { font-size: 28px; margin-top: 8px; }
-
-/* 完了カード */
-.complete-card {
-background: #1e1e2e;
-background: var(–card);
-border: 1px solid #2a2a3e;
-border: 1px solid var(–border);
-border-radius: 20px;
-padding: 28px 20px;
-width: 100%;
-text-align: center;
-}
-.complete-card .complete-icon { font-size: 40px; margin-bottom: 12px; display: block; }
-.complete-card .complete-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
-.complete-card .complete-sub { font-size: 14px; color: #888899; color: var(–muted); margin-bottom: 16px; }
-
-/* ════════════════════════════
-OVERLAY
-════════════════════════════ */
-.overlay {
-position: fixed;
-top: 0; left: 0; right: 0; bottom: 0;
-background: #0e0e14;
-background: var(–bg);
-z-index: 200;
-display: -webkit-box;
-display: -ms-flexbox;
-display: flex;
--webkit-box-orient: vertical;
--webkit-box-direction: normal;
--ms-flex-direction: column;
-flex-direction: column;
--webkit-box-align: center;
--ms-flex-align: center;
-align-items: center;
--webkit-box-pack: center;
--ms-flex-pack: center;
-justify-content: center;
-padding: 24px;
-text-align: center;
-}
-.overlay.hidden { display: none; }
-.overlay > * { margin-bottom: 20px; }
-.overlay > *:last-child { margin-bottom: 0; }
-
-.overlay-player { font-size: 13px; color: #888899; color: var(–muted); letter-spacing: 0.2em; }
-.overlay-name { font-size: 30px; font-weight: 900; color: #f1c40f; color: var(–gold); }
-.overlay-word { font-size: 58px; font-weight: 900; line-height: 1.1; }
-.overlay-role { font-size: 15px; color: #888899; color: var(–muted); }
-.overlay-note { font-size: 13px; color: #888899; color: var(–muted); background: #1e1e2e; background: var(–card); border-radius: 12px; padding: 12px 20px; line-height: 1.6; max-width: 320px; }
-
-/* ════════════════════════════
-DISCUSSION
-════════════════════════════ */
-#discussion-screen { padding-top: 40px; text-align: center; }
-#discussion-screen > * { margin-bottom: 20px; width: 100%; }
-#discussion-screen > *:last-child { margin-bottom: 0; }
-
-.timer-circle { width: 160px; height: 160px; position: relative; margin: 0 auto; }
-.timer-svg { width: 100%; height: 100%; -webkit-transform: rotate(-90deg); transform: rotate(-90deg); }
-.timer-bg { fill: none; stroke: #2a2a3e; stroke: var(–border); stroke-width: 8; }
-.timer-arc {
-fill: none;
-stroke: #f1c40f;
-stroke: var(–gold);
-stroke-width: 8;
-stroke-linecap: round;
-stroke-dasharray: 440;
-stroke-dashoffset: 0;
--webkit-transition: stroke-dashoffset 1s linear, stroke 0.5s;
-transition: stroke-dashoffset 1s linear, stroke 0.5s;
-}
-.timer-text {
-position: absolute;
-top: 0; left: 0; right: 0; bottom: 0;
-display: -webkit-box;
-display: -ms-flexbox;
-display: flex;
--webkit-box-align: center;
--ms-flex-align: center;
-align-items: center;
--webkit-box-pack: center;
--ms-flex-pack: center;
-justify-content: center;
-font-size: 44px;
-font-weight: 900;
-color: #f1c40f;
-color: var(–gold);
-}
-.discussion-hint {
-font-size: 14px;
-color: #888899;
-color: var(–muted);
-line-height: 1.7;
-background: #1e1e2e;
-background: var(–card);
-border-radius: 16px;
-padding: 16px;
-text-align: left;
-}
-.hint-title { font-weight: 700; color: #f0f0f5; color: var(–text); margin-bottom: 6px; font-size: 15px; }
-
-/* ════════════════════════════
-VOTE
-════════════════════════════ */
-#vote-screen { padding-top: 40px; }
-#vote-screen > * { margin-bottom: 16px; width: 100%; }
-#vote-screen > *:last-child { margin-bottom: 0; }
-
-.vote-instruction { font-size: 15px; color: #888899; color: var(–muted); text-align: center; }
-
-.vote-list {
-width: 100%;
-display: -webkit-box;
-display: -ms-flexbox;
-display: flex;
--webkit-box-orient: vertical;
--webkit-box-direction: normal;
--ms-flex-direction: column;
-flex-direction: column;
-}
-.vote-list > .vote-item { margin-bottom: 10px; }
-.vote-list > .vote-item:last-child { margin-bottom: 0; }
-
-.vote-item {
-background: #1e1e2e;
-background: var(–card);
-border: 2px solid #2a2a3e;
-border: 2px solid var(–border);
-border-radius: 16px;
-padding: 18px 20px;
-cursor: pointer;
--webkit-transition: border-color 0.2s, background 0.2s;
-transition: border-color 0.2s, background 0.2s;
-display: -webkit-box;
-display: -ms-flexbox;
-display: flex;
--webkit-box-align: center;
--ms-flex-align: center;
-align-items: center;
--webkit-box-pack: justify;
--ms-flex-pack: justify;
-justify-content: space-between;
--webkit-user-select: none;
--moz-user-select: none;
--ms-user-select: none;
-user-select: none;
-width: 100%;
-}
-.vote-item.voted {
-border-color: #e74c3c;
-border-color: var(–accent);
-background: rgba(231,76,60,0.12);
-}
-.vote-name { font-size: 18px; font-weight: 700; }
-.vote-count { font-size: 24px; font-weight: 900; color: #e74c3c; color: var(–accent); min-width: 36px; text-align: right; }
-
-/* ════════════════════════════
-REVERSAL
-════════════════════════════ */
-#reversal-screen { min-height: 100vh; justify-content: center; text-align: center; padding: 30px 16px; }
-#reversal-screen > * { margin-bottom: 20px; width: 100%; }
-#reversal-screen > *:last-child { margin-bottom: 0; }
-
-.reversal-banner {
-background: linear-gradient(135deg, rgba(155,89,182,0.2), rgba(231,76,60,0.2));
-border: 2px solid #9b59b6;
-border: 2px solid var(–purple);
-border-radius: 24px;
-padding: 24px 20px;
--webkit-animation: glowPulse 2s ease-in-out infinite;
-animation: glowPulse 2s ease-in-out infinite;
-}
-@-webkit-keyframes glowPulse {
-0%,100% { box-shadow: 0 0 20px rgba(155,89,182,0.3); }
-50%      { box-shadow: 0 0 50px rgba(155,89,182,0.7); }
-}
-@keyframes glowPulse {
-0%,100% { box-shadow: 0 0 20px rgba(155,89,182,0.3); }
-50%      { box-shadow: 0 0 50px rgba(155,89,182,0.7); }
-}
-.reversal-big-title { font-size: 32px; font-weight: 900; color: #9b59b6; color: var(–purple); margin-bottom: 8px; }
-.reversal-desc { font-size: 14px; color: #888899; color: var(–muted); line-height: 1.6; white-space: pre-line; }
-
-.wolf-box {
-background: #1e1e2e;
-background: var(–card);
-border: 2px solid rgba(155,89,182,0.3);
-border-radius: 20px;
-padding: 20px;
-}
-.wolf-box-name { font-size: 24px; font-weight: 900; color: #9b59b6; color: var(–purple); margin-bottom: 6px; }
-.wolf-box-hint { font-size: 13px; color: #888899; color: var(–muted); margin-top: 6px; }
-
-.guess-area {
-width: 100%;
-display: -webkit-box;
-display: -ms-flexbox;
-display: flex;
--webkit-box-orient: vertical;
--webkit-box-direction: normal;
--ms-flex-direction: column;
-flex-direction: column;
-}
-.guess-area > * { margin-bottom: 12px; }
-.guess-area > *:last-child { margin-bottom: 0; }
-
-.guess-label { font-size: 14px; color: #888899; color: var(–muted); text-align: center; }
-.guess-input {
-background: #16161f;
-background: var(–surface);
-border: 2px solid #2a2a3e;
-border: 2px solid var(–border);
-border-radius: 12px;
-padding: 16px;
-color: #f0f0f5;
-color: var(–text);
-font-size: 20px;
-font-family: inherit;
-width: 100%;
-text-align: center;
-outline: none;
--webkit-transition: border-color 0.2s;
-transition: border-color 0.2s;
-}
-.guess-input:focus { border-color: #9b59b6; border-color: var(–purple); }
-
-.btn-purple {
-background: linear-gradient(135deg, #9b59b6, #6c3483);
-color: #ffffff;
-border: none;
-border-radius: 16px;
-padding: 16px;
-font-size: 18px;
-font-weight: 700;
-font-family: inherit;
-cursor: pointer;
-width: 100%;
--webkit-transition: -webkit-transform 0.15s;
-transition: transform 0.15s;
-display: block;
-text-align: center;
-}
-.btn-purple:active { -webkit-transform: scale(0.97); transform: scale(0.97); }
-
-/* ════════════════════════════
-RESULT
-════════════════════════════ */
-#result-screen { min-height: 100vh; justify-content: center; text-align: center; padding: 30px 16px; }
-#result-screen > * { margin-bottom: 20px; width: 100%; }
-#result-screen > *:last-child { margin-bottom: 0; }
-
-.result-emoji { font-size: 80px; -webkit-animation: bounce 1s ease; animation: bounce 1s ease; display: block; }
-.result-title { font-size: 36px; font-weight: 900; line-height: 1.2; }
-.result-title.wolf-wins    { color: #e74c3c; color: var(–accent); }
-.result-title.citizen-wins { color: #2ecc71; color: var(–green); }
-.result-title.reversal-wins{ color: #9b59b6; color: var(–purple); }
-
-.result-desc { font-size: 15px; color: #888899; color: var(–muted); line-height: 1.7; white-space: pre-line; }
-
-.result-card {
-background: #1e1e2e;
-background: var(–card);
-border: 1px solid #2a2a3e;
-border: 1px solid var(–border);
-border-radius: 20px;
-padding: 20px;
-}
-.result-card-label { font-size: 13px; color: #888899; color: var(–muted); letter-spacing: 0.15em; margin-bottom: 4px; }
-
-.result-word-row {
-display: -webkit-box;
-display: -ms-flexbox;
-display: flex;
-margin-top: 12px;
-}
-.result-word-row > .word-box { margin-right: 10px; }
-.result-word-row > .word-box:last-child { margin-right: 0; }
-
-.word-box { -webkit-box-flex: 1; -ms-flex: 1; flex: 1; border-radius: 14px; padding: 14px 10px; text-align: center; }
-.cbox { background: rgba(46,204,113,0.1);  border: 1px solid rgba(46,204,113,0.2); }
-.wbox { background: rgba(231,76,60,0.1);   border: 1px solid rgba(231,76,60,0.2); }
-.box-label { font-size: 11px; color: #888899; color: var(–muted); letter-spacing: 0.15em; margin-bottom: 6px; }
-.box-word  { font-size: 22px; font-weight: 900; }
-.cbox .box-word { color: #2ecc71; }
-.wbox .box-word { color: #e74c3c; }
-
-.wolf-row { margin-top: 12px; padding-top: 12px; border-top: 1px solid #2a2a3e; border-top: 1px solid var(–border); }
-.wolf-row-label { font-size: 12px; color: #888899; color: var(–muted); margin-bottom: 4px; }
-.wolf-row-names { font-size: 16px; font-weight: 700; color: #e74c3c; color: var(–accent); }
-
-/* ════════════════════════════
-ANIMATIONS
-════════════════════════════ */
-@-webkit-keyframes fadeDown { from{opacity:0;-webkit-transform:translateY(-20px);transform:translateY(-20px)} to{opacity:1;-webkit-transform:translateY(0);transform:translateY(0)} }
-@keyframes fadeDown         { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:translateY(0)} }
-@-webkit-keyframes pulse    { 0%,100%{-webkit-transform:scale(1);transform:scale(1)} 50%{-webkit-transform:scale(1.06);transform:scale(1.06)} }
-@keyframes pulse            { 0%,100%{transform:scale(1)} 50%{transform:scale(1.06)} }
-@-webkit-keyframes bounce   { 0%,100%{-webkit-transform:translateY(0);transform:translateY(0)} 30%{-webkit-transform:translateY(-20px);transform:translateY(-20px)} 60%{-webkit-transform:translateY(-8px);transform:translateY(-8px)} }
-@keyframes bounce           { 0%,100%{transform:translateY(0)} 30%{transform:translateY(-20px)} 60%{transform:translateY(-8px)} }
-@-webkit-keyframes fadeIn   { from{opacity:0;-webkit-transform:scale(.95);transform:scale(.95)} to{opacity:1;-webkit-transform:scale(1);transform:scale(1)} }
-@keyframes fadeIn           { from{opacity:0;transform:scale(.95)} to{opacity:1;transform:scale(1)} }
-@-webkit-keyframes shakeIn  { 0%{opacity:0;-webkit-transform:translateX(-12px);transform:translateX(-12px)} 40%{-webkit-transform:translateX(8px);transform:translateX(8px)} 70%{-webkit-transform:translateX(-4px);transform:translateX(-4px)} 100%{opacity:1;-webkit-transform:translateX(0);transform:translateX(0)} }
-@keyframes shakeIn          { 0%{opacity:0;transform:translateX(-12px)} 40%{transform:translateX(8px)} 70%{transform:translateX(-4px)} 100%{opacity:1;transform:translateX(0)} }
-
-.fade-in  { -webkit-animation: fadeIn  0.35s ease; animation: fadeIn  0.35s ease; }
-.shake-in { -webkit-animation: shakeIn 0.5s  ease; animation: shakeIn 0.5s  ease; }
+.screen-title-row .screen-title { -webkit-box-flex:1; -ms-flex:1; flex:1; }
+@keyframes fadeDown         { from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)} }
+@-webkit-keyframes pulse    { 0%,100%{-webkit-transform:scale(1);transform:scale(1)}50%{-webkit-transform:scale(1.06);transform:scale(1.06)} }
+@keyframes pulse            { 0%,100%{transform:scale(1)}50%{transform:scale(1.06)} }
+@-webkit-keyframes bounce   { 0%,100%{-webkit-transform:translateY(0);transform:translateY(0)}30%{-webkit-transform:translateY(-20px);transform:translateY(-20px)}60%{-webkit-transform:translateY(-8px);transform:translateY(-8px)} }
+@keyframes bounce           { 0%,100%{transform:translateY(0)}30%{transform:translateY(-20px)}60%{transform:translateY(-8px)} }
+@-webkit-keyframes fadeIn   { from{opacity:0;-webkit-transform:scale(.95);transform:scale(.95)}to{opacity:1;-webkit-transform:scale(1);transform:scale(1)} }
+@keyframes fadeIn           { from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)} }
+@-webkit-keyframes shakeIn  { 0%{opacity:0;-webkit-transform:translateX(-12px);transform:translateX(-12px)}40%{-webkit-transform:translateX(8px);transform:translateX(8px)}70%{-webkit-transform:translateX(-4px);transform:translateX(-4px)}100%{opacity:1;-webkit-transform:translateX(0);transform:translateX(0)} }
+@keyframes shakeIn          { 0%{opacity:0;transform:translateX(-12px)}40%{transform:translateX(8px)}70%{transform:translateX(-4px)}100%{opacity:1;transform:translateX(0)} }
+.fade-in  { -webkit-animation:fadeIn  .35s ease both; animation:fadeIn  .35s ease both; }
+.shake-in { -webkit-animation:shakeIn .5s  ease both; animation:shakeIn .5s  ease both; }
 </style>
 
 </head>
@@ -857,7 +327,8 @@ ANIMATIONS
     <div class="title-main">ワードウルフ</div>
     <div class="title-sub">WORD WOLF</div>
   </div>
-  <button class="btn-start" onclick="showSetup()">🐺 はじめる</button>
+  <button class="btn-start" onclick="showSetup()" style="margin-bottom:16px;">🐺 はじめる</button>
+  <button class="btn-secondary" style="max-width:280px;" onclick="showWords()">📝 お題を編集</button>
 </div>
 
 <!-- SETUP -->
@@ -890,28 +361,20 @@ ANIMATIONS
   </div>
 
   <div class="section-card">
-    <span class="section-label">🌀 大逆転モード</span>
-    <div class="reversal-toggle" id="reversal-toggle" onclick="toggleReversal()">
+    <span class="section-label">🎛️ オプション</span>
+    <div class="toggle-row" id="toggle-reversal" onclick="toggleOption('reversal')">
       <div class="toggle-label-wrap">
-        <div class="toggle-label-main">🐺 大逆転モード</div>
-        <div class="toggle-label-sub">追放後にウルフが逆転できる！</div>
+        <div class="toggle-label-main">🌀 大逆転モード</div>
+        <div class="toggle-label-sub">追放後ウルフが答えたら正解/不正解を判定</div>
       </div>
-      <div class="toggle-switch" id="reversal-switch"></div>
+      <div class="toggle-switch" id="sw-reversal"></div>
     </div>
-    <div class="reversal-options" id="reversal-options">
-      <div style="font-size:12px;color:#888899;margin-top:10px;margin-bottom:4px;">逆転の条件：</div>
-      <div class="reversal-opt selected" id="ropt-guess" onclick="selectReversalType(event,'guess')">
-        <div class="reversal-opt-title">🎯 お題当て逆転</div>
-        <div class="reversal-opt-desc">追放後、市民のお題を当てたら逆転勝利！</div>
+    <div class="toggle-row" id="toggle-hint" onclick="toggleOption('hint')" style="margin-top:10px;">
+      <div class="toggle-label-wrap">
+        <div class="toggle-label-main">💡 役割ヒント表示</div>
+        <div class="toggle-label-sub">お題確認時に「ウルフかも」のヒントを表示</div>
       </div>
-      <div class="reversal-opt" id="ropt-confess" onclick="selectReversalType(event,'confess')">
-        <div class="reversal-opt-title">🙋 自白逆転</div>
-        <div class="reversal-opt-desc">「自分がウルフ！」と宣言してお題を当てたら逆転！</div>
-      </div>
-      <div class="reversal-opt" id="ropt-both" onclick="selectReversalType(event,'both')">
-        <div class="reversal-opt-title">✨ 両方あり</div>
-        <div class="reversal-opt-desc">どちらの方法でも逆転できる！</div>
-      </div>
+      <div class="toggle-switch" id="sw-hint"></div>
     </div>
   </div>
 
@@ -920,20 +383,62 @@ ANIMATIONS
 
 </div>
 
+<!-- WORD EDITOR -->
+
+<div id="words-screen" class="screen">
+  <div class="screen-title">📝 お題リスト</div>
+
+  <div class="words-stats" id="words-stats"></div>
+  <div style="font-size:12px;color:#888899;text-align:center;margin-top:-8px;">お題AとBはゲームごとにランダムで市民／ウルフに割り当てられます</div>
+
+  <div class="section-card">
+    <div class="section-label-row">
+      <span class="section-label" style="margin-bottom:0;">お題ペア一覧</span>
+      <button class="btn-sm-add" onclick="addWordPair()">＋ 追加</button>
+    </div>
+    <div class="word-pair-list" id="word-pair-list"></div>
+  </div>
+
+<button class="btn-secondary" onclick="showScreen('title-screen')">← もどる</button>
+
+</div>
+
+<!-- 中止確認オーバーレイ -->
+
+<div id="abort-overlay" class="abort-overlay hidden">
+  <div class="abort-dialog">
+    <div class="abort-dialog-title">⏹ ゲームを中止</div>
+    <div class="abort-dialog-sub">中止するとゲームの進行が<br>リセットされます。よろしいですか？</div>
+    <div class="abort-dialog-btns">
+      <button class="btn-secondary" onclick="closeAbort()">キャンセル</button>
+      <button class="btn-wolf" onclick="doAbort()">中止する</button>
+    </div>
+  </div>
+</div>
+
 <!-- DEAL -->
 
 <div id="deal-screen" class="screen">
-  <div class="screen-title">📋 お題配布</div>
+  <div class="screen-title-row">
+    <div class="screen-title">📋 お題配布</div>
+    <button class="btn-abort" onclick="openAbort()">⏹ 中止</button>
+  </div>
   <div class="deal-instruction">順番にタップして自分のお題を確認してください。<br>他の人に見せないように！</div>
   <div class="progress-dots" id="progress-dots"></div>
   <div class="wolf-count-badge" id="wolf-count-badge"></div>
   <div class="reversal-info-badge" id="reversal-info-badge" style="display:none;">🌀 大逆転モード ON — 追放後にウルフの逆転チャンスあり！</div>
-  <div id="deal-cards" style="width:100%;"></div>
+  <button class="btn-secondary" onclick="redealGame()" style="font-size:14px;padding:10px;">🔀 このお題やったことある（再抽選）</button>
+  <div id="deal-cards"></div>
 </div>
 
 <!-- WORD OVERLAY -->
 
 <div id="word-overlay" class="overlay hidden">
+  <!-- オーバーレイ内の上部ボタン行 -->
+  <div style="display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;width:100%;max-width:340px;">
+    <button class="btn-abort" onclick="redealFromOverlay()">🔀 再抽選</button>
+    <button class="btn-abort" onclick="abortFromOverlay()">⏹ 中止</button>
+  </div>
   <div class="overlay-player">あなたのお題</div>
   <div class="overlay-name" id="overlay-name"></div>
   <div class="overlay-word" id="overlay-word"></div>
@@ -945,10 +450,13 @@ ANIMATIONS
 <!-- DISCUSSION -->
 
 <div id="discussion-screen" class="screen">
-  <div class="screen-title">💬 話し合い</div>
+  <div class="screen-title-row">
+    <div class="screen-title">💬 話し合い</div>
+    <button class="btn-abort" onclick="openAbort()">⏹ 中止</button>
+  </div>
   <div class="timer-circle">
     <svg class="timer-svg" viewBox="0 0 160 160">
-      <circle class="timer-bg" cx="80" cy="80" r="70"/>
+      <circle class="timer-bg"  cx="80" cy="80" r="70"/>
       <circle class="timer-arc" id="timer-arc" cx="80" cy="80" r="70"/>
     </svg>
     <div class="timer-text" id="timer-text">3:00</div>
@@ -967,7 +475,10 @@ ANIMATIONS
 <!-- VOTE -->
 
 <div id="vote-screen" class="screen">
-  <div class="screen-title">🗳️ 投票</div>
+  <div class="screen-title-row">
+    <div class="screen-title">🗳️ 投票</div>
+    <button class="btn-abort" onclick="openAbort()">⏹ 中止</button>
+  </div>
   <div class="vote-instruction">ウルフだと思う人をタップ！（複数可）</div>
   <div class="vote-list" id="vote-list"></div>
   <button class="btn-primary" id="result-btn" onclick="processVoteResult()" disabled>結果へ進む →</button>
@@ -977,23 +488,27 @@ ANIMATIONS
 <!-- REVERSAL -->
 
 <div id="reversal-screen" class="screen">
+  <div class="screen-title-row" style="margin-bottom:0;">
+    <div style="-webkit-box-flex:1;-ms-flex:1;flex:1;"></div>
+    <button class="btn-abort" onclick="openAbort()">⏹ 中止</button>
+  </div>
   <div class="reversal-banner shake-in">
     <div style="font-size:48px;">🌀</div>
     <div class="reversal-big-title">大逆転チャンス！</div>
-    <div class="reversal-desc" id="reversal-desc"></div>
+    <div class="reversal-sub">追放されたウルフに最後のチャンス！<br>市民のお題を当てれば大逆転勝利！</div>
   </div>
-  <div class="wolf-box" id="wolf-box"></div>
-  <div class="guess-area" id="guess-area" style="display:none;">
-    <div class="guess-label">市民のお題は何だと思う？</div>
-    <input type="text" class="guess-input" id="guess-input" placeholder="お題を入力...">
-    <button class="btn-purple" onclick="checkGuess()">🎯 答える！</button>
+  <div class="wolf-answer-box">
+    <div class="wolf-answer-label">🐺 ウルフのお題（自分のお題）</div>
+    <div class="wolf-answer-word" id="reversal-wolf-word"></div>
+    <div class="wolf-answer-hint">「市民のお題は何？」と答えてもらってください</div>
   </div>
-  <div class="guess-area" id="confess-area" style="display:none;">
-    <div class="guess-label">「自分がウルフ！」と宣言して市民のお題も当てよう！</div>
-    <input type="text" class="guess-input" id="confess-input" placeholder="市民のお題は...">
-    <button class="btn-purple" onclick="checkConfess()">🙋 宣言する！</button>
+  <div class="judge-who" id="reversal-wolf-names"></div>
+  <div style="font-size:13px;color:#888899;text-align:center;">ウルフが答えたら正解か不正解か判定してください</div>
+  <div class="judge-row">
+    <button class="btn-green"  onclick="judgeReversal(true)">⭕ 正解！<br><span style="font-size:13px;font-weight:400;">ウルフの逆転勝利</span></button>
+    <button class="btn-wolf" onclick="judgeReversal(false)">✕ 不正解<br><span style="font-size:13px;font-weight:400;">市民の勝利</span></button>
   </div>
-  <button class="btn-secondary" onclick="showResult(false)">スキップ（逆転しない）</button>
+  <button class="btn-secondary" onclick="showResult(false)">スキップ（逆転なし）</button>
 </div>
 
 <!-- RESULT -->
@@ -1001,78 +516,163 @@ ANIMATIONS
 <div id="result-screen" class="screen">
   <div class="result-emoji" id="result-emoji"></div>
   <div class="result-title" id="result-title"></div>
-  <div class="result-desc" id="result-desc"></div>
+  <div class="result-desc"  id="result-desc"></div>
+
+  <!-- お題答え合わせ -->
+
   <div class="result-card">
     <div class="result-card-label">お題の答え</div>
     <div class="result-word-row">
       <div class="word-box cbox"><div class="box-label">市民のお題</div><div class="box-word" id="r-citizen"></div></div>
       <div class="word-box wbox"><div class="box-label">ウルフのお題</div><div class="box-word" id="r-wolf-word"></div></div>
     </div>
-    <div class="wolf-row">
-      <div class="wolf-row-label">🐺 ウルフは...</div>
-      <div class="wolf-row-names" id="r-wolf-names"></div>
-    </div>
   </div>
-  <button class="btn-primary" onclick="playAgain()">🔄 もう一度遊ぶ</button>
-  <button class="btn-secondary" onclick="showScreen('title-screen')">🏠 タイトルへ</button>
+
+  <!-- プレイヤー別一覧 -->
+
+  <div class="result-card">
+    <div class="result-card-label">みんなのお題</div>
+    <div class="player-result-list" id="player-result-list"></div>
+  </div>
+
+<button class="btn-primary" onclick="playAgain()">🔄 もう一度遊ぶ</button>
+<button class="btn-secondary" onclick="showScreen('title-screen')">🏠 タイトルへ</button>
+
 </div>
 
-</div><!-- /#app -->
+</div>
 
 <script>
-/* ─── WORD DATA ─── */
-var WORD_PAIRS=[
-  ["ラーメン","うどん"],["すし","刺身"],["カレー","シチュー"],
-  ["コーヒー","紅茶"],["バーガー","ホットドッグ"],["ピザ","グラタン"],
-  ["アイスクリーム","シャーベット"],["ケーキ","プリン"],["チョコレート","キャラメル"],
-  ["おにぎり","サンドイッチ"],["焼肉","しゃぶしゃぶ"],["たこやき","お好み焼き"],
-  ["コーラ","サイダー"],["ビール","ワイン"],["いちご","さくらんぼ"],
-  ["犬","猫"],["ライオン","トラ"],["イルカ","クジラ"],
-  ["ハムスター","リス"],["カエル","トカゲ"],["パンダ","コアラ"],
-  ["ペンギン","アザラシ"],["キリン","シマウマ"],["タコ","イカ"],
-  ["海","プール"],["山","丘"],["電車","バス"],
-  ["飛行機","ヘリコプター"],["映画館","劇場"],["スーパー","コンビニ"],
-  ["図書館","書店"],["病院","クリニック"],["学校","塾"],
-  ["サッカー","ラグビー"],["野球","ソフトボール"],["テニス","バドミントン"],
-  ["マンガ","アニメ"],["ゲーム","おもちゃ"],["ギター","ベース"],
-  ["スマホ","タブレット"],["テレビ","パソコン"],["お風呂","シャワー"],
-  ["昼寝","仮眠"],["散歩","ジョギング"],["掃除","洗濯"],
-  ["桜","梅"],["雪","雨"],["温泉","銭湯"],["神社","お寺"],["新幹線","特急"]
-];
+/* ════════════════════════
+   内蔵バックアップお題（なし）
+════════════════════════ */
+var BUILTIN_PAIRS=[];
 
-/* ─── STATE ─── */
+/* ════════════════════════
+   LOCAL STORAGE キー
+════════════════════════ */
+var LS_NAMES    = 'ww_names';
+var LS_PAIRS    = 'ww_pairs';
+var LS_REVERSAL = 'ww_reversal';
+var LS_HINT     = 'ww_hint';
+var LS_TIMER    = 'ww_timer';
+
+function lsGet(k,def){ try{ var v=localStorage.getItem(k); return v!==null?JSON.parse(v):def; }catch(e){ return def; } }
+function lsSet(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+
+/* ════════════════════════
+   STATE
+════════════════════════ */
 var S={
+  wordPairs: lsGet(LS_PAIRS, BUILTIN_PAIRS.slice()),
   playerCount:4, playerNames:[],
-  timerSecs:180, reversalEnabled:false, reversalType:'guess',
+  timerSecs:   lsGet(LS_TIMER,    180),
+  reversalEnabled: lsGet(LS_REVERSAL, true),   /* 初期値: 大逆転モード ON */
+  hintEnabled:     lsGet(LS_HINT,     false),  /* 初期値: ヒント OFF     */
   roles:[], citizenWord:'', wolfWord:'',
   dealIdx:0,
   timerHandle:null, remaining:0, paused:false,
   votes:{}, mostVoted:[], wolfCaught:false
 };
 
-/* ─── LOCAL STORAGE ─── */
-var LS='ww_names';
-function saveNames(a){try{localStorage.setItem(LS,JSON.stringify(a));}catch(e){}}
-function loadNames(){try{var v=localStorage.getItem(LS);return v?JSON.parse(v):[];}catch(e){return[];}}
+/* ════════════════════════
+   JSON読み込み
+   words.json と words_family.json を両方読み込んで合算
+   localStorageに保存済みでも毎回読み直して最新を反映
+════════════════════════ */
+var JSON_FILES = ['words.json', 'words_family.json'];
+var jsonLoaded = {};   /* ファイル名 → ペア配列 */
+var jsonPending = 0;   /* 読み込み待ちカウント */
 
-/* ─── UTILS ─── */
+function tryLoadJSON(){
+  jsonLoaded = {};
+  jsonPending = JSON_FILES.length;
+  for(var i=0;i<JSON_FILES.length;i++){
+    loadOneJSON(JSON_FILES[i]);
+  }
+}
+
+function loadOneJSON(filename){
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', filename, true);
+  xhr.onreadystatechange = function(){
+    if(xhr.readyState !== 4) return;
+    if((xhr.status===200||xhr.status===0) && xhr.responseText){
+      try{
+        var data = JSON.parse(xhr.responseText);
+        var pairs = [];
+        if(data.categories){
+          for(var i=0;i<data.categories.length;i++){
+            var cat = data.categories[i];
+            if(cat.pairs) for(var j=0;j<cat.pairs.length;j++) pairs.push(cat.pairs[j]);
+          }
+        }
+        if(pairs.length > 0) jsonLoaded[filename] = pairs;
+      }catch(e){}
+    }
+    jsonPending--;
+    if(jsonPending <= 0) mergeLoadedJSON();
+  };
+  xhr.onerror = function(){ jsonPending--; if(jsonPending<=0) mergeLoadedJSON(); };
+  try{ xhr.send(); }catch(e){ jsonPending--; if(jsonPending<=0) mergeLoadedJSON(); }
+}
+
+function mergeLoadedJSON(){
+  /* 全JSONのペアをフラットに集める */
+  var allFromJSON = [];
+  for(var i=0;i<JSON_FILES.length;i++){
+    var fp = jsonLoaded[JSON_FILES[i]];
+    if(fp) for(var j=0;j<fp.length;j++) allFromJSON.push(fp[j]);
+  }
+
+  /* localStorageに保存済みの編集内容がある場合：
+     編集済みペアを優先し、JSONにしかない新規ペアを末尾に追加 */
+  var lsPairs = lsGet(LS_PAIRS, null);
+  if(lsPairs !== null && lsPairs.length > 0){
+    var base = lsPairs.slice();
+    for(var k=0;k<allFromJSON.length;k++){
+      var p = allFromJSON[k];
+      var found = false;
+      for(var m=0;m<base.length;m++){
+        if(base[m][0]===p[0] && base[m][1]===p[1]){ found=true; break; }
+      }
+      if(!found) base.push(p);
+    }
+    S.wordPairs = base;
+    lsSet(LS_PAIRS, base);
+  } else {
+    /* 初回またはlocalStorageが空：JSONから全部読む */
+    S.wordPairs = allFromJSON;
+    lsSet(LS_PAIRS, allFromJSON);
+  }
+  renderWordStats();
+  renderWordList();
+}
+
+/* ════════════════════════
+   UTILS
+════════════════════════ */
 function showScreen(id){
-  var screens=document.querySelectorAll('.screen');
-  for(var i=0;i<screens.length;i++) screens[i].classList.remove('active');
+  var all=document.querySelectorAll('.screen');
+  for(var i=0;i<all.length;i++) all[i].classList.remove('active');
   document.getElementById(id).classList.add('active');
   window.scrollTo(0,0);
 }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-function esc(s){
-  return String(s)
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;');
+/* ════════════════════════
+   SETUP
+════════════════════════ */
+function showSetup(){
+  showScreen('setup-screen');
+  renderPlayerInputs();
+  /* タイマーボタンの選択状態を復元 */
+  var btns=document.querySelectorAll('.timer-btn');
+  var timerMap=[120,180,300,0];
+  for(var i=0;i<btns.length;i++){
+    btns[i].classList.toggle('selected', timerMap[i]===S.timerSecs);
+  }
 }
-
-/* ─── SETUP ─── */
-function showSetup(){showScreen('setup-screen');renderPlayerInputs();}
 
 function changeCount(d){
   S.playerCount=Math.max(3,Math.min(6,S.playerCount+d));
@@ -1082,10 +682,10 @@ function changeCount(d){
 
 function renderPlayerInputs(){
   var container=document.getElementById('player-inputs');
-  var inputs=container.querySelectorAll('.player-input');
+  var oldIn=container.querySelectorAll('.player-input');
   var cur=[];
-  for(var i=0;i<inputs.length;i++) cur.push(inputs[i].value);
-  var saved=loadNames();
+  for(var x=0;x<oldIn.length;x++) cur.push(oldIn[x].value);
+  var saved=lsGet(LS_NAMES,[]);
   container.innerHTML='';
   for(var j=0;j<S.playerCount;j++){
     var val=(j<cur.length&&cur[j]!=='')?cur[j]:(saved[j]||'');
@@ -1100,84 +700,56 @@ function renderPlayerInputs(){
   attachTouchSort();
 }
 
-/* ─── TOUCH SORT (iOS/Android/Edge対応) ─── */
+/* touch sort */
 function attachTouchSort(){
   var container=document.getElementById('player-inputs');
-  var srcRow=null;
-  var ghost=null;
-  var fingerOffsetY=0;
-
-  function getRows(){ return Array.prototype.slice.call(container.querySelectorAll('.player-row')); }
-
-  function createGhost(row){
-    var g=row.cloneNode(true);
-    var r=row.getBoundingClientRect();
-    g.style.position='fixed';
-    g.style.left=r.left+'px';
-    g.style.top=r.top+'px';
-    g.style.width=r.width+'px';
-    g.style.margin='0';
-    g.style.pointerEvents='none';
-    g.style.zIndex='999';
-    g.style.opacity='0.88';
-    g.style.boxShadow='0 8px 32px rgba(0,0,0,0.7)';
-    g.style.borderColor='#f1c40f';
-    document.body.appendChild(g);
-    return g;
+  var srcRow=null,ghost=null,fingerOffY=0;
+  function rows(){ return Array.prototype.slice.call(container.querySelectorAll('.player-row')); }
+  function mkGhost(row){
+    var g=row.cloneNode(true); var r=row.getBoundingClientRect();
+    g.style.cssText='position:fixed;margin:0;pointer-events:none;z-index:999;opacity:0.88;'+
+      'box-shadow:0 8px 32px rgba(0,0,0,.7);border:2px solid #f1c40f;border-radius:12px;'+
+      'background:#16161f;padding:4px 8px 4px 4px;left:'+r.left+'px;top:'+r.top+'px;width:'+r.width+'px;'+
+      'display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;';
+    document.body.appendChild(g); return g;
   }
-
   container.addEventListener('touchstart',function(e){
-    var handle=e.target;
-    if(!handle||handle.getAttribute('data-role')!=='handle') return;
-    var row=handle.parentNode;
-    if(!row||!row.classList.contains('player-row')) return;
-    srcRow=row;
-    var r=row.getBoundingClientRect();
-    fingerOffsetY=e.touches[0].clientY-r.top;
-    ghost=createGhost(row);
-    row.style.opacity='0.25';
-    e.preventDefault();
+    var t=e.target; if(!t||t.getAttribute('data-role')!=='handle') return;
+    var row=t.parentNode; if(!row||!row.classList.contains('player-row')) return;
+    srcRow=row; var r=row.getBoundingClientRect(); fingerOffY=e.touches[0].clientY-r.top;
+    ghost=mkGhost(row); row.style.opacity='0.25'; e.preventDefault();
   },{passive:false});
-
   container.addEventListener('touchmove',function(e){
-    if(!srcRow||!ghost) return;
-    e.preventDefault();
-    var ty=e.touches[0].clientY;
-    ghost.style.top=(ty-fingerOffsetY)+'px';
-    var rows=getRows();
-    for(var i=0;i<rows.length;i++) rows[i].classList.remove('drag-over');
-    for(var j=0;j<rows.length;j++){
-      if(rows[j]===srcRow) continue;
-      var r=rows[j].getBoundingClientRect();
-      if(ty>=r.top&&ty<=r.bottom){ rows[j].classList.add('drag-over'); break; }
+    if(!srcRow||!ghost) return; e.preventDefault();
+    var ty=e.touches[0].clientY; ghost.style.top=(ty-fingerOffY)+'px';
+    var rr=rows();
+    for(var i=0;i<rr.length;i++) rr[i].classList.remove('drag-over');
+    for(var j=0;j<rr.length;j++){
+      if(rr[j]===srcRow) continue; var b=rr[j].getBoundingClientRect();
+      if(ty>=b.top&&ty<=b.bottom){rr[j].classList.add('drag-over');break;}
     }
   },{passive:false});
-
-  container.addEventListener('touchend',function(e){
+  container.addEventListener('touchend',function(){
     if(!srcRow) return;
-    if(ghost){ ghost.parentNode&&ghost.parentNode.removeChild(ghost); ghost=null; }
+    if(ghost){if(ghost.parentNode)ghost.parentNode.removeChild(ghost);ghost=null;}
     srcRow.style.opacity='';
-    var rows=getRows();
-    var target=null;
-    for(var i=0;i<rows.length;i++){
-      if(rows[i].classList.contains('drag-over')){ target=rows[i]; break; }
-    }
-    for(var j=0;j<rows.length;j++) rows[j].classList.remove('drag-over');
-    if(target&&target!==srcRow){
-      var si=rows.indexOf(srcRow), ti=rows.indexOf(target);
-      if(si<ti) container.insertBefore(srcRow,target.nextSibling);
-      else container.insertBefore(srcRow,target);
+    var rr=rows(),tgt=null;
+    for(var i=0;i<rr.length;i++) if(rr[i].classList.contains('drag-over')){tgt=rr[i];break;}
+    for(var j=0;j<rr.length;j++) rr[j].classList.remove('drag-over');
+    if(tgt&&tgt!==srcRow){
+      var si=rr.indexOf(srcRow),ti=rr.indexOf(tgt);
+      if(si<ti) container.insertBefore(srcRow,tgt.nextSibling);
+      else container.insertBefore(srcRow,tgt);
       renumberRows();
     }
     srcRow=null;
   });
 }
-
 function renumberRows(){
-  var rows=document.querySelectorAll('#player-inputs .player-row');
-  for(var i=0;i<rows.length;i++){
-    rows[i].querySelector('.row-num').textContent=i+1;
-    rows[i].querySelector('.player-input').placeholder='プレイヤー '+(i+1);
+  var rr=document.querySelectorAll('#player-inputs .player-row');
+  for(var i=0;i<rr.length;i++){
+    rr[i].querySelector('.row-num').textContent=i+1;
+    rr[i].querySelector('.player-input').placeholder='プレイヤー '+(i+1);
   }
 }
 
@@ -1186,33 +758,119 @@ function selectTimer(btn,secs){
   for(var i=0;i<btns.length;i++) btns[i].classList.remove('selected');
   btn.classList.add('selected');
   S.timerSecs=secs;
+  lsSet(LS_TIMER,secs); /* タイマーも記憶 */
 }
 
-function toggleReversal(){
-  S.reversalEnabled=!S.reversalEnabled;
-  document.getElementById('reversal-switch').classList.toggle('on',S.reversalEnabled);
-  document.getElementById('reversal-toggle').classList.toggle('on',S.reversalEnabled);
-  document.getElementById('reversal-options').classList.toggle('visible',S.reversalEnabled);
+function toggleOption(key){
+  if(key==='reversal'){
+    S.reversalEnabled=!S.reversalEnabled;
+    lsSet(LS_REVERSAL,S.reversalEnabled);
+    document.getElementById('sw-reversal').classList.toggle('on',S.reversalEnabled);
+    document.getElementById('toggle-reversal').classList.toggle('on',S.reversalEnabled);
+  } else if(key==='hint'){
+    S.hintEnabled=!S.hintEnabled;
+    lsSet(LS_HINT,S.hintEnabled);
+    document.getElementById('sw-hint').classList.toggle('on',S.hintEnabled);
+    document.getElementById('toggle-hint').classList.toggle('on',S.hintEnabled);
+  }
 }
 
-function selectReversalType(e,t){
-  e.stopPropagation();
-  S.reversalType=t;
-  var opts=['guess','confess','both'];
-  for(var i=0;i<opts.length;i++)
-    document.getElementById('ropt-'+opts[i]).classList.toggle('selected',opts[i]===t);
+/* ════════════════════════
+   WORD EDITOR
+════════════════════════ */
+function showWords(){
+  renderWordStats();
+  renderWordList();
+  showScreen('words-screen');
 }
 
-/* ─── GAME START ─── */
+function renderWordStats(){
+  var el=document.getElementById('words-stats');
+  if(el) el.innerHTML='現在 <span>'+S.wordPairs.length+'</span> ペアあります';
+}
+
+function renderWordList(){
+  var list=document.getElementById('word-pair-list');
+  if(!list) return;
+  list.innerHTML='';
+  for(var i=0;i<S.wordPairs.length;i++){
+    list.appendChild(makePairRow(i, S.wordPairs[i][0], S.wordPairs[i][1]));
+  }
+  /* 追加用の空行 */
+  list.appendChild(makeAddRow());
+}
+
+function makePairRow(idx, a, b){
+  var row=document.createElement('div');
+  row.className='word-pair-row';
+  row.dataset.idx=idx;
+  row.innerHTML=
+    '<div class="word-pair-inputs">'+
+      '<input class="word-input" type="text" value="'+esc(a)+'" placeholder="お題A" onchange="updatePair('+idx+',0,this.value)">'+
+      '<span class="word-sep">vs</span>'+
+      '<input class="word-input" type="text" value="'+esc(b)+'" placeholder="お題B" onchange="updatePair('+idx+',1,this.value)">'+
+    '</div>'+
+    '<button class="btn-sm-danger" onclick="deletePair('+idx+')" style="margin-left:8px;">✕</button>';
+  return row;
+}
+
+function makeAddRow(){
+  var row=document.createElement('div');
+  row.className='word-pair-row word-add-row';
+  row.id='add-row';
+  row.innerHTML=
+    '<div class="word-pair-inputs">'+
+      '<input class="word-input" type="text" id="new-a" placeholder="お題A">'+
+      '<span class="word-sep">vs</span>'+
+      '<input class="word-input" type="text" id="new-b" placeholder="お題B">'+
+    '</div>'+
+    '<button class="btn-sm-add" onclick="addWordPair()" style="margin-left:8px;">追加</button>';
+  return row;
+}
+
+function updatePair(idx,col,val){
+  if(idx<0||idx>=S.wordPairs.length) return;
+  S.wordPairs[idx][col]=val.trim();
+  lsSet(LS_PAIRS,S.wordPairs);
+  renderWordStats();
+}
+
+function deletePair(idx){
+  if(idx<0||idx>=S.wordPairs.length) return;
+  S.wordPairs.splice(idx,1);
+  lsSet(LS_PAIRS,S.wordPairs);
+  renderWordStats();
+  renderWordList();
+}
+
+function addWordPair(){
+  var a=document.getElementById('new-a');
+  var b=document.getElementById('new-b');
+  if(!a||!b) return;
+  var av=a.value.trim(), bv=b.value.trim();
+  if(!av||!bv){ a.style.borderBottom='2px solid #e74c3c'; b.style.borderBottom='2px solid #e74c3c'; return; }
+  S.wordPairs.push([av,bv]);
+  lsSet(LS_PAIRS,S.wordPairs);
+  renderWordStats();
+  renderWordList();
+  /* リストの一番下にスクロール */
+  var list=document.getElementById('word-pair-list');
+  if(list) list.scrollTop=list.scrollHeight;
+}
+
+/* ════════════════════════
+   GAME START
+════════════════════════ */
 function startGame(){
   var inputs=document.querySelectorAll('#player-inputs .player-input');
   S.playerNames=[];
   for(var i=0;i<inputs.length;i++)
     S.playerNames.push(inputs[i].value.trim()||'プレイヤー '+(i+1));
   S.playerCount=S.playerNames.length;
-  saveNames(S.playerNames);
+  lsSet(LS_NAMES,S.playerNames);
 
-  var pair=WORD_PAIRS[Math.floor(Math.random()*WORD_PAIRS.length)];
+  var pairs=S.wordPairs.length>0?S.wordPairs:BUILTIN_PAIRS;
+  var pair=pairs[Math.floor(Math.random()*pairs.length)];
   if(Math.random()<0.5){S.citizenWord=pair[0];S.wolfWord=pair[1];}
   else{S.citizenWord=pair[1];S.wolfWord=pair[0];}
 
@@ -1223,8 +881,7 @@ function startGame(){
   for(var k=0;k<S.playerCount;k++) pool.push(k);
   for(var w=0;w<wolfCount;w++){
     var ri=Math.floor(Math.random()*pool.length);
-    S.roles[pool[ri]]='wolf';
-    pool.splice(ri,1);
+    S.roles[pool[ri]]='wolf'; pool.splice(ri,1);
   }
 
   S.dealIdx=0; S.votes={}; S.mostVoted=[]; S.wolfCaught=false;
@@ -1233,15 +890,15 @@ function startGame(){
   showScreen('deal-screen');
 }
 
-/* ─── DEAL ─── */
+/* ════════════════════════
+   DEAL
+════════════════════════ */
 function setupDealScreen(){
-  var dots='';
+  var html='';
   for(var i=0;i<S.playerNames.length;i++)
-    dots+='<div class="dot'+(i===0?' current':'')+'" id="dot-'+i+'"></div>';
-  document.getElementById('progress-dots').innerHTML=dots;
-
-  var wc=0;
-  for(var j=0;j<S.roles.length;j++) if(S.roles[j]==='wolf') wc++;
+    html+='<div class="dot'+(i===0?' current':'')+'" id="dot-'+i+'"></div>';
+  document.getElementById('progress-dots').innerHTML=html;
+  var wc=0; for(var j=0;j<S.roles.length;j++) if(S.roles[j]==='wolf') wc++;
   document.getElementById('wolf-count-badge').innerHTML='🐺 ウルフは <span>'+wc+'人</span>います';
   document.getElementById('reversal-info-badge').style.display=S.reversalEnabled?'block':'none';
   renderDealCard();
@@ -1264,20 +921,24 @@ function renderDealCard(){
     '<div class="player-card fade-in" onclick="onDealTap()">'+
       '<div class="player-card-name">👤 '+esc(name)+'</div>'+
       '<div class="player-card-hint">タップしてお題を確認</div>'+
-      '<div class="tap-icon">👆</div>'+
+      '<span class="tap-icon">👆</span>'+
     '</div>';
 }
 
-function onDealTap(){ openWordOverlay(S.dealIdx); }
+function onDealTap(){ openOverlay(S.dealIdx); }
 
-function openWordOverlay(idx){
-  var role=S.roles[idx];
-  var word=role==='wolf'?S.wolfWord:S.citizenWord;
+function openOverlay(idx){
+  var role=S.roles[idx], word=role==='wolf'?S.wolfWord:S.citizenWord;
   document.getElementById('overlay-name').textContent=S.playerNames[idx];
   document.getElementById('overlay-word').textContent=word;
   document.getElementById('overlay-word').style.color=role==='wolf'?'#e74c3c':'#2ecc71';
-  document.getElementById('overlay-role').textContent=
-    role==='wolf'?'🐺 あなたはウルフかもしれない...':'😊 話し合いを楽しもう';
+  var roleEl=document.getElementById('overlay-role');
+  if(S.hintEnabled){
+    roleEl.textContent=role==='wolf'?'🐺 あなたはウルフかもしれない...':'😊 話し合いを楽しもう';
+    roleEl.className='overlay-role';
+  } else {
+    roleEl.textContent=''; roleEl.className='overlay-role hidden-hint';
+  }
   document.getElementById('word-overlay').classList.remove('hidden');
 }
 
@@ -1286,101 +947,98 @@ function closeOverlay(){
   var dot=document.getElementById('dot-'+S.dealIdx);
   if(dot){dot.classList.remove('current');dot.classList.add('done');}
   S.dealIdx++;
-  if(S.dealIdx<S.playerCount){
-    var nd=document.getElementById('dot-'+S.dealIdx);
-    if(nd) nd.classList.add('current');
-  }
+  if(S.dealIdx<S.playerCount){ var nd=document.getElementById('dot-'+S.dealIdx); if(nd) nd.classList.add('current'); }
   renderDealCard();
 }
 
-/* ─── DISCUSSION ─── */
+/* ════════════════════════
+   DISCUSSION
+════════════════════════ */
 function startDiscussion(){
   S.remaining=S.timerSecs; S.paused=false;
   document.getElementById('pause-btn').textContent='⏸ 一時停止';
   document.getElementById('pause-btn').style.display='';
   document.getElementById('timer-arc').style.stroke='#f1c40f';
+  document.getElementById('timer-text').style.color='#f1c40f';
   updateTimerDisplay();
   showScreen('discussion-screen');
-  if(S.timerSecs>0){ startTimerTick(); }
-  else{
+  if(S.timerSecs>0){
+    requestWakeLock(); /* スリープ防止 開始 */
+    startTimerTick();
+  } else {
     document.getElementById('timer-text').textContent='∞';
     document.getElementById('timer-arc').style.strokeDashoffset='440';
     document.getElementById('pause-btn').style.display='none';
   }
 }
-
 function startTimerTick(){
   clearInterval(S.timerHandle);
   S.timerHandle=setInterval(function(){
     if(S.paused) return;
-    S.remaining--;
-    updateTimerDisplay();
+    S.remaining--; updateTimerDisplay();
     if(S.remaining<=0){
       clearInterval(S.timerHandle);
+      S.timerHandle=null;
+      releaseWakeLock(); /* スリープ防止 解放 */
       document.getElementById('timer-text').textContent='⏰';
       document.getElementById('timer-arc').style.stroke='#e74c3c';
+      document.getElementById('timer-text').style.color='#e74c3c';
     }
   },1000);
 }
-
 function updateTimerDisplay(){
   var t=S.remaining;
-  document.getElementById('timer-text').textContent=
-    Math.floor(t/60)+':'+(t%60<10?'0':'')+(t%60);
+  document.getElementById('timer-text').textContent=Math.floor(t/60)+':'+(t%60<10?'0':'')+(t%60);
   var frac=S.timerSecs>0?(t/S.timerSecs):1;
   document.getElementById('timer-arc').style.strokeDashoffset=440*(1-frac);
-  if(t<=30&&t>0) document.getElementById('timer-arc').style.stroke='#e74c3c';
+  if(t<=30&&t>0){ document.getElementById('timer-arc').style.stroke='#e74c3c'; document.getElementById('timer-text').style.color='#e74c3c'; }
 }
-
 function pauseResume(){
   S.paused=!S.paused;
   document.getElementById('pause-btn').textContent=S.paused?'▶ 再開':'⏸ 一時停止';
 }
-
 function goToVote(){clearInterval(S.timerHandle);buildVoteScreen();showScreen('vote-screen');}
 
-/* ─── VOTE ─── */
+/* ════════════════════════
+   VOTE
+════════════════════════ */
 function buildVoteScreen(){
   S.votes={};
   for(var i=0;i<S.playerNames.length;i++) S.votes[S.playerNames[i]]=0;
   renderVoteList();
   document.getElementById('result-btn').disabled=true;
 }
-
 function renderVoteList(){
   var html='';
   for(var i=0;i<S.playerNames.length;i++){
-    var name=S.playerNames[i];
-    var cnt=S.votes[name]||0;
+    var name=S.playerNames[i],cnt=S.votes[name]||0;
     html+='<div class="vote-item'+(cnt>0?' voted':'')+'" data-vname="'+esc(name)+'" onclick="onVoteTap(this)">'+
       '<div class="vote-name">👤 '+esc(name)+'</div>'+
-      '<div class="vote-count">'+(cnt>0?cnt:'')+'</div>'+
-      '</div>';
+      '<div class="vote-count">'+(cnt>0?cnt:'')+'</div></div>';
   }
   document.getElementById('vote-list').innerHTML=html;
-  var total=0;
-  for(var k in S.votes) total+=S.votes[k];
+  var total=0; for(var k in S.votes) if(S.votes.hasOwnProperty(k)) total+=S.votes[k];
   document.getElementById('result-btn').disabled=(total===0);
 }
-
 function onVoteTap(el){
   var name=el.getAttribute('data-vname');
-  if(name===null||!(name in S.votes)) return;
+  if(!name||!(name in S.votes)) return;
   S.votes[name]=S.votes[name]>0?0:1;
   renderVoteList();
 }
-
 function resetVotes(){
   for(var i=0;i<S.playerNames.length;i++) S.votes[S.playerNames[i]]=0;
   renderVoteList();
 }
 
-/* ─── PROCESS VOTE ─── */
+/* ════════════════════════
+   PROCESS VOTE
+════════════════════════ */
 function processVoteResult(){
   var maxV=0;
-  for(var n in S.votes) if(S.votes[n]>maxV) maxV=S.votes[n];
+  for(var n in S.votes) if(S.votes.hasOwnProperty(n)&&S.votes[n]>maxV) maxV=S.votes[n];
   S.mostVoted=[];
-  for(var m in S.votes) if(S.votes[m]===maxV&&maxV>0) S.mostVoted.push(m);
+  for(var m in S.votes) if(S.votes.hasOwnProperty(m)&&S.votes[m]===maxV&&maxV>0) S.mostVoted.push(m);
   var wolves=[];
   for(var i=0;i<S.playerNames.length;i++) if(S.roles[i]==='wolf') wolves.push(S.playerNames[i]);
   S.wolfCaught=false;
@@ -1389,69 +1047,172 @@ function processVoteResult(){
   else showResult(false);
 }
 
-/* ─── REVERSAL ─── */
+/* ════════════════════════
+   REVERSAL
+════════════════════════ */
 function showReversalScreen(){
-  var wolves=[];
+  var wolves=[],caught=[];
   for(var i=0;i<S.playerNames.length;i++) if(S.roles[i]==='wolf') wolves.push(S.playerNames[i]);
-  var caught=[];
   for(var j=0;j<S.mostVoted.length;j++) if(wolves.indexOf(S.mostVoted[j])>=0) caught.push(S.mostVoted[j]);
-  var boxHTML='';
-  for(var k=0;k<caught.length;k++) boxHTML+='<div class="wolf-box-name">🐺 '+esc(caught[k])+'</div>';
-  if(S.reversalType==='guess'||S.reversalType==='both')
-    boxHTML+='<div class="wolf-box-hint">市民のお題を当てれば大逆転勝利！</div>';
-  if(S.reversalType==='confess'||S.reversalType==='both')
-    boxHTML+='<div class="wolf-box-hint" style="margin-top:6px;">自白してお題を当てれば逆転！</div>';
-  document.getElementById('wolf-box').innerHTML=boxHTML;
-  var dm={
-    guess:'追放されたウルフに最後のチャンス！\n市民のお題を当てれば大逆転勝利！',
-    confess:'ウルフが自白して市民のお題を当てれば逆転勝利！\n※ 自白なしは無効。',
-    both:'2つの方法で逆転可能！\n① お題を当てる　② 自白してお題を当てる'
-  };
-  document.getElementById('reversal-desc').textContent=dm[S.reversalType];
-  var ga=document.getElementById('guess-area');
-  var ca=document.getElementById('confess-area');
-  ga.style.display='none'; ca.style.display='none';
-  if(S.reversalType==='guess'||S.reversalType==='both'){ga.style.display='flex';document.getElementById('guess-input').value='';}
-  if(S.reversalType==='confess'||S.reversalType==='both'){ca.style.display='flex';document.getElementById('confess-input').value='';}
+  document.getElementById('reversal-wolf-word').textContent=S.wolfWord;
+  document.getElementById('reversal-wolf-names').textContent='🐺 追放：'+caught.join('、');
   showScreen('reversal-screen');
 }
+function judgeReversal(correct){ showResult(correct); }
 
-function norm(s){return s.replace(/\s/g,'').toLowerCase();}
-function wordMatch(g){var a=norm(g),b=norm(S.citizenWord);return a===b||b.indexOf(a)>=0||a.indexOf(b)>=0;}
-function checkGuess(){var g=document.getElementById('guess-input').value.trim();if(!g)return;showResult(wordMatch(g));}
-function checkConfess(){var g=document.getElementById('confess-input').value.trim();if(!g)return;showResult(wordMatch(g));}
-
-/* ─── RESULT ─── */
+/* ════════════════════════
+   RESULT
+════════════════════════ */
 function showResult(reversalWin){
   var wolves=[];
   for(var i=0;i<S.playerNames.length;i++) if(S.roles[i]==='wolf') wolves.push(S.playerNames[i]);
   var emoji=document.getElementById('result-emoji');
   var title=document.getElementById('result-title');
-  var desc=document.getElementById('result-desc');
+  var desc =document.getElementById('result-desc');
   if(reversalWin){
     emoji.textContent='🌀'; title.textContent='大逆転！ウルフの勝利！';
     title.className='result-title reversal-wins';
-    desc.textContent='ウルフが見事にお題を当てて大逆転！\n「'+wolves.join('、')+'」の勝利！';
-  }else if(S.wolfCaught){
+    desc.textContent='ウルフが市民のお題を見事に当てて大逆転！\n「'+wolves.join('、')+'」の勝利！';
+  } else if(S.wolfCaught){
     emoji.textContent='🎉'; title.textContent='市民の勝利！';
     title.className='result-title citizen-wins';
-    desc.textContent='ウルフを見つけ出しました！\n「'+S.mostVoted.join('、')+'」が追放されました。'
-      +(S.reversalEnabled?'\nウルフは逆転に失敗しました...':'');
-  }else{
+    desc.textContent='ウルフを見つけ出しました！\n「'+S.mostVoted.join('、')+'」が追放されました。'+
+      (S.reversalEnabled?'\nウルフは正解できませんでした...':'');
+  } else {
     emoji.textContent='🐺'; title.textContent='ウルフの勝利...';
     title.className='result-title wolf-wins';
     desc.textContent='ウルフは生き残りました！\nうまく市民に紛れ込んでいました。';
   }
+
   document.getElementById('r-citizen').textContent=S.citizenWord;
   document.getElementById('r-wolf-word').textContent=S.wolfWord;
-  document.getElementById('r-wolf-names').textContent=wolves.join('、');
+
+  /* プレイヤー別お題一覧 */
+  var listEl=document.getElementById('player-result-list');
+  var html='';
+  for(var j=0;j<S.playerNames.length;j++){
+    var name=S.playerNames[j];
+    var isWolf=(S.roles[j]==='wolf');
+    var word=isWolf?S.wolfWord:S.citizenWord;
+    var wasVoted=(S.mostVoted.indexOf(name)>=0);
+
+    var rowClass='player-result-row '+(isWolf?'is-wolf':'is-citizen');
+    var icon=isWolf?'🐺':'😊';
+    var wordClass=isWolf?'wolf-word':'citizen-word';
+
+    /* バッジ */
+    var badges='';
+    if(isWolf) badges+='<div class="pr-tag tag-wolf">ウルフ</div>';
+    if(wasVoted) badges+='<div class="pr-tag tag-voted">追放票あり</div>';
+
+    html+=
+      '<div class="'+rowClass+'">'+
+        '<div class="pr-icon">'+icon+'</div>'+
+        '<div class="pr-info">'+
+          '<div class="pr-name">'+esc(name)+'</div>'+
+          '<div class="pr-word '+wordClass+'">'+esc(word)+'</div>'+
+        '</div>'+
+        (badges?'<div class="pr-badges">'+badges+'</div>':'')+
+      '</div>';
+  }
+  listEl.innerHTML=html;
+
   showScreen('result-screen');
 }
-
 function playAgain(){showSetup();}
 
-/* ─── INIT ─── */
-renderPlayerInputs();
+/* ════════════════════════
+   中止
+════════════════════════ */
+function openAbort(){
+  document.getElementById('abort-overlay').classList.remove('hidden');
+}
+function closeAbort(){
+  document.getElementById('abort-overlay').classList.add('hidden');
+}
+function doAbort(){
+  clearInterval(S.timerHandle);
+  releaseWakeLock();
+  document.getElementById('abort-overlay').classList.add('hidden');
+  document.getElementById('word-overlay').classList.add('hidden');
+  showScreen('title-screen');
+}
+
+/* オーバーレイ内の中止ボタン（確認ダイアログを経由） */
+function abortFromOverlay(){
+  document.getElementById('word-overlay').classList.add('hidden');
+  openAbort();
+}
+
+/* オーバーレイ内の再抽選ボタン */
+function redealFromOverlay(){
+  document.getElementById('word-overlay').classList.add('hidden');
+  redealGame();
+}
+
+/* ════════════════════════
+   再抽選（やったことある）
+   同じお題が連続しないよう除外して選ぶ
+════════════════════════ */
+function redealGame(){
+  var pairs=S.wordPairs.length>0?S.wordPairs:BUILTIN_PAIRS;
+  var candidates=[];
+  for(var i=0;i<pairs.length;i++){
+    var p=pairs[i];
+    if(p[0]!==S.citizenWord&&p[1]!==S.citizenWord&&
+       p[0]!==S.wolfWord  &&p[1]!==S.wolfWord){
+      candidates.push(p);
+    }
+  }
+  if(candidates.length===0) candidates=pairs;
+  var pair=candidates[Math.floor(Math.random()*candidates.length)];
+  if(Math.random()<0.5){S.citizenWord=pair[0];S.wolfWord=pair[1];}
+  else{S.citizenWord=pair[1];S.wolfWord=pair[0];}
+  S.dealIdx=0;
+  setupDealScreen();
+}
+
+/* ════════════════════════
+   Wake Lock（スリープ防止）
+   タイマー開始時に取得、終了・中止時に解放
+════════════════════════ */
+var wakeLock=null;
+
+function requestWakeLock(){
+  if(!('wakeLock' in navigator)) return;
+  navigator.wakeLock.request('screen').then(function(lock){
+    wakeLock=lock;
+    lock.addEventListener('release',function(){ wakeLock=null; });
+  }).catch(function(){});
+}
+
+function releaseWakeLock(){
+  if(wakeLock){ wakeLock.release().catch(function(){}); wakeLock=null; }
+}
+
+/* ページが再表示されたとき（バックグラウンドから復帰）に再取得 */
+document.addEventListener('visibilitychange',function(){
+  if(document.visibilityState==='visible'&&S.timerHandle&&!S.paused){
+    requestWakeLock();
+  }
+});
+
+/* ════════════════════════
+   INIT — トグルの見た目をStateに同期
+════════════════════════ */
+(function init(){
+  /* 画面回転ロック（縦固定） */
+  if(screen.orientation&&screen.orientation.lock){
+    screen.orientation.lock('portrait').catch(function(){});
+  }
+
+  document.getElementById('sw-reversal').classList.toggle('on',S.reversalEnabled);
+  document.getElementById('toggle-reversal').classList.toggle('on',S.reversalEnabled);
+  document.getElementById('sw-hint').classList.toggle('on',S.hintEnabled);
+  document.getElementById('toggle-hint').classList.toggle('on',S.hintEnabled);
+  tryLoadJSON();
+  renderPlayerInputs();
+})();
 </script>
 
 </body>

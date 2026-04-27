@@ -734,11 +734,11 @@ function renderWordList(){
   var list=document.getElementById('word-pair-list');
   if(!list) return;
   list.innerHTML='';
+  /* 追加用の空行を先頭に表示 */
+  list.appendChild(makeAddRow());
   for(var i=0;i<S.wordPairs.length;i++){
     list.appendChild(makePairRow(i, S.wordPairs[i][0], S.wordPairs[i][1]));
   }
-  /* 追加用の空行 */
-  list.appendChild(makeAddRow());
 }
 
 function makePairRow(idx, a, b){

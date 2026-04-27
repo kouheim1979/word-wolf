@@ -131,6 +131,25 @@ button:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--c-line);}
   gap:10px;
   text-align:center;
 }
+.complete-card{
+  width:100%;
+  min-height:190px;
+  padding:18px 14px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  text-align:center;
+}
+.complete-icon{font-size:32px;line-height:1;}
+.complete-title{
+  font-family:"M PLUS Rounded 1c","Zen Maru Gothic",sans-serif;
+  font-size:clamp(28px,7vw,36px);
+  font-weight:900;
+  line-height:1.15;
+}
+.complete-sub{font-size:clamp(16px,4.4vw,19px);text-align:center;}
 .player-card-name{
   width:100%;
   display:flex;
@@ -159,8 +178,8 @@ button:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--c-line);}
 #discussion-screen,#vote-screen,#reversal-screen{align-items:stretch;}
 #discussion-screen .screen-main,#vote-screen .screen-main,#reversal-screen .screen-main{display:flex;flex-direction:column;gap:12px;padding:4px 8px 6px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 #discussion-screen .screen-shell,#vote-screen .screen-shell{padding-top:calc(20px + env(safe-area-inset-top));}
-#deal-screen .screen-main{display:flex;flex-direction:column;justify-content:center;padding-bottom:4px;}
-#deal-screen #deal-cards{display:flex;flex-direction:column;gap:10px;}
+#deal-screen .screen-main{display:flex;flex-direction:column;justify-content:flex-start;padding:4px 8px 6px;}
+#deal-screen #deal-cards{display:flex;flex-direction:column;gap:10px;width:100%;}
 #reversal-screen .screen-shell{padding-top:calc(12px + env(safe-area-inset-top));gap:8px;}
 #reversal-screen .screen-main{gap:8px;padding-top:0;}
 .result-screen{padding:0;align-items:stretch;text-align:center;}

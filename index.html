@@ -54,13 +54,24 @@ button:focus-visible,input:focus-visible{outline:none;box-shadow:0 0 0 4px rgba(
 .screen-title-row{display:flex;align-items:center;justify-content:space-between;width:100%;gap:8px;}
 .screen-title-row .screen-title{flex:1;text-align:center;}
 .section-card,.result-card,.player-card,.complete-card,.wolf-answer-box,.abort-dialog,.discussion-hint,.vote-item,.toggle-row,.word-pair-row{background:var(--c-paper);border:3px solid var(--c-line);border-radius:var(--r-lg);box-shadow:var(--sh-2);}
-.section-card{width:100%;padding:20px;transform:rotate(.4deg);}
+.section-card{width:100%;padding:22px;transform:rotate(.4deg);}
 .section-card:nth-of-type(even){transform:rotate(-.5deg);}
-#setup-screen,#words-screen{padding-top:calc(16px + env(safe-area-inset-top));align-items:stretch;gap:12px;}
-.screen-shell{width:100%;min-height:100svh;min-height:100dvh;display:grid;grid-template-rows:auto minmax(0,1fr) auto;padding:calc(18px + env(safe-area-inset-top)) 0 0;gap:10px;}
-.screen-header{display:flex;flex-direction:column;gap:8px;}
-.screen-main{min-height:0;overflow-y:auto;}
-.screen-footer{width:100%;display:flex;justify-content:center;padding-top:12px;padding-bottom:calc(16px + env(safe-area-inset-bottom));}
+#setup-screen,#words-screen{align-items:stretch;}
+#setup-screen .screen-shell,#words-screen .screen-shell{padding-top:calc(16px + env(safe-area-inset-top));}
+.setup-stack{display:flex;flex-direction:column;gap:16px;padding:2px 8px 10px;}
+.setup-help{font-size:11px;font-weight:400;}
+.footer-actions{width:100%;display:flex;flex-direction:column;align-items:center;gap:10px;}
+.secondary-action-button{width:100%;max-width:350px;min-height:54px;}
+.words-description{text-align:center;}
+.words-editor-card{padding:16px 16px 14px;}
+.word-editor-error{min-height:22px;margin:8px 0 4px;color:var(--c-hero-dk);font-size:13px;font-weight:700;}
+.word-editor-error:empty{display:none;}
+.word-row-action{margin-left:8px;}
+.screen-shell{width:100%;min-height:100svh;min-height:100dvh;display:grid;grid-template-rows:auto minmax(0,1fr) auto;padding:calc(18px + env(safe-area-inset-top)) 0 0;gap:12px;}
+.screen-header{display:flex;flex-direction:column;gap:10px;padding:0 8px;}
+.screen-main{min-height:0;}
+.screen-main.scrollable{overflow-y:auto;-webkit-overflow-scrolling:touch;padding-right:2px;}
+.screen-footer{width:100%;display:flex;justify-content:center;padding:12px 8px calc(14px + env(safe-area-inset-bottom));}
 .primary-action-button{width:100%;max-width:350px;min-height:56px;display:inline-flex;align-items:center;justify-content:center;border-radius:24px;font-size:17px;font-weight:900;margin:0;}
 .section-label,.section-label-row,.words-stats,.vote-instruction,.deal-instruction,.result-desc,.overlay-note,.overlay-role,.toggle-label-sub,.wolf-answer-hint,.wolf-row-label,.box-label{font-size:13px;color:var(--c-ink-soft);}
 .section-label-row{display:flex;align-items:center;justify-content:space-between;}
@@ -70,14 +81,15 @@ button:focus-visible,input:focus-visible{outline:none;box-shadow:0 0 0 4px rgba(
 .count-display{font-size:64px;color:var(--c-hero);min-width:100px;text-align:center;}
 .count-btn{width:50px;height:50px;border-radius:999px;border:3px solid var(--c-line);background:var(--c-sun);box-shadow:var(--sh-1);font-family:"M PLUS Rounded 1c",sans-serif;font-size:24px;font-weight:900;color:var(--c-ink);}
 .player-row,.word-pair-inputs,.toggle-row,.vote-item,.player-result-row{display:flex;align-items:center;gap:8px;}
-.player-row{background:var(--c-cream);border:3px solid var(--c-line);border-radius:var(--r-md);padding:8px 10px;min-height:60px;}
+.player-row{background:var(--c-cream);border:3px solid var(--c-line);border-radius:var(--r-md);padding:6px 10px;min-height:60px;}
 .player-row.drag-over{transform:translateY(-2px);}
 .drag-handle,.row-num,.word-sep{color:var(--c-ink-soft);font-size:13px;}
-.player-input,.word-input{flex:1;border:2px dashed transparent;background:transparent;padding:10px;font-size:16px;color:var(--c-ink);}
+.player-input,.word-input{flex:1;border:2px dashed transparent;background:transparent;padding:8px 10px;font-size:15px;color:var(--c-ink);min-height:42px;}
 .timer-btn,.btn-sm,.btn-sm-add,.btn-sm-danger{flex:1;min-height:50px;border-radius:var(--r-md);border:3px solid var(--c-line);box-shadow:var(--sh-1);background:var(--c-cream);font-family:"M PLUS Rounded 1c",sans-serif;font-weight:800;}
+.timer-btn{min-height:50px;padding:8px 6px;}
 .timer-btn.selected{background:var(--c-sun);color:var(--c-ink);}
-.toggle-row{justify-content:space-between;padding:10px 12px;}
-.toggle-row+.toggle-row{margin-top:8px;border-top:2px dashed var(--c-line);padding-top:12px;}
+.toggle-row{justify-content:space-between;padding:9px 12px;align-items:center;}
+.toggle-row+.toggle-row{margin-top:8px;border-top:2px dashed var(--c-line);padding-top:10px;}
 .toggle-row.on{background:#DDD6FE;}
 .toggle-switch{width:50px;height:28px;border-radius:999px;border:2px solid var(--c-line);background:var(--c-paper);position:relative;flex-shrink:0;}
 .toggle-switch::after{content:"";position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:999px;background:var(--c-cream);border:2px solid var(--c-line);transition:transform .2s ease;}
@@ -102,31 +114,42 @@ button:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--c-line);}
 .overlay-name{font-size:32px;color:var(--c-cream);font-family:"M PLUS Rounded 1c",sans-serif;font-weight:900;} .overlay-word{font-size:72px;color:var(--c-sun);text-shadow:3px 3px 0 var(--c-line);} .overlay-player{font-size:13px;color:var(--c-cream);}
 .timer-circle{width:170px;height:170px;position:relative;margin:0 auto;border:3px solid var(--c-line);border-radius:999px;background:var(--c-paper);box-shadow:var(--sh-3);}
 .timer-bg{fill:none;stroke:var(--c-ink-soft);stroke-width:8;} .timer-arc{fill:none;stroke:var(--c-sun);stroke-width:8;stroke-linecap:round;stroke-dasharray:440;stroke-dashoffset:0;transition:stroke-dashoffset 1s linear,stroke .2s ease;} .timer-svg{width:100%;height:100%;transform:rotate(-90deg);} .timer-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:48px;color:var(--c-hero);}
-.vote-item{justify-content:space-between;user-select:none;padding:14px 16px;border-width:3px;} .vote-item.voted{background:#FED7AA;} .vote-name{font-family:"M PLUS Rounded 1c",sans-serif;font-size:18px;font-weight:800;} .vote-count{font-family:"Reggae One",sans-serif;font-size:32px;color:var(--c-hero);}
+.vote-item{justify-content:space-between;user-select:none;padding:12px 14px;min-height:76px;border-width:3px;} .vote-item.voted{background:#FED7AA;} .vote-name{font-family:"M PLUS Rounded 1c",sans-serif;font-size:18px;font-weight:800;} .vote-count{font-family:"Reggae One",sans-serif;font-size:32px;color:var(--c-hero);}
 #discussion-screen,#vote-screen,#reversal-screen{align-items:stretch;}
-#discussion-screen .screen-main,#vote-screen .screen-main,#reversal-screen .screen-main{display:flex;flex-direction:column;gap:10px;padding-bottom:6px;}
+#discussion-screen .screen-main,#vote-screen .screen-main,#reversal-screen .screen-main{display:flex;flex-direction:column;gap:12px;padding:4px 8px 6px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+#discussion-screen .screen-shell,#vote-screen .screen-shell{padding-top:calc(20px + env(safe-area-inset-top));}
 #deal-screen .screen-main{display:flex;flex-direction:column;justify-content:center;padding-bottom:4px;}
 #deal-screen #deal-cards{display:flex;flex-direction:column;gap:10px;}
 #reversal-screen .screen-shell{padding-top:calc(12px + env(safe-area-inset-top));gap:8px;}
+#reversal-screen .screen-main{gap:8px;padding-top:0;}
 .result-screen{padding:0;align-items:stretch;text-align:center;}
-.result-screen .screen-main{overflow-y:auto;padding-bottom:8px;}
-.result-screen .screen-shell{padding-top:calc(8px + env(safe-area-inset-top));gap:8px;}
-.result-screen .screen-header{gap:4px;}
+.result-screen .screen-main{padding:2px 8px 8px;}
+.result-screen .screen-shell{padding-top:calc(12px + env(safe-area-inset-top));gap:10px;}
+.result-screen .screen-header{gap:6px;}
 .result-screen .result-emoji{font-size:68px;line-height:1;}
-.result-screen .result-title{font-size:36px;line-height:1.08;}
-.result-screen .result-desc{font-size:19px;line-height:1.25;margin-bottom:2px;white-space:pre-line;}
+.result-screen .result-title{font-size:38px;line-height:1.08;}
+.result-screen .result-desc{font-size:19px;line-height:1.4;margin-bottom:4px;white-space:pre-line;}
 .result-screen .result-stack{display:flex;flex-direction:column;gap:12px;}
-.result-screen .result-card{padding:16px;}
+.result-screen .result-card{padding:15px;}
 .result-screen .result-card-label{margin-bottom:8px;}
 .result-screen .result-word-row{gap:8px;}
 .result-screen .word-box{padding:12px 10px;}
 .result-screen .player-result-row{padding:10px 12px;min-height:auto;border-width:3px;box-shadow:var(--sh-1);}
 .result-screen .player-result-list{display:flex;flex-direction:column;gap:8px;}
 .result-screen .btn-secondary{margin-top:4px;}
-.reversal-banner{background:var(--c-hero);border:3px solid var(--c-line);border-radius:var(--r-xl);padding:20px;box-shadow:var(--sh-3);color:var(--c-cream);transform:rotate(-.5deg);}
+.reversal-banner{background:var(--c-hero);border:3px solid var(--c-line);border-radius:var(--r-xl);padding:16px;box-shadow:var(--sh-3);color:var(--c-cream);transform:rotate(-.5deg);}
 .reversal-big-title{font-family:"Reggae One",sans-serif;font-size:38px;} .result-emoji{font-size:82px;animation:pop .35s cubic-bezier(.5,1.6,.4,1);} .result-title{font-size:64px;color:var(--c-hero);}
 .word-box{flex:1;border-radius:var(--r-md);padding:14px 10px;border:3px solid var(--c-line);box-shadow:var(--sh-1);} .cbox{background:#BBF7D0;} .wbox{background:#FED7AA;} .box-word{font-family:"M PLUS Rounded 1c",sans-serif;font-size:22px;font-weight:900;}
-.player-result-row{justify-content:space-between;padding:12px;background:var(--c-paper);border:3px solid var(--c-line);border-radius:var(--r-md);box-shadow:var(--sh-1);} .player-result-row.is-wolf{background:#FED7AA;} .player-result-row.is-citizen{background:#BBF7D0;} .pr-tag{font-size:11px;font-family:"M PLUS Rounded 1c",sans-serif;font-weight:800;padding:4px 8px;border:2px solid var(--c-line);border-radius:var(--r-sm);background:var(--c-cream);}
+.player-result-row{display:grid;grid-template-columns:44px minmax(0,1fr) 96px;align-items:center;gap:10px;padding:12px;background:var(--c-paper);border:3px solid var(--c-line);border-radius:var(--r-md);box-shadow:var(--sh-1);}
+.player-result-row.is-wolf{background:#FED7AA;}
+.player-result-row.is-citizen{background:#BBF7D0;}
+.pr-icon{display:flex;align-items:center;justify-content:center;font-size:22px;}
+.pr-info{min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:2px;}
+.pr-name,.pr-word{max-width:100%;text-align:center;overflow-wrap:anywhere;}
+.pr-name{font-family:"M PLUS Rounded 1c",sans-serif;font-weight:900;}
+.pr-word{font-size:14px;}
+.pr-badges{min-width:96px;display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:6px;}
+.pr-tag{font-size:11px;font-family:"M PLUS Rounded 1c",sans-serif;font-weight:800;padding:4px 8px;border:2px solid var(--c-line);border-radius:var(--r-sm);background:var(--c-cream);}
 .abort-overlay{position:fixed;inset:0;background:rgba(31,10,61,.8);z-index:300;display:flex;align-items:center;justify-content:center;padding:24px;}
 .abort-dialog{max-width:340px;padding:24px;}
 .squiggle{height:14px;margin:4px 0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 14' preserveAspectRatio='none'%3E%3Cpath d='M0 7 Q 7.5 0 15 7 T 30 7 T 45 7 T 60 7' fill='none' stroke='%231F0A3D' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:repeat-x;background-size:60px 14px;opacity:.4;}
@@ -171,73 +194,90 @@ button:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--c-line);}
 <!-- SETUP -->
 
 <div id="setup-screen" class="screen">
-  <div class="screen-title">⚙️ ゲーム設定</div>
+  <div class="screen-shell">
+    <header class="screen-header">
+      <div class="screen-title">⚙️ ゲーム設定</div>
+    </header>
+    <main class="screen-main scrollable">
+      <div class="setup-stack">
+        <div class="section-card">
+          <span class="section-label">👥 プレイ人数</span>
+          <div class="count-row">
+            <button class="count-btn" onclick="changeCount(-1)">－</button>
+            <div class="count-display" id="count-display">4</div>
+            <button class="count-btn" onclick="changeCount(1)">＋</button>
+          </div>
+        </div>
 
-  <div class="section-card">
-    <span class="section-label">👥 プレイ人数</span>
-    <div class="count-row">
-      <button class="count-btn" onclick="changeCount(-1)">－</button>
-      <div class="count-display" id="count-display">4</div>
-      <button class="count-btn" onclick="changeCount(1)">＋</button>
-    </div>
-  </div>
+        <div class="section-card">
+          <span class="section-label">📝 プレイヤー名　<span class="setup-help">☰ ドラッグで並べ替え</span></span>
+          <div class="player-inputs" id="player-inputs"></div>
+        </div>
 
-  <div class="section-card">
-    <span class="section-label">📝 プレイヤー名　<span style="font-size:11px;font-weight:400;">☰ ドラッグで並べ替え</span></span>
-    <div class="player-inputs" id="player-inputs"></div>
-  </div>
+        <div class="section-card">
+          <span class="section-label">⏱️ 話し合い時間</span>
+          <div class="timer-options">
+            <button class="timer-btn" onclick="selectTimer(this,120)">2分</button>
+            <button class="timer-btn selected" onclick="selectTimer(this,180)">3分</button>
+            <button class="timer-btn" onclick="selectTimer(this,300)">5分</button>
+            <button class="timer-btn" onclick="selectTimer(this,0)">なし</button>
+          </div>
+        </div>
 
-  <div class="section-card">
-    <span class="section-label">⏱️ 話し合い時間</span>
-    <div class="timer-options">
-      <button class="timer-btn" onclick="selectTimer(this,120)">2分</button>
-      <button class="timer-btn selected" onclick="selectTimer(this,180)">3分</button>
-      <button class="timer-btn" onclick="selectTimer(this,300)">5分</button>
-      <button class="timer-btn" onclick="selectTimer(this,0)">なし</button>
-    </div>
-  </div>
-
-  <div class="section-card">
-    <span class="section-label">🎛️ オプション</span>
-    <div class="toggle-row" id="toggle-reversal" onclick="toggleOption('reversal')">
-      <div class="toggle-label-wrap">
-        <div class="toggle-label-main">🌀 大逆転モード</div>
-        <div class="toggle-label-sub">追放後ウルフが答えたら正解/不正解を判定</div>
+        <div class="section-card">
+          <span class="section-label">🎛️ オプション</span>
+          <div class="toggle-row" id="toggle-reversal" onclick="toggleOption('reversal')">
+            <div class="toggle-label-wrap">
+              <div class="toggle-label-main">🌀 大逆転モード</div>
+              <div class="toggle-label-sub">追放後ウルフが答えたら正解/不正解を判定</div>
+            </div>
+            <div class="toggle-switch" id="sw-reversal"></div>
+          </div>
+          <div class="toggle-row" id="toggle-hint" onclick="toggleOption('hint')">
+            <div class="toggle-label-wrap">
+              <div class="toggle-label-main">💡 役割ヒント表示</div>
+              <div class="toggle-label-sub">お題確認時に「ウルフかも」のヒントを表示</div>
+            </div>
+            <div class="toggle-switch" id="sw-hint"></div>
+          </div>
+        </div>
       </div>
-      <div class="toggle-switch" id="sw-reversal"></div>
-    </div>
-    <div class="toggle-row" id="toggle-hint" onclick="toggleOption('hint')" style="margin-top:10px;">
-      <div class="toggle-label-wrap">
-        <div class="toggle-label-main">💡 役割ヒント表示</div>
-        <div class="toggle-label-sub">お題確認時に「ウルフかも」のヒントを表示</div>
+    </main>
+    <footer class="screen-footer setup-footer">
+      <div class="footer-actions">
+        <button class="btn-primary primary-action-button" onclick="startGame()">🎮 ゲームスタート</button>
+        <button class="btn-secondary secondary-action-button" onclick="showScreen('title-screen')">← もどる</button>
       </div>
-      <div class="toggle-switch" id="sw-hint"></div>
-    </div>
+    </footer>
   </div>
-
-<button class="btn-primary" onclick="startGame()">🎮 ゲームスタート</button>
-<button class="btn-secondary" onclick="showScreen('title-screen')">← もどる</button>
-
 </div>
 
 <!-- WORD EDITOR -->
 
 <div id="words-screen" class="screen">
-  <div class="screen-title">📝 お題リスト</div>
-
-  <div class="words-stats" id="words-stats"></div>
-  <div class="section-label" style="text-align:center;margin-top:-8px;">お題AとBはゲームごとにランダムで市民／ウルフに割り当てられます</div>
-
-  <div class="section-card">
-    <div class="section-label-row">
-      <span class="section-label" style="margin-bottom:0;">お題ペア一覧</span>
-      <button class="btn-sm-add" onclick="addWordPair()">＋ 追加</button>
-    </div>
-    <div class="word-pair-list" id="word-pair-list"></div>
+  <div class="screen-shell">
+    <header class="screen-header">
+      <div class="screen-title-row">
+        <div class="screen-title">📝 お題リスト</div>
+        <button class="btn-abort" onclick="showScreen('title-screen')">← もどる</button>
+      </div>
+      <div class="words-stats" id="words-stats"></div>
+      <div class="section-label words-description">お題AとBはゲームごとにランダムで市民／ウルフに割り当てられます</div>
+    </header>
+    <main class="screen-main scrollable">
+      <div class="section-card words-editor-card">
+        <div class="section-label-row">
+          <span class="section-label" style="margin-bottom:0;">お題ペア一覧</span>
+          <button class="btn-sm-add form-action-button" onclick="addWordPair()">＋ 追加</button>
+        </div>
+        <div class="word-editor-error" id="word-editor-error" role="status" aria-live="polite"></div>
+        <div class="word-pair-list" id="word-pair-list"></div>
+      </div>
+    </main>
+    <footer class="screen-footer">
+      <button class="btn-primary primary-action-button" onclick="showScreen('title-screen')">保存してもどる</button>
+    </footer>
   </div>
-
-<button class="btn-secondary" onclick="showScreen('title-screen')">← もどる</button>
-
 </div>
 
 <!-- 中止確認オーバーレイ -->
@@ -655,9 +695,15 @@ function toggleOption(key){
 /* ════════════════════════
    WORD EDITOR
 ════════════════════════ */
+function setWordEditorError(msg){
+  var el=document.getElementById('word-editor-error');
+  if(el) el.textContent=msg||'';
+}
+
 function showWords(){
   renderWordStats();
   renderWordList();
+  setWordEditorError('');
   showScreen('words-screen');
 }
 
@@ -687,7 +733,7 @@ function makePairRow(idx, a, b){
       '<span class="word-sep">vs</span>'+
       '<input class="word-input" type="text" value="'+esc(b)+'" placeholder="お題B" onchange="updatePair('+idx+',1,this.value)">'+
     '</div>'+
-    '<button class="btn-sm-danger" onclick="deletePair('+idx+')" style="margin-left:8px;">✕</button>';
+    '<button class="btn-sm-danger word-row-action" onclick="deletePair('+idx+')">✕</button>';
   return row;
 }
 
@@ -697,11 +743,11 @@ function makeAddRow(){
   row.id='add-row';
   row.innerHTML=
     '<div class="word-pair-inputs">'+
-      '<input class="word-input" type="text" id="new-a" placeholder="お題A">'+
+      '<input class="word-input" type="text" id="new-a" placeholder="市民のお題" oninput="setWordEditorError(\'\')">'+
       '<span class="word-sep">vs</span>'+
-      '<input class="word-input" type="text" id="new-b" placeholder="お題B">'+
+      '<input class="word-input" type="text" id="new-b" placeholder="ウルフのお題" oninput="setWordEditorError(\'\')">'+
     '</div>'+
-    '<button class="btn-sm-add" onclick="addWordPair()" style="margin-left:8px;">追加</button>';
+    '<button class="btn-sm-add form-action-button word-row-action" onclick="addWordPair()">追加</button>';
   return row;
 }
 
@@ -725,7 +771,21 @@ function addWordPair(){
   var b=document.getElementById('new-b');
   if(!a||!b) return;
   var av=a.value.trim(), bv=b.value.trim();
-  if(!av||!bv){ a.style.borderBottom='2px solid #FF3366'; b.style.borderBottom='2px solid #FF3366'; return; }
+  a.style.borderBottom='';
+  b.style.borderBottom='';
+  if(!av||!bv){
+    setWordEditorError('市民とウルフの両方のお題を入力してください。');
+    a.style.borderBottom='2px solid #FF3366';
+    b.style.borderBottom='2px solid #FF3366';
+    return;
+  }
+  for(var i=0;i<S.wordPairs.length;i++){
+    if(S.wordPairs[i][0]===av&&S.wordPairs[i][1]===bv){
+      setWordEditorError('同じお題ペアはすでに登録されています。');
+      return;
+    }
+  }
+  setWordEditorError('');
   S.wordPairs.push([av,bv]);
   lsSet(LS_PAIRS,S.wordPairs);
   renderWordStats();
@@ -1022,7 +1082,7 @@ function showResult(reversalWin){
           '<div class="pr-name">'+esc(name)+'</div>'+
           '<div class="pr-word '+wordClass+'">'+esc(word)+'</div>'+
         '</div>'+
-        (badges?'<div class="pr-badges">'+badges+'</div>':'')+
+        '<div class="pr-badges"'+(badges?'':' aria-hidden=\"true\"')+'>'+badges+'</div>'+
       '</div>';
   }
   listEl.innerHTML=html;

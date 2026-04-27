@@ -3,10 +3,11 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="ワードウルフ">
+<meta name="theme-color" content="#0b0a12">
 <!-- ホーム画面アイコン（オオカミ絵文字をSVGでアイコン化） -->
 <link rel="apple-touch-icon" href="data:image/png;base64,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">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,13 +36,14 @@
   --r-xl:28px;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{font-family:"Zen Maru Gothic","M PLUS Rounded 1c",-apple-system,BlinkMacSystemFont,"Hiragino Maru Gothic ProN","Hiragino Sans","Yu Gothic UI","Meiryo",sans-serif;font-size:16px;font-weight:500;background:var(--c-cream);color:var(--c-ink);min-height:100%;}
+html,body{font-family:"Zen Maru Gothic","M PLUS Rounded 1c",-apple-system,BlinkMacSystemFont,"Hiragino Maru Gothic ProN","Hiragino Sans","Yu Gothic UI","Meiryo",sans-serif;font-size:16px;font-weight:500;background:var(--c-cream);color:var(--c-ink);min-height:100%;width:100%;overflow-x:hidden;}
+body{min-height:100svh;min-height:100dvh;}
 button,input{font-size:16px;-webkit-appearance:none;appearance:none;font-family:inherit;color:var(--c-ink);} 
 input{background:var(--c-paper);border:2.5px solid var(--c-line);border-radius:var(--r-sm);padding:10px 12px;}
 button:focus-visible,input:focus-visible{outline:none;box-shadow:0 0 0 4px rgba(255,51,102,.35),var(--sh-1);} 
-#app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:env(safe-area-inset-top) 16px calc(48px + env(safe-area-inset-bottom));}
+#app{position:relative;z-index:1;min-height:100svh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;padding:0 16px;}
 .bg-dots{position:fixed;inset:0;z-index:0;background-image:radial-gradient(circle at center,var(--c-ink) 1.5px,transparent 1.5px);background-size:28px 28px;opacity:.06;pointer-events:none;}
-.screen{display:none;width:100%;max-width:520px;position:relative;z-index:1;}
+.screen{display:none;width:100%;max-width:520px;position:relative;z-index:1;min-height:100svh;min-height:100dvh;}
 .screen.active{display:flex;flex-direction:column;align-items:center;animation:pop .35s cubic-bezier(.5,1.6,.4,1);}
 #title-screen{justify-content:center;min-height:100vh;text-align:center;}
 .logo-wrap{margin-bottom:20px;}
@@ -54,7 +56,12 @@ button:focus-visible,input:focus-visible{outline:none;box-shadow:0 0 0 4px rgba(
 .section-card,.result-card,.player-card,.complete-card,.wolf-answer-box,.abort-dialog,.discussion-hint,.vote-item,.toggle-row,.word-pair-row{background:var(--c-paper);border:2.5px solid var(--c-line);border-radius:var(--r-lg);box-shadow:var(--sh-2);} 
 .section-card{width:100%;padding:18px;transform:rotate(.4deg);} 
 .section-card:nth-of-type(even){transform:rotate(-.5deg);} 
-#setup-screen,#words-screen,#deal-screen,#discussion-screen,#vote-screen{padding-top:24px;align-items:stretch;gap:14px;}
+#setup-screen,#words-screen,#discussion-screen,#vote-screen{padding-top:24px;align-items:stretch;gap:14px;}
+.screen-shell{width:100%;min-height:100svh;min-height:100dvh;display:grid;grid-template-rows:auto minmax(0,1fr) auto;padding:calc(12px + env(safe-area-inset-top)) 0 0;gap:12px;}
+.screen-header{display:flex;flex-direction:column;gap:8px;}
+.screen-main{min-height:0;}
+.screen-footer{width:100%;display:flex;justify-content:center;padding-top:12px;padding-bottom:calc(16px + env(safe-area-inset-bottom));}
+.primary-action-button{width:100%;max-width:350px;min-height:56px;display:inline-flex;align-items:center;justify-content:center;border-radius:24px;font-size:17px;font-weight:900;margin:0;}
 .section-label,.section-label-row,.words-stats,.vote-instruction,.deal-instruction,.result-desc,.overlay-note,.overlay-role,.toggle-label-sub,.wolf-answer-hint,.wolf-row-label,.box-label{font-size:13px;color:var(--c-ink-soft);} 
 .section-label-row{display:flex;align-items:center;justify-content:space-between;}
 .count-row,.timer-options,.judge-row,.abort-dialog-btns,.result-word-row{display:flex;gap:10px;}
@@ -89,12 +96,22 @@ button:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--c-line);}
 .wolf-count-badge,.reversal-info-badge,.overlay-note{border:2px solid var(--c-line);border-radius:var(--r-md);padding:10px 14px;box-shadow:var(--sh-1);} 
 .wolf-count-badge{background:#FED7AA;} .reversal-info-badge{background:#DDD6FE;}
 .overlay{position:fixed;inset:0;background:rgba(31,10,61,.8);z-index:200;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:24px;text-align:center;}
+.overlay-shell{width:100%;max-width:520px;min-height:100svh;min-height:100dvh;display:grid;grid-template-rows:auto minmax(0,1fr) auto;padding:calc(12px + env(safe-area-inset-top)) 0 0;gap:12px;}
+.overlay-main{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;}
 .overlay.hidden,.abort-overlay.hidden{display:none;}
 .overlay-name{font-size:32px;color:var(--c-cream);font-family:"M PLUS Rounded 1c",sans-serif;font-weight:900;} .overlay-word{font-size:72px;color:var(--c-sun);text-shadow:3px 3px 0 var(--c-line);} .overlay-player{font-size:13px;color:var(--c-cream);} 
 .timer-circle{width:170px;height:170px;position:relative;margin:0 auto;border:3px solid var(--c-line);border-radius:999px;background:var(--c-paper);box-shadow:var(--sh-3);} 
 .timer-bg{fill:none;stroke:var(--c-ink-soft);stroke-width:8;} .timer-arc{fill:none;stroke:var(--c-sun);stroke-width:8;stroke-linecap:round;stroke-dasharray:440;stroke-dashoffset:0;transition:stroke-dashoffset 1s linear,stroke .2s ease;} .timer-svg{width:100%;height:100%;transform:rotate(-90deg);} .timer-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:48px;color:var(--c-hero);} 
 .vote-item{justify-content:space-between;user-select:none;padding:16px 18px;} .vote-item.voted{background:#FED7AA;} .vote-name{font-family:"M PLUS Rounded 1c",sans-serif;font-size:18px;font-weight:800;} .vote-count{font-family:"Reggae One",sans-serif;font-size:32px;color:var(--c-hero);} 
-#reversal-screen,#result-screen{min-height:100vh;justify-content:center;text-align:center;padding:30px 16px;align-items:stretch;gap:16px;}
+#reversal-screen{min-height:100vh;justify-content:center;text-align:center;padding:30px 16px;align-items:stretch;gap:16px;}
+.result-screen{padding:0;align-items:stretch;text-align:center;}
+.result-screen .screen-main{overflow-y:auto;padding-bottom:8px;}
+.result-screen .result-emoji{font-size:72px;}
+.result-screen .result-title{font-size:40px;line-height:1.1;}
+.result-screen .result-desc{font-size:18px;line-height:1.45;margin-bottom:4px;}
+.result-screen .result-stack{display:flex;flex-direction:column;gap:14px;}
+.result-screen .result-card{padding:14px;}
+.result-screen .player-result-row{padding:12px 14px;min-height:auto;}
 .reversal-banner{background:var(--c-hero);border:3px solid var(--c-line);border-radius:var(--r-xl);padding:20px;box-shadow:var(--sh-3);color:var(--c-cream);transform:rotate(-.5deg);} 
 .reversal-big-title{font-family:"Reggae One",sans-serif;font-size:38px;} .result-emoji{font-size:82px;animation:pop .35s cubic-bezier(.5,1.6,.4,1);} .result-title{font-size:64px;color:var(--c-hero);} 
 .word-box{flex:1;border-radius:var(--r-md);padding:14px 10px;border:2.5px solid var(--c-line);box-shadow:var(--sh-1);} .cbox{background:#BBF7D0;} .wbox{background:#FED7AA;} .box-word{font-family:"M PLUS Rounded 1c",sans-serif;font-size:22px;font-weight:900;} 
@@ -228,32 +245,47 @@ button:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--c-line);}
 <!-- DEAL -->
 
 <div id="deal-screen" class="screen">
-  <div class="screen-title-row">
-    <div class="screen-title">📋 お題配布</div>
-    <button class="btn-abort" onclick="openAbort()">⏹ 中止</button>
+  <div class="screen-shell">
+    <header class="screen-header">
+      <div class="screen-title-row">
+        <div class="screen-title">📋 お題配布</div>
+        <button class="btn-abort" onclick="openAbort()">⏹ 中止</button>
+      </div>
+      <div class="deal-instruction">順番にタップして自分のお題を確認してください。<br>他の人に見せないように！</div>
+      <div class="progress-dots" id="progress-dots"></div>
+      <div class="wolf-count-badge" id="wolf-count-badge"></div>
+      <div class="reversal-info-badge" id="reversal-info-badge" style="display:none;">🌀 大逆転モード ON — 追放後にウルフの逆転チャンスあり！</div>
+      <button class="btn-secondary" onclick="redealGame()" style="font-size:14px;padding:10px;">🔀 このお題やったことある（再抽選）</button>
+    </header>
+    <main class="screen-main">
+      <div id="deal-cards"></div>
+    </main>
+    <footer class="screen-footer">
+      <button id="deal-primary-btn" class="btn-primary primary-action-button" onclick="onDealPrimaryAction()">👀 お題を見る</button>
+    </footer>
   </div>
-  <div class="deal-instruction">順番にタップして自分のお題を確認してください。<br>他の人に見せないように！</div>
-  <div class="progress-dots" id="progress-dots"></div>
-  <div class="wolf-count-badge" id="wolf-count-badge"></div>
-  <div class="reversal-info-badge" id="reversal-info-badge" style="display:none;">🌀 大逆転モード ON — 追放後にウルフの逆転チャンスあり！</div>
-  <button class="btn-secondary" onclick="redealGame()" style="font-size:14px;padding:10px;">🔀 このお題やったことある（再抽選）</button>
-  <div id="deal-cards"></div>
 </div>
 
 <!-- WORD OVERLAY -->
 
 <div id="word-overlay" class="overlay hidden">
-  <!-- オーバーレイ内の上部ボタン行 -->
-  <div style="display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;width:100%;max-width:340px;">
-    <button class="btn-abort" onclick="redealFromOverlay()">🔀 再抽選</button>
-    <button class="btn-abort" onclick="abortFromOverlay()">⏹ 中止</button>
+  <div class="overlay-shell">
+    <header class="screen-header">
+      <div class="screen-title-row">
+        <button class="btn-abort" onclick="redealFromOverlay()">🔀 再抽選</button>
+        <button class="btn-abort" onclick="abortFromOverlay()">⏹ 中止</button>
+      </div>
+    </header>
+    <main class="overlay-main">
+      <div class="overlay-player">あなたのお題</div>
+      <div class="overlay-name" id="overlay-name"></div>
+      <div class="overlay-word topic-word" id="overlay-word"></div>
+      <div class="overlay-note">📸 しっかり覚えたら閉じてください</div>
+    </main>
+    <footer class="screen-footer">
+      <button class="btn-primary primary-action-button" onclick="closeOverlay()">確認した ✓</button>
+    </footer>
   </div>
-  <div class="overlay-player">あなたのお題</div>
-  <div class="overlay-name" id="overlay-name"></div>
-  <div class="overlay-word" id="overlay-word"></div>
-  <div class="overlay-role" id="overlay-role"></div>
-  <div class="overlay-note">📸 しっかり覚えたら閉じてください</div>
-  <button class="btn-primary" style="max-width:280px;" onclick="closeOverlay()">確認した ✓</button>
 </div>
 
 <!-- DISCUSSION -->
@@ -322,31 +354,33 @@ button:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--c-line);}
 
 <!-- RESULT -->
 
-<div id="result-screen" class="screen">
-  <div class="result-emoji" id="result-emoji"></div>
-  <div class="result-title" id="result-title"></div>
-  <div class="result-desc"  id="result-desc"></div>
-
-  <!-- お題答え合わせ -->
-
-  <div class="result-card">
-    <div class="result-card-label">お題の答え</div>
-    <div class="result-word-row">
-      <div class="word-box cbox"><div class="box-label">市民のお題</div><div class="box-word" id="r-citizen"></div></div>
-      <div class="word-box wbox"><div class="box-label">ウルフのお題</div><div class="box-word" id="r-wolf-word"></div></div>
-    </div>
+<div id="result-screen" class="screen result-screen">
+  <div class="screen-shell">
+    <header class="screen-header">
+      <div class="result-emoji" id="result-emoji"></div>
+      <div class="result-title" id="result-title"></div>
+      <div class="result-desc"  id="result-desc"></div>
+    </header>
+    <main class="screen-main">
+      <div class="result-stack">
+        <div class="result-card">
+          <div class="result-card-label">お題の答え</div>
+          <div class="result-word-row">
+            <div class="word-box cbox"><div class="box-label">市民のお題</div><div class="box-word" id="r-citizen"></div></div>
+            <div class="word-box wbox"><div class="box-label">ウルフのお題</div><div class="box-word" id="r-wolf-word"></div></div>
+          </div>
+        </div>
+        <div class="result-card">
+          <div class="result-card-label">みんなのお題</div>
+          <div class="player-result-list" id="player-result-list"></div>
+        </div>
+      </div>
+    </main>
+    <footer class="screen-footer">
+      <button class="btn-primary primary-action-button" onclick="playAgain()">🔄 もう一度遊ぶ</button>
+    </footer>
+    <button class="btn-secondary" onclick="showScreen('title-screen')">🏠 タイトルへ</button>
   </div>
-
-  <!-- プレイヤー別一覧 -->
-
-  <div class="result-card">
-    <div class="result-card-label">みんなのお題</div>
-    <div class="player-result-list" id="player-result-list"></div>
-  </div>
-
-<button class="btn-primary" onclick="playAgain()">🔄 もう一度遊ぶ</button>
-<button class="btn-secondary" onclick="showScreen('title-screen')">🏠 タイトルへ</button>
-
 </div>
 
 </div>
@@ -744,14 +778,18 @@ function setupDealScreen(){
 
 function renderDealCard(){
   var el=document.getElementById('deal-cards');
+  var primaryBtn=document.getElementById('deal-primary-btn');
   if(S.dealIdx>=S.playerCount){
     el.innerHTML=
       '<div class="complete-card fade-in">'+
         '<span class="complete-icon">✅</span>'+
         '<div class="complete-title">全員確認完了！</div>'+
         '<div class="complete-sub">話し合いをはじめましょう</div>'+
-        '<button class="btn-primary" onclick="startDiscussion()">💬 話し合い開始</button>'+
       '</div>';
+    if(primaryBtn){
+      primaryBtn.textContent='💬 話し合い開始';
+      primaryBtn.onclick=startDiscussion;
+    }
     return;
   }
   var name=S.playerNames[S.dealIdx];
@@ -761,22 +799,22 @@ function renderDealCard(){
       '<div class="player-card-hint">タップしてお題を確認</div>'+
       '<span class="tap-icon">👆</span>'+
     '</div>';
+  if(primaryBtn){
+    primaryBtn.textContent='👀 お題を見る';
+    primaryBtn.onclick=onDealPrimaryAction;
+  }
 }
 
 function onDealTap(){ openOverlay(S.dealIdx); }
+function onDealPrimaryAction(){
+  if(S.dealIdx>=S.playerCount){ startDiscussion(); return; }
+  onDealTap();
+}
 
 function openOverlay(idx){
-  var role=S.roles[idx], word=role==='wolf'?S.wolfWord:S.citizenWord;
+  var word=S.roles[idx]==='wolf'?S.wolfWord:S.citizenWord;
   document.getElementById('overlay-name').textContent=S.playerNames[idx];
   document.getElementById('overlay-word').textContent=word;
-  document.getElementById('overlay-word').style.color=role==='wolf'?'#FF3366':'#3B5BDB';
-  var roleEl=document.getElementById('overlay-role');
-  if(S.hintEnabled){
-    roleEl.textContent=role==='wolf'?'🐺 あなたはウルフかもしれない...':'😊 話し合いを楽しもう';
-    roleEl.className='overlay-role';
-  } else {
-    roleEl.textContent=''; roleEl.className='overlay-role hidden-hint';
-  }
   document.getElementById('word-overlay').classList.remove('hidden');
 }
 

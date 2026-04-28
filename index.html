@@ -50,6 +50,7 @@ button:focus-visible,input:focus-visible{outline:none;box-shadow:0 0 0 4px rgba(
 #title-screen{justify-content:center;min-height:100vh;text-align:center;}
 .logo-wrap{margin-bottom:20px;}
 .moon{display:inline-flex;align-items:center;justify-content:center;animation:bob 2.6s ease-in-out infinite;}
+.hero-character{width:138px;height:138px;display:block;}
 .title-main,.logo-font{font-family:"Reggae One","M PLUS Rounded 1c",sans-serif;font-weight:400;font-size:38px;line-height:1.15;color:var(--c-hero);text-shadow:3px 3px 0 var(--c-line);}
 .title-sub{display:inline-block;margin-top:10px;font-size:13px;padding:6px 14px;border:2px solid var(--c-line);border-radius:999px;background:var(--c-sun);box-shadow:var(--sh-1);transform:rotate(-1deg);font-family:"M PLUS Rounded 1c",sans-serif;font-weight:800;color:var(--c-ink);}
 .screen-title,.display{font-family:"M PLUS Rounded 1c","Zen Maru Gothic",sans-serif;font-weight:900;font-size:22px;color:var(--c-ink);}
@@ -248,16 +249,27 @@ button:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--c-line);}
 <div id="title-screen" class="screen active">
   <div class="logo-wrap">
     <div class="moon" aria-hidden="true">
-      <svg viewBox="0 0 130 130" width="130" height="130">
-        <ellipse cx="65" cy="118" rx="36" ry="5" fill="rgba(31,10,61,0.20)"/>
-        <path d="M33 78C26 56 40 27 66 27c23 0 39 19 33 44 8 12-2 27-16 25H47C34 98 25 90 33 78z" fill="#FF3366" stroke="#1F0A3D" stroke-width="3"/>
-        <circle cx="49" cy="57" r="8" fill="#FFF9F2" stroke="#1F0A3D" stroke-width="2.5"/>
-        <circle cx="80" cy="57" r="8" fill="#FFF9F2" stroke="#1F0A3D" stroke-width="2.5"/>
-        <circle cx="50" cy="59" r="2.5" fill="#1F0A3D"/>
-        <circle cx="81" cy="59" r="2.5" fill="#1F0A3D"/>
-        <path d="M50 78c4 5 22 5 28 0" stroke="#1F0A3D" stroke-width="2.5" fill="none"/>
-        <ellipse cx="38" cy="68" rx="4" ry="3" fill="#FFC93C"/>
-        <ellipse cx="92" cy="68" rx="4" ry="3" fill="#FFC93C"/>
+      <svg class="hero-character" viewBox="0 0 180 180" role="img" aria-label="羊のふりをしたオオカミ">
+        <ellipse cx="90" cy="164" rx="45" ry="8" fill="rgba(31,10,61,0.22)"/>
+        <ellipse cx="57" cy="66" rx="24" ry="17" fill="#FDF7EC" stroke="#101A4A" stroke-width="6"/>
+        <ellipse cx="123" cy="66" rx="24" ry="17" fill="#FDF7EC" stroke="#101A4A" stroke-width="6"/>
+        <ellipse cx="58" cy="70" rx="13" ry="8" fill="#F49AA7"/>
+        <ellipse cx="124" cy="70" rx="13" ry="8" fill="#F49AA7"/>
+
+        <path d="M45 64C45 43 62 31 83 32h14c21 0 38 11 38 33v15c0 22-18 40-40 40H85c-22 0-40-18-40-40V64z" fill="#F5E2C4" stroke="#101A4A" stroke-width="6"/>
+        <path d="M48 48c0-12 10-22 22-22 9 0 17 5 21 13 4-8 12-13 21-13 12 0 22 10 22 22 11 0 19 8 19 19 0 10-8 18-18 19H47c-10 0-18-8-18-18 0-11 8-20 19-20z" fill="#FFF9EE" stroke="#101A4A" stroke-width="6"/>
+
+        <path d="M63 74c8-2 14-1 21 3 5-4 11-5 20-3" stroke="#101A4A" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+        <circle cx="71" cy="78" r="4.7" fill="#101A4A"/>
+        <circle cx="109" cy="78" r="4.7" fill="#101A4A"/>
+        <path d="M83 87l7 5 8-8" stroke="#101A4A" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path d="M90 92l2 10" stroke="#101A4A" stroke-width="4.5" stroke-linecap="round"/>
+
+        <path d="M59 104l20-18c9-8 23-8 32 1l18 18-13 33H73l-14-34z" fill="#404867" stroke="#101A4A" stroke-width="6" stroke-linejoin="round"/>
+        <path d="M87 96c9-1 16 0 23 5" stroke="#101A4A" stroke-width="4.5" stroke-linecap="round"/>
+        <path d="M66 112c11 7 23 7 34-1" stroke="#101A4A" stroke-width="6" stroke-linecap="round"/>
+        <path d="M100 111c5 0 10 3 13 8" stroke="#101A4A" stroke-width="4.5" stroke-linecap="round"/>
+        <path d="M82 120c-2 7 3 13 10 13 5 0 9-3 10-8" stroke="#101A4A" stroke-width="5" stroke-linecap="round" fill="none"/>
       </svg>
     </div>
     <div class="title-main">ワードウルフ</div>

@@ -277,6 +277,16 @@ button:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--c-line);}
         </div>
 
         <div class="section-card">
+          <span class="section-label">🐺 ウルフ人数</span>
+          <div class="count-row">
+            <button class="count-btn" onclick="changeWolfCount(-1)">－</button>
+            <div class="count-display" id="wolf-count-display">1</div>
+            <button class="count-btn" onclick="changeWolfCount(1)">＋</button>
+          </div>
+          <div class="setup-help" style="text-align:center;margin-top:8px;">最大でプレイヤー人数 - 1 人まで設定できます</div>
+        </div>
+
+        <div class="section-card">
           <span class="section-label">📝 プレイヤー名　<span class="setup-help">☰ ドラッグで並べ替え</span></span>
           <div class="player-inputs" id="player-inputs"></div>
         </div>
@@ -335,8 +345,8 @@ button:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--c-line);}
       <div class="section-card words-editor-card word-add-card">
         <div class="section-label" style="margin-bottom:8px;">新しいお題ペアを追加</div>
         <div class="word-add-fields">
-          <input class="word-input" type="text" id="new-a" placeholder="市民のお題" oninput="setWordEditorError('')">
-          <input class="word-input" type="text" id="new-b" placeholder="ウルフのお題" oninput="setWordEditorError('')">
+          <input class="word-input" type="text" id="new-a" placeholder="お題Aを入力" oninput="setWordEditorError('')">
+          <input class="word-input" type="text" id="new-b" placeholder="お題Bを入力" oninput="setWordEditorError('')">
           <button class="btn-sm-add form-action-button" onclick="addWordPair()">＋ 追加</button>
         </div>
         <div class="word-editor-error" id="word-editor-error" role="status" aria-live="polite"></div>
@@ -547,6 +557,7 @@ var LS_PAIRS    = 'ww_pairs';
 var LS_REVERSAL = 'ww_reversal';
 var LS_HINT     = 'ww_hint';
 var LS_TIMER    = 'ww_timer';
+var LS_WOLF_CNT = 'ww_wolf_count';
 
 function lsGet(k,def){ try{ var v=localStorage.getItem(k); return v!==null?JSON.parse(v):def; }catch(e){ return def; } }
 function lsSet(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
@@ -557,6 +568,7 @@ function lsSet(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){}
 var S={
   wordPairs: lsGet(LS_PAIRS, BUILTIN_PAIRS.slice()),
   playerCount:4, playerNames:[],
+  wolfCount:   lsGet(LS_WOLF_CNT, 1),
   timerSecs:   lsGet(LS_TIMER,    180),
   reversalEnabled: lsGet(LS_REVERSAL, true),   /* 初期値: 大逆転モード ON */
   hintEnabled:     lsGet(LS_HINT,     false),  /* 初期値: ヒント OFF     */
@@ -656,6 +668,8 @@ function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').rep
 ════════════════════════ */
 function showSetup(){
   showScreen('setup-screen');
+  S.wolfCount=Math.min(Math.max(1,S.wolfCount),Math.max(1,S.playerCount-1));
+  document.getElementById('wolf-count-display').textContent=S.wolfCount;
   renderPlayerInputs();
   /* タイマーボタンの選択状態を復元 */
   var btns=document.querySelectorAll('.timer-btn');
@@ -666,9 +680,21 @@ function showSetup(){
 }
 
 function changeCount(d){
-  S.playerCount=Math.max(3,Math.min(6,S.playerCount+d));
+  S.playerCount=Math.max(3,Math.min(20,S.playerCount+d));
+  S.wolfCount=Math.min(Math.max(1,S.wolfCount),Math.max(1,S.playerCount-1));
+  lsSet(LS_WOLF_CNT,S.wolfCount);
+  document.getElementById('wolf-count-display').textContent=S.wolfCount;
   document.getElementById('count-display').textContent=S.playerCount;
   renderPlayerInputs();
+}
+
+
+
+function changeWolfCount(d){
+  var maxWolf=Math.max(1,S.playerCount-1);
+  S.wolfCount=Math.max(1,Math.min(maxWolf,S.wolfCount+d));
+  lsSet(LS_WOLF_CNT,S.wolfCount);
+  document.getElementById('wolf-count-display').textContent=S.wolfCount;
 }
 
 function renderPlayerInputs(){
@@ -832,7 +858,7 @@ function addWordPair(){
   a.style.borderBottom='';
   b.style.borderBottom='';
   if(!av||!bv){
-    setWordEditorError('市民とウルフの両方のお題を入力してください。');
+    setWordEditorError('お題Aとお題Bの両方を入力してください。');
     a.style.borderBottom='2px solid #FF3366';
     b.style.borderBottom='2px solid #FF3366';
     return;
@@ -899,7 +925,7 @@ function startGame(){
   if(Math.random()<0.5){S.citizenWord=pair[0];S.wolfWord=pair[1];}
   else{S.citizenWord=pair[1];S.wolfWord=pair[0];}
 
-  var wolfCount=S.playerCount>=5?2:1;
+  var wolfCount=Math.max(1,Math.min(S.wolfCount,S.playerCount-1));
   S.roles=[];
   for(var j=0;j<S.playerCount;j++) S.roles.push('citizen');
   var pool=[];

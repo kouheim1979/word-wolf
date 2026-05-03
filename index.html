@@ -120,6 +120,10 @@ button:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--c-line);}
 .word-add-row{background:#BBF7D0;}
 .word-add-card{padding:14px 16px;}
 .word-add-fields{display:flex;flex-direction:column;gap:10px;}
+.genre-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px;}
+.genre-btn{min-height:42px;padding:8px 10px;border:3px solid var(--c-line);border-radius:12px;background:var(--c-cream);box-shadow:var(--sh-1);font-weight:800;font-size:14px;}
+.genre-btn.selected{background:var(--c-sun);}
+.genre-select{width:100%;min-height:42px;border:3px solid var(--c-line);border-radius:12px;padding:8px 10px;background:var(--c-paper);font-weight:700;}
 .word-add-fields .word-input{width:100%;max-width:100%;min-width:0;background:var(--c-paper);}
 .word-add-fields .form-action-button{align-self:flex-end;margin-top:2px;}
 .word-list-card .word-pair-list{margin-top:0;}
@@ -232,6 +236,7 @@ button:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--c-line);}
   #words-screen .word-sep{justify-self:center;}
   #words-screen .word-row-action{align-self:flex-end;}
   #words-screen .word-add-fields .form-action-button{align-self:stretch;}
+  .genre-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
   .word-pair-row{flex-direction:column;align-items:stretch;}
   .word-row-action{align-self:flex-end;}
 }
@@ -284,6 +289,11 @@ button:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--c-line);}
             <button class="count-btn" onclick="changeWolfCount(1)">＋</button>
           </div>
           <div class="setup-help" style="text-align:center;margin-top:8px;">最大でプレイヤー人数 - 1 人まで設定できます<br>※2人プレイ時は「ウルフあり / なし」を毎回ランダムで決定</div>
+        </div>
+
+        <div class="section-card">
+          <span class="section-label">🏷️ お題ジャンル</span>
+          <div class="genre-grid" id="setup-genre-grid"></div>
         </div>
 
         <div class="section-card">
@@ -347,6 +357,7 @@ button:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--c-line);}
         <div class="word-add-fields">
           <input class="word-input" type="text" id="new-a" placeholder="お題Aを入力" oninput="setWordEditorError('')">
           <input class="word-input" type="text" id="new-b" placeholder="お題Bを入力" oninput="setWordEditorError('')">
+          <select id="new-genre" class="genre-select"></select>
           <button class="btn-sm-add form-action-button" onclick="addWordPair()">＋ 追加</button>
         </div>
         <div class="word-editor-error" id="word-editor-error" role="status" aria-live="polite"></div>
@@ -559,6 +570,10 @@ var LS_REVERSAL = 'ww_reversal';
 var LS_HINT     = 'ww_hint';
 var LS_TIMER    = 'ww_timer';
 var LS_WOLF_CNT = 'ww_wolf_count';
+var LS_GENRE    = 'ww_genre';
+var ALL_GENRE   = 'ぜんぶ';
+var UNCATEGORIZED_GENRE = '未分類';
+var GENRES      = [ALL_GENRE,'一般','食べ物','企業・お店','難しい','恋愛','盛り上がる',UNCATEGORIZED_GENRE];
 
 function lsGet(k,def){ try{ var v=localStorage.getItem(k); return v!==null?JSON.parse(v):def; }catch(e){ return def; } }
 function lsSet(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
@@ -568,6 +583,7 @@ function lsSet(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){}
 ════════════════════════ */
 var S={
   wordPairs: lsGet(LS_PAIRS, BUILTIN_PAIRS.slice()),
+  selectedGenre: lsGet(LS_GENRE, ALL_GENRE),
   playerCount:4, playerNames:[],
   wolfCount:   lsGet(LS_WOLF_CNT, 1),
   timerSecs:   lsGet(LS_TIMER,    180),
@@ -578,6 +594,19 @@ var S={
   timerHandle:null, remaining:0, paused:false,
   votes:{}, mostVoted:[], wolfCaught:false
 };
+S.wordPairs=(S.wordPairs||[]).map(function(p){ return normalizePair(p, UNCATEGORIZED_GENRE); });
+if(GENRES.indexOf(S.selectedGenre)<0) S.selectedGenre=ALL_GENRE;
+
+function genreFromCategoryName(name){
+  var g=String(name||'').trim();
+  return g || UNCATEGORIZED_GENRE;
+}
+function normalizePair(pair, fallbackGenre){
+  var genre = fallbackGenre || UNCATEGORIZED_GENRE;
+  if(Array.isArray(pair)) return { citizen: String(pair[0]||''), wolf: String(pair[1]||''), genre: genre };
+  if(pair && typeof pair==='object') return { citizen: String(pair.citizen||pair[0]||''), wolf: String(pair.wolf||pair[1]||''), genre: String(pair.genre||genre) };
+  return { citizen:'', wolf:'', genre: genre };
+}
 
 /* ════════════════════════
    JSON読み込み
@@ -608,7 +637,7 @@ function loadOneJSON(filename){
         if(data.categories){
           for(var i=0;i<data.categories.length;i++){
             var cat = data.categories[i];
-            if(cat.pairs) for(var j=0;j<cat.pairs.length;j++) pairs.push(cat.pairs[j]);
+            if(cat.pairs) for(var j=0;j<cat.pairs.length;j++) pairs.push(normalizePair(cat.pairs[j], genreFromCategoryName(cat.name)));
           }
         }
         if(pairs.length > 0) jsonLoaded[filename] = pairs;
@@ -633,12 +662,12 @@ function mergeLoadedJSON(){
      編集済みペアを優先し、JSONにしかない新規ペアを末尾に追加 */
   var lsPairs = lsGet(LS_PAIRS, null);
   if(lsPairs !== null && lsPairs.length > 0){
-    var base = lsPairs.slice();
+    var base = lsPairs.map(function(p){ return normalizePair(p, UNCATEGORIZED_GENRE); });
     for(var k=0;k<allFromJSON.length;k++){
       var p = allFromJSON[k];
       var found = false;
       for(var m=0;m<base.length;m++){
-        if(base[m][0]===p[0] && base[m][1]===p[1]){ found=true; break; }
+        if(base[m].citizen===p.citizen && base[m].wolf===p.wolf){ found=true; break; }
       }
       if(!found) base.push(p);
     }
@@ -651,6 +680,8 @@ function mergeLoadedJSON(){
   }
   renderWordStats();
   renderWordList();
+  renderNewGenreSelect();
+  renderGenreButtons();
 }
 
 /* ════════════════════════
@@ -677,6 +708,19 @@ function showSetup(){
   var timerMap=[120,180,300,0];
   for(var i=0;i<btns.length;i++){
     btns[i].classList.toggle('selected', timerMap[i]===S.timerSecs);
+  }
+  renderGenreButtons();
+}
+function renderGenreButtons(){
+  var box=document.getElementById('setup-genre-grid');
+  if(!box) return;
+  box.innerHTML='';
+  for(var i=0;i<GENRES.length;i++){
+    var g=GENRES[i], b=document.createElement('button');
+    b.className='genre-btn'+(S.selectedGenre===g?' selected':'');
+    b.textContent=g;
+    b.onclick=(function(genre){ return function(){ S.selectedGenre=genre; lsSet(LS_GENRE,genre); renderGenreButtons(); };})(g);
+    box.appendChild(b);
   }
 }
 
@@ -804,8 +848,21 @@ function setWordEditorError(msg){
 function showWords(){
   renderWordStats();
   renderWordList();
+  renderNewGenreSelect();
   setWordEditorError('');
   showScreen('words-screen');
+}
+function renderNewGenreSelect(){
+  var el=document.getElementById('new-genre');
+  if(!el) return;
+  el.innerHTML='';
+  for(var i=0;i<GENRES.length;i++){
+    if(GENRES[i]===ALL_GENRE) continue;
+    var op=document.createElement('option');
+    op.value=GENRES[i];
+    op.textContent='ジャンル: '+GENRES[i];
+    el.appendChild(op);
+  }
 }
 
 function renderWordStats(){
@@ -818,11 +875,12 @@ function renderWordList(){
   if(!list) return;
   list.innerHTML='';
   for(var i=0;i<S.wordPairs.length;i++){
-    list.appendChild(makePairRow(i, S.wordPairs[i][0], S.wordPairs[i][1]));
+    list.appendChild(makePairRow(i, S.wordPairs[i]));
   }
 }
 
-function makePairRow(idx, a, b){
+function makePairRow(idx, pair){
+  var a=pair.citizen, b=pair.wolf, g=pair.genre||UNCATEGORIZED_GENRE;
   var row=document.createElement('div');
   row.className='word-pair-row';
   row.dataset.idx=idx;
@@ -832,15 +890,22 @@ function makePairRow(idx, a, b){
       '<span class="word-sep">vs</span>'+
       '<input class="word-input" type="text" value="'+esc(b)+'" placeholder="お題B" onchange="updatePair('+idx+',1,this.value)">'+
     '</div>'+
+    '<select class="genre-select" onchange="updatePairGenre('+idx+',this.value)">'+GENRES.filter(function(x){return x!==ALL_GENRE;}).map(function(x){return '<option value="'+esc(x)+'"'+(x===g?' selected':'')+'>'+esc(x)+'</option>';}).join('')+'</select>'+
     '<button class="btn-sm-danger word-row-action" onclick="deletePair('+idx+')">✕</button>';
   return row;
 }
 
 function updatePair(idx,col,val){
   if(idx<0||idx>=S.wordPairs.length) return;
-  S.wordPairs[idx][col]=val.trim();
+  if(col===0) S.wordPairs[idx].citizen=val.trim();
+  else S.wordPairs[idx].wolf=val.trim();
   lsSet(LS_PAIRS,S.wordPairs);
   renderWordStats();
+}
+function updatePairGenre(idx,val){
+  if(idx<0||idx>=S.wordPairs.length) return;
+  S.wordPairs[idx].genre=val;
+  lsSet(LS_PAIRS,S.wordPairs);
 }
 
 function deletePair(idx){
@@ -865,13 +930,14 @@ function addWordPair(){
     return;
   }
   for(var i=0;i<S.wordPairs.length;i++){
-    if(S.wordPairs[i][0]===av&&S.wordPairs[i][1]===bv){
+    if(S.wordPairs[i].citizen===av&&S.wordPairs[i].wolf===bv){
       setWordEditorError('同じお題ペアはすでに登録されています。');
       return;
     }
   }
   setWordEditorError('');
-  S.wordPairs.push([av,bv]);
+  var genreEl=document.getElementById('new-genre');
+  S.wordPairs.push({citizen:av,wolf:bv,genre:(genreEl&&genreEl.value)||UNCATEGORIZED_GENRE});
   lsSet(LS_PAIRS,S.wordPairs);
   renderWordStats();
   renderWordList();
@@ -927,9 +993,15 @@ function startGame(){
   lsSet(LS_NAMES,S.playerNames);
 
   var pairs=S.wordPairs.length>0?S.wordPairs:BUILTIN_PAIRS;
-  var pair=pairs[Math.floor(Math.random()*pairs.length)];
-  if(Math.random()<0.5){S.citizenWord=pair[0];S.wolfWord=pair[1];}
-  else{S.citizenWord=pair[1];S.wolfWord=pair[0];}
+  var candidates = S.selectedGenre===ALL_GENRE ? pairs : pairs.filter(function(p){ return (p.genre||UNCATEGORIZED_GENRE)===S.selectedGenre; });
+  if(candidates.length===0){
+    alert('「'+S.selectedGenre+'」ジャンルにはお題がありません。ジャンルを変更してください。');
+    showScreen('setup-screen');
+    return;
+  }
+  var pair=candidates[Math.floor(Math.random()*candidates.length)];
+  if(Math.random()<0.5){S.citizenWord=pair.citizen;S.wolfWord=pair.wolf;}
+  else{S.citizenWord=pair.wolf;S.wolfWord=pair.citizen;}
 
   var isTwoPlayer = (S.playerCount===2);
   var hasWolf = !isTwoPlayer || Math.random()<0.5;
@@ -1243,18 +1315,26 @@ function redealFromOverlay(){
 ════════════════════════ */
 function redealGame(){
   var pairs=S.wordPairs.length>0?S.wordPairs:BUILTIN_PAIRS;
+  if(S.selectedGenre!==ALL_GENRE){
+    pairs=pairs.filter(function(p){ return (p.genre||UNCATEGORIZED_GENRE)===S.selectedGenre; });
+  }
+  if(pairs.length===0){
+    alert('「'+S.selectedGenre+'」ジャンルにはお題がありません。ジャンルを変更してください。');
+    showScreen('setup-screen');
+    return;
+  }
   var candidates=[];
   for(var i=0;i<pairs.length;i++){
     var p=pairs[i];
-    if(p[0]!==S.citizenWord&&p[1]!==S.citizenWord&&
-       p[0]!==S.wolfWord  &&p[1]!==S.wolfWord){
+    if(p.citizen!==S.citizenWord&&p.wolf!==S.citizenWord&&
+       p.citizen!==S.wolfWord  &&p.wolf!==S.wolfWord){
       candidates.push(p);
     }
   }
   if(candidates.length===0) candidates=pairs;
   var pair=candidates[Math.floor(Math.random()*candidates.length)];
-  if(Math.random()<0.5){S.citizenWord=pair[0];S.wolfWord=pair[1];}
-  else{S.citizenWord=pair[1];S.wolfWord=pair[0];}
+  if(Math.random()<0.5){S.citizenWord=pair.citizen;S.wolfWord=pair.wolf;}
+  else{S.citizenWord=pair.wolf;S.wolfWord=pair.citizen;}
   S.dealIdx=0;
   setupDealScreen();
 }
@@ -1297,6 +1377,7 @@ document.addEventListener('visibilitychange',function(){
   document.getElementById('toggle-reversal').classList.toggle('on',S.reversalEnabled);
   document.getElementById('sw-hint').classList.toggle('on',S.hintEnabled);
   document.getElementById('toggle-hint').classList.toggle('on',S.hintEnabled);
+  lsSet(LS_GENRE,S.selectedGenre);
   tryLoadJSON();
   renderPlayerInputs();
   document.addEventListener('click',function(e){ if(e.target&&e.target.tagName==='BUTTON') playTapFx(); });

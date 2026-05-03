@@ -69,6 +69,14 @@ button:focus-visible,input:focus-visible{outline:none;box-shadow:0 0 0 4px rgba(
 .words-editor-card{padding:16px 16px 14px;transform:none;}
 .word-editor-error{min-height:22px;margin:8px 0 4px;color:var(--c-hero-dk);font-size:13px;font-weight:700;}
 .word-editor-error:empty{display:none;}
+.import-export-controls{display:flex;flex-direction:column;gap:10px;}
+.import-mode-row{display:flex;flex-direction:column;gap:8px;background:var(--c-cream);border:2px dashed var(--c-line);border-radius:12px;padding:10px 12px;}
+.import-mode-option{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;}
+.import-mode-option input{accent-color:var(--c-hero);}
+.import-export-buttons{display:flex;flex-direction:column;gap:8px;}
+.import-export-buttons .btn-secondary,.import-export-buttons .btn-primary{margin:0;min-height:50px;}
+.import-export-message{min-height:22px;margin-top:2px;color:var(--c-deep-dk);font-size:13px;font-weight:700;}
+.import-export-message.error{color:var(--c-hero-dk);}
 .word-pair-list{display:flex;flex-direction:column;gap:10px;margin-top:8px;}
 .word-pair-row{display:flex;align-items:center;gap:8px;padding:8px 10px;}
 .word-pair-inputs{flex:1;min-width:0;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:8px;}
@@ -352,6 +360,22 @@ button:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--c-line);}
       <div class="section-label words-description">お題AとBはゲームごとにランダムで市民／ウルフに割り当てられます</div>
     </header>
     <main class="screen-main scrollable">
+      <div class="section-card words-editor-card word-add-card">
+        <div class="section-label" style="margin-bottom:8px;">お題ファイル</div>
+        <div class="import-export-controls">
+          <input type="file" id="import-json-input" accept=".json,application/json" style="display:none;" onchange="handleImportJsonFile(event)">
+          <div class="import-export-buttons">
+            <button class="btn-secondary" id="import-json-button" onclick="triggerImportJson()">JSONを取り込む</button>
+            <button class="btn-primary" id="export-json-button" onclick="exportWordsJson()">現在のお題をエクスポート</button>
+          </div>
+          <div class="import-mode-row">
+            <div class="section-label" style="margin-bottom:0;">取り込み方法</div>
+            <label class="import-mode-option"><input type="radio" id="import-mode-add" name="import-mode" value="add" checked>今のお題に追加</label>
+            <label class="import-mode-option"><input type="radio" id="import-mode-replace" name="import-mode" value="replace">全部消して置き換え</label>
+          </div>
+          <div class="import-export-message" id="import-export-message" role="status" aria-live="polite"></div>
+        </div>
+      </div>
       <div class="section-card words-editor-card word-add-card">
         <div class="section-label" style="margin-bottom:8px;">新しいお題ペアを追加</div>
         <div class="word-add-fields">
@@ -715,8 +739,9 @@ function renderGenreButtons(){
   var box=document.getElementById('setup-genre-grid');
   if(!box) return;
   box.innerHTML='';
-  for(var i=0;i<GENRES.length;i++){
-    var g=GENRES[i], b=document.createElement('button');
+  var genres=getAvailableGenres(true);
+  for(var i=0;i<genres.length;i++){
+    var g=genres[i], b=document.createElement('button');
     b.className='genre-btn'+(S.selectedGenre===g?' selected':'');
     b.textContent=g;
     b.onclick=(function(genre){ return function(){ S.selectedGenre=genre; lsSet(LS_GENRE,genre); renderGenreButtons(); };})(g);
@@ -852,15 +877,27 @@ function showWords(){
   setWordEditorError('');
   showScreen('words-screen');
 }
+function getAvailableGenres(includeAll){
+  var list=[];
+  for(var i=0;i<GENRES.length;i++){
+    if(includeAll || GENRES[i]!==ALL_GENRE) list.push(GENRES[i]);
+  }
+  for(var j=0;j<S.wordPairs.length;j++){
+    var g=String((S.wordPairs[j]&&S.wordPairs[j].genre)||UNCATEGORIZED_GENRE).trim()||UNCATEGORIZED_GENRE;
+    if(g===ALL_GENRE) g=UNCATEGORIZED_GENRE;
+    if(list.indexOf(g)<0) list.push(g);
+  }
+  return list;
+}
 function renderNewGenreSelect(){
   var el=document.getElementById('new-genre');
   if(!el) return;
   el.innerHTML='';
-  for(var i=0;i<GENRES.length;i++){
-    if(GENRES[i]===ALL_GENRE) continue;
+  var genres=getAvailableGenres(false);
+  for(var i=0;i<genres.length;i++){
     var op=document.createElement('option');
-    op.value=GENRES[i];
-    op.textContent='ジャンル: '+GENRES[i];
+    op.value=genres[i];
+    op.textContent='ジャンル: '+genres[i];
     el.appendChild(op);
   }
 }
@@ -881,6 +918,7 @@ function renderWordList(){
 
 function makePairRow(idx, pair){
   var a=pair.citizen, b=pair.wolf, g=pair.genre||UNCATEGORIZED_GENRE;
+  var genres=getAvailableGenres(false);
   var row=document.createElement('div');
   row.className='word-pair-row';
   row.dataset.idx=idx;
@@ -890,7 +928,7 @@ function makePairRow(idx, pair){
       '<span class="word-sep">vs</span>'+
       '<input class="word-input" type="text" value="'+esc(b)+'" placeholder="お題B" onchange="updatePair('+idx+',1,this.value)">'+
     '</div>'+
-    '<select class="genre-select" onchange="updatePairGenre('+idx+',this.value)">'+GENRES.filter(function(x){return x!==ALL_GENRE;}).map(function(x){return '<option value="'+esc(x)+'"'+(x===g?' selected':'')+'>'+esc(x)+'</option>';}).join('')+'</select>'+
+    '<select class="genre-select" onchange="updatePairGenre('+idx+',this.value)">'+genres.map(function(x){return '<option value="'+esc(x)+'"'+(x===g?' selected':'')+'>'+esc(x)+'</option>';}).join('')+'</select>'+
     '<button class="btn-sm-danger word-row-action" onclick="deletePair('+idx+')">✕</button>';
   return row;
 }
@@ -929,8 +967,9 @@ function addWordPair(){
     b.style.borderBottom='2px solid #FF3366';
     return;
   }
+  var newKey = makePairKey({citizen:av,wolf:bv});
   for(var i=0;i<S.wordPairs.length;i++){
-    if(S.wordPairs[i].citizen===av&&S.wordPairs[i].wolf===bv){
+    if(makePairKey(S.wordPairs[i])===newKey){
       setWordEditorError('同じお題ペアはすでに登録されています。');
       return;
     }
@@ -945,6 +984,151 @@ function addWordPair(){
   /* 追加されたペアが見える位置までスクロール */
   var list=document.getElementById('word-pair-list');
   if(list && list.lastElementChild) list.lastElementChild.scrollIntoView({block:'nearest'});
+}
+
+function setImportExportMessage(msg,isError){
+  var el=document.getElementById('import-export-message');
+  if(!el) return;
+  el.textContent=msg||'';
+  el.classList.toggle('error',!!isError);
+}
+function getImportMode(){
+  var replaceEl=document.getElementById('import-mode-replace');
+  return replaceEl&&replaceEl.checked?'replace':'add';
+}
+function makePairKey(pair){
+  var a=String((pair&&pair.citizen)||'').trim();
+  var b=String((pair&&pair.wolf)||'').trim();
+  if(!a||!b) return '';
+  return [a,b].sort().join('###');
+}
+function triggerImportJson(){
+  var input=document.getElementById('import-json-input');
+  if(input) input.click();
+}
+function normalizeImportedPair(pair,fallbackGenre){
+  var norm=normalizePair(pair,fallbackGenre||UNCATEGORIZED_GENRE);
+  norm.citizen=String(norm.citizen||'').trim();
+  norm.wolf=String(norm.wolf||'').trim();
+  norm.genre=String(norm.genre||fallbackGenre||UNCATEGORIZED_GENRE).trim()||UNCATEGORIZED_GENRE;
+  if(norm.genre===ALL_GENRE) norm.genre=UNCATEGORIZED_GENRE;
+  return norm;
+}
+function extractPairsFromImportedJson(data){
+  var out=[],invalid=0,sameWord=0;
+  function pushPair(pair,fallbackGenre){
+    var p=normalizeImportedPair(pair,fallbackGenre);
+    if(!p.citizen||!p.wolf){ invalid++; return; }
+    if(p.citizen===p.wolf){ sameWord++; return; }
+    out.push(p);
+  }
+  if(Array.isArray(data)){
+    for(var i=0;i<data.length;i++){
+      var item=data[i];
+      if(Array.isArray(item)) pushPair(item,UNCATEGORIZED_GENRE);
+      else if(item&&typeof item==='object') pushPair(item,genreFromCategoryName(item.genre));
+      else invalid++;
+    }
+  } else if(data&&typeof data==='object'){
+    if(Array.isArray(data.categories)){
+      for(var c=0;c<data.categories.length;c++){
+        var cat=data.categories[c]||{};
+        var genre=genreFromCategoryName(cat.name);
+        if(!Array.isArray(cat.pairs)) continue;
+        for(var p=0;p<cat.pairs.length;p++) pushPair(cat.pairs[p],genre);
+      }
+    }
+    if(Array.isArray(data.pairs)){
+      for(var j=0;j<data.pairs.length;j++) pushPair(data.pairs[j],UNCATEGORIZED_GENRE);
+    }
+  } else {
+    throw new Error('invalid-json-structure');
+  }
+  return {pairs:out,invalid:invalid,sameWord:sameWord};
+}
+function applyImportedPairs(importedPairs, mode, sameWordCount, invalidCount){
+  var target=mode==='replace'?[]:S.wordPairs.slice();
+  var seen={};
+  for(var i=0;i<target.length;i++) seen[makePairKey(target[i])]=true;
+  var added=0,dup=0;
+  for(var j=0;j<importedPairs.length;j++){
+    var p=importedPairs[j];
+    var key=makePairKey(p);
+    if(!key){ continue; }
+    if(seen[key]){ dup++; continue; }
+    seen[key]=true;
+    target.push(p);
+    added++;
+  }
+  if(mode==='replace'){
+    if(!confirm('現在のお題をすべて削除して、選択したJSONのお題に置き換えます。よろしいですか？')) return false;
+    S.wordPairs=target;
+    lsSet(LS_PAIRS,S.wordPairs);
+    renderWordStats(); renderWordList(); renderNewGenreSelect(); renderGenreButtons();
+    setImportExportMessage('現在のお題を削除し、'+added+'件を読み込みました。'+(invalidCount>0?' 不正データを'+invalidCount+'件除外しました。':'')+(sameWordCount>0?' お題Aとお題Bが同じペアを'+sameWordCount+'件除外しました。':''),false);
+    return true;
+  }
+  S.wordPairs=target;
+  lsSet(LS_PAIRS,S.wordPairs);
+  renderWordStats(); renderWordList(); renderNewGenreSelect(); renderGenreButtons();
+  setImportExportMessage(added+'件を追加しました。重複'+dup+'件はスキップしました。'+(invalidCount>0?' 不正データを'+invalidCount+'件除外しました。':'')+(sameWordCount>0?' お題Aとお題Bが同じペアを'+sameWordCount+'件除外しました。':''),false);
+  return true;
+}
+function handleImportJsonFile(event){
+  var input=event&&event.target;
+  var file=input&&input.files&&input.files[0];
+  if(!file) return;
+  var reader=new FileReader();
+  reader.onload=function(){
+    try{
+      var raw=String(reader.result||'');
+      var data=JSON.parse(raw);
+      var result=extractPairsFromImportedJson(data);
+      if(result.pairs.length===0){
+        setImportExportMessage('有効なお題ペアが見つかりませんでした。',true);
+        return;
+      }
+      applyImportedPairs(result.pairs,getImportMode(),result.sameWord,result.invalid);
+    }catch(e){
+      setImportExportMessage('JSON形式が正しくありません。',true);
+    }finally{
+      input.value='';
+    }
+  };
+  reader.onerror=function(){
+    setImportExportMessage('JSONファイルを読み込めませんでした。',true);
+    input.value='';
+  };
+  reader.readAsText(file,'UTF-8');
+}
+function buildExportJsonFromPairs(pairs){
+  var grouped={};
+  var order=[];
+  for(var i=0;i<pairs.length;i++){
+    var p=normalizeImportedPair(pairs[i],UNCATEGORIZED_GENRE);
+    if(!p.citizen||!p.wolf||p.citizen===p.wolf) continue;
+    var g=p.genre===ALL_GENRE?UNCATEGORIZED_GENRE:p.genre;
+    if(!grouped[g]){ grouped[g]=[]; order.push(g); }
+    grouped[g].push([p.citizen,p.wolf]);
+  }
+  return {categories:order.map(function(g){ return {name:g,pairs:grouped[g]}; })};
+}
+function exportWordsJson(){
+  var data=buildExportJsonFromPairs(S.wordPairs);
+  if(!data.categories.length){
+    setImportExportMessage('エクスポートできるお題がありません。',true);
+    return;
+  }
+  var json=JSON.stringify(data,null,2);
+  var blob=new Blob([json],{type:'application/json;charset=utf-8'});
+  var url=URL.createObjectURL(blob);
+  var d=new Date();
+  var yyyymmdd=d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');
+  var a=document.createElement('a');
+  a.href=url;
+  a.download='word-wolf-words-'+yyyymmdd+'.json';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  setImportExportMessage('現在のお題をJSONでエクスポートしました。',false);
 }
 
 function tone(freq,dur,type,vol){

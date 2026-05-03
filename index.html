@@ -268,7 +268,7 @@ button:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--c-line);}
     <main class="screen-main scrollable">
       <div class="setup-stack">
         <div class="section-card">
-          <span class="section-label">👥 プレイ人数</span>
+          <span class="section-label">👥 プレイ人数 <span class="setup-help">（2人からOK）</span></span>
           <div class="count-row">
             <button class="count-btn" onclick="changeCount(-1)">－</button>
             <div class="count-display" id="count-display">4</div>
@@ -283,7 +283,7 @@ button:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--c-line);}
             <div class="count-display" id="wolf-count-display">1</div>
             <button class="count-btn" onclick="changeWolfCount(1)">＋</button>
           </div>
-          <div class="setup-help" style="text-align:center;margin-top:8px;">最大でプレイヤー人数 - 1 人まで設定できます</div>
+          <div class="setup-help" style="text-align:center;margin-top:8px;">最大でプレイヤー人数 - 1 人まで設定できます<br>※2人プレイ時は「ウルフあり / なし」を毎回ランダムで決定</div>
         </div>
 
         <div class="section-card">
@@ -681,7 +681,7 @@ function showSetup(){
 }
 
 function changeCount(d){
-  S.playerCount=Math.max(3,Math.min(20,S.playerCount+d));
+  S.playerCount=Math.max(2,Math.min(20,S.playerCount+d));
   S.wolfCount=Math.min(Math.max(1,S.wolfCount),Math.max(1,S.playerCount-1));
   lsSet(LS_WOLF_CNT,S.wolfCount);
   document.getElementById('wolf-count-display').textContent=S.wolfCount;
@@ -919,6 +919,11 @@ function startGame(){
   for(var i=0;i<inputs.length;i++)
     S.playerNames.push(inputs[i].value.trim()||'プレイヤー '+(i+1));
   S.playerCount=S.playerNames.length;
+  if(S.playerCount<2){
+    alert('2人以上で遊べます。プレイヤー人数を確認してください。');
+    showScreen('setup-screen');
+    return;
+  }
   lsSet(LS_NAMES,S.playerNames);
 
   var pairs=S.wordPairs.length>0?S.wordPairs:BUILTIN_PAIRS;
@@ -926,14 +931,21 @@ function startGame(){
   if(Math.random()<0.5){S.citizenWord=pair[0];S.wolfWord=pair[1];}
   else{S.citizenWord=pair[1];S.wolfWord=pair[0];}
 
-  var wolfCount=Math.max(1,Math.min(S.wolfCount,S.playerCount-1));
+  var isTwoPlayer = (S.playerCount===2);
+  var hasWolf = !isTwoPlayer || Math.random()<0.5;
+
   S.roles=[];
   for(var j=0;j<S.playerCount;j++) S.roles.push('citizen');
-  var pool=[];
-  for(var k=0;k<S.playerCount;k++) pool.push(k);
-  for(var w=0;w<wolfCount;w++){
-    var ri=Math.floor(Math.random()*pool.length);
-    S.roles[pool[ri]]='wolf'; pool.splice(ri,1);
+
+  if(hasWolf){
+    var wolfCount=Math.max(1,Math.min(S.wolfCount,S.playerCount-1));
+    var pool=[];
+    for(var k=0;k<S.playerCount;k++) pool.push(k);
+    for(var w=0;w<wolfCount;w++){
+      var ri=Math.floor(Math.random()*pool.length);
+      S.roles[pool[ri]]='wolf';
+      pool.splice(ri,1);
+    }
   }
 
   S.dealIdx=0; S.votes={}; S.mostVoted=[]; S.wolfCaught=false;
@@ -951,7 +963,11 @@ function setupDealScreen(){
     html+='<div class="dot'+(i===0?' current':'')+'" id="dot-'+i+'"></div>';
   document.getElementById('progress-dots').innerHTML=html;
   var wc=0; for(var j=0;j<S.roles.length;j++) if(S.roles[j]==='wolf') wc++;
-  document.getElementById('wolf-count-badge').innerHTML='🐺 ウルフは <span>'+wc+'人</span>います';
+  if(S.playerCount===2){
+    document.getElementById('wolf-count-badge').innerHTML='🐺 2人プレイ中：ウルフがいるかどうかはランダムです';
+  } else {
+    document.getElementById('wolf-count-badge').innerHTML='🐺 ウルフは <span>'+wc+'人</span>います';
+  }
   document.getElementById('reversal-info-badge').style.display=S.reversalEnabled?'block':'none';
   renderDealCard();
 }
@@ -1107,9 +1123,10 @@ function processVoteResult(){
   for(var m in S.votes) if(S.votes.hasOwnProperty(m)&&S.votes[m]===maxV&&maxV>0) S.mostVoted.push(m);
   var wolves=[];
   for(var i=0;i<S.playerNames.length;i++) if(S.roles[i]==='wolf') wolves.push(S.playerNames[i]);
+  var hasWolf = wolves.length>0;
   S.wolfCaught=false;
   for(var j=0;j<S.mostVoted.length;j++) if(wolves.indexOf(S.mostVoted[j])>=0){S.wolfCaught=true;break;}
-  if(S.reversalEnabled&&S.wolfCaught) showReversalScreen();
+  if(hasWolf && S.reversalEnabled && S.wolfCaught) showReversalScreen();
   else showResult(false);
 }
 
@@ -1139,6 +1156,10 @@ function showResult(reversalWin){
     emoji.textContent='🌀'; title.textContent='大逆転！ウルフの勝利！'; playSuccessFx(); fireConfetti(52);
     title.className='result-title reversal-wins';
     desc.textContent='ウルフが市民のお題を見事に当てて大逆転！\n「'+wolves.join('、')+'」の勝利！';
+  } else if(S.playerCount===2 && wolves.length===0){
+    emoji.textContent='🕊️'; title.textContent='平和な村でした！'; playSuccessFx(); fireConfetti(40);
+    title.className='result-title citizen-wins';
+    desc.textContent='今回はウルフなし！\n全員が同じお題の市民でした。';
   } else if(S.wolfCaught){
     emoji.textContent='🎉'; title.textContent='市民の勝利！'; playSuccessFx(); fireConfetti(48);
     title.className='result-title citizen-wins';
@@ -1151,7 +1172,7 @@ function showResult(reversalWin){
   }
 
   document.getElementById('r-citizen').textContent=S.citizenWord;
-  document.getElementById('r-wolf-word').textContent=S.wolfWord;
+  document.getElementById('r-wolf-word').textContent=(S.playerCount===2 && wolves.length===0)?'（なし）':S.wolfWord;
 
   /* プレイヤー別お題一覧 */
   var listEl=document.getElementById('player-result-list');

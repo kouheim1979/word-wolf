@@ -1,0 +1,672 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>简体字ノート</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700&family=Noto+Serif+JP:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Sans:ital,wght@0,500;1,500&display=swap">
+<style>
+/* Layout: one narrow column like a copybook page; the 米字格 practice square is the hero of every view. */
+:root {
+  --paper: #f5f7f3;
+  --sheet: #ffffff;
+  --ink: #1b211e;
+  --ink-soft: #5b6660;
+  --line: #d9e0da;
+  --grid: #8fc4a6;          /* green guide lines, like a 田字格 notebook */
+  --jade: #1d6b4c;          /* 简体字 accent */
+  --jade-wash: #e3f0e8;
+  --indigo: #39477f;        /* 日本漢字 accent */
+  --indigo-wash: #e7e9f4;
+  --good: #1d7a45;
+  --bad: #b23a2e;
+  --bad-wash: #f8e5e2;
+  --font-cn: "Noto Serif SC", "Songti SC", "SimSun", serif;
+  --font-jp: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --font-ui: "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
+  --font-py: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #121614; --sheet: #1a201d; --ink: #e6ece8; --ink-soft: #9aa7a0; --line: #2c3531;
+    --grid: #2f6a4b; --jade: #6fd1a0; --jade-wash: #1d3329; --indigo: #a7b3ec; --indigo-wash: #242a44;
+    --good: #6fd1a0; --bad: #f08a7c; --bad-wash: #3a2220; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #121614; --sheet: #1a201d; --ink: #e6ece8; --ink-soft: #9aa7a0; --line: #2c3531;
+  --grid: #2f6a4b; --jade: #6fd1a0; --jade-wash: #1d3329; --indigo: #a7b3ec; --indigo-wash: #242a44;
+  --good: #6fd1a0; --bad: #f08a7c; --bad-wash: #3a2220; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--paper); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 48px;
+}
+.cn { font-family: var(--font-cn); }
+.jp { font-family: var(--font-jp); }
+.py { font-family: var(--font-py); font-style: italic; letter-spacing: .02em; }
+.wrap { max-width: 640px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--jade); outline-offset: 2px; }
+
+header { display: flex; align-items: end; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.brand h1 { margin: 0; font-size: 26px; line-height: 1.2; font-weight: 700; letter-spacing: .04em; }
+.brand h1 .cn { color: var(--jade); }
+.brand p { margin: 2px 0 0; color: var(--ink-soft); font-size: 13px; }
+.progress { min-width: 160px; flex: 0 1 220px; font-size: 12px; color: var(--ink-soft); }
+.progress .bar { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+.progress .bar i { display: block; height: 100%; background: var(--jade); width: 0; transition: width .4s; }
+.progress b { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+nav { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--line); border-radius: 10px; background: var(--sheet); padding: 4px; gap: 4px; }
+nav button { border: 0; background: transparent; padding: 8px 4px; border-radius: 7px; font-weight: 500; font-size: 14px; color: var(--ink-soft); }
+nav button[aria-selected="true"] { background: var(--jade-wash); color: var(--jade); font-weight: 700; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { border: 1px solid var(--line); background: var(--sheet); border-radius: 999px; padding: 4px 12px; font-size: 13px; color: var(--ink-soft); }
+.chip[aria-pressed="true"] { border-color: var(--jade); color: var(--jade); background: var(--jade-wash); font-weight: 700; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+.toggle { display: inline-flex; gap: 6px; align-items: center; font-size: 13px; color: var(--ink-soft); }
+
+/* 米字格 */
+.mizi { position: relative; aspect-ratio: 1; max-width: 100%; border: 2px solid var(--grid); background: var(--sheet); display: grid; place-items: center; }
+.mizi svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.mizi svg line { stroke: var(--grid); stroke-width: 1; stroke-dasharray: 4 4; }
+.mizi span { position: relative; line-height: 1; }
+
+/* Flashcard */
+.card { background: var(--sheet); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+.pair { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 14px; }
+.side { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0; }
+.side .mizi { width: min(100%, 170px); }
+.side .mizi span { font-size: clamp(72px, 22vw, 116px); }
+.side.jpside .mizi { border-color: var(--line); }
+.side.jpside .mizi svg line { stroke: var(--line); }
+.side.jpside .mizi span { color: var(--indigo); }
+.side.cnside .mizi span { color: var(--jade); }
+.label { font-size: 11px; letter-spacing: .12em; color: var(--ink-soft); font-weight: 700; }
+.arrow { color: var(--ink-soft); font-size: 22px; }
+.hidden-char { color: var(--ink-soft) !important; opacity: .35; font-family: var(--font-ui) !important; font-size: 56px !important; }
+.meta { display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; min-height: 64px; }
+.meta .py { font-size: 24px; color: var(--ink); }
+.meta .mean { color: var(--ink-soft); font-size: 14px; }
+.tag { display: inline-block; font-size: 12px; padding: 2px 10px; border-radius: 999px; background: var(--indigo-wash); color: var(--indigo); font-weight: 500; }
+.actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.btn { border: 1px solid var(--line); background: var(--sheet); border-radius: 10px; padding: 12px; font-weight: 700; font-size: 15px; }
+.btn.primary { background: var(--jade); border-color: var(--jade); color: var(--sheet); }
+.btn.ghost { color: var(--ink-soft); font-weight: 500; }
+.btn.full { grid-column: 1 / -1; }
+.speak { border: 1px solid var(--line); background: var(--sheet); border-radius: 999px; width: 36px; height: 36px; display: inline-grid; place-items: center; color: var(--jade); }
+.speak svg { width: 18px; height: 18px; }
+.cardfoot { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+
+/* Quiz */
+.qprompt { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.qprompt .mizi { width: 150px; }
+.qprompt .mizi span { font-size: 104px; }
+.options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.opt { border: 1px solid var(--line); background: var(--sheet); border-radius: 12px; aspect-ratio: 1; font-size: clamp(34px, 10vw, 48px); line-height: 1; display: grid; place-items: center; }
+.opt.right { border-color: var(--good); background: var(--jade-wash); color: var(--good); }
+.opt.wrong { border-color: var(--bad); background: var(--bad-wash); color: var(--bad); }
+.opt:disabled { cursor: default; }
+.feedback { text-align: center; min-height: 52px; font-size: 14px; }
+.feedback strong.ok { color: var(--good); }
+.feedback strong.ng { color: var(--bad); }
+.dots { display: flex; gap: 4px; justify-content: center; }
+.dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+.dots i.ok { background: var(--good); }
+.dots i.ng { background: var(--bad); }
+.dots i.now { outline: 2px solid var(--jade); outline-offset: 1px; }
+.result { text-align: center; display: flex; flex-direction: column; gap: 10px; align-items: center; }
+.result .score { font-size: 48px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--jade); line-height: 1.1; }
+.misslist { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.miss { border: 1px solid var(--line); border-radius: 8px; padding: 4px 10px; font-size: 18px; }
+
+/* List */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 8px; }
+.cell { border: 1px solid var(--line); background: var(--sheet); border-radius: 10px; padding: 8px 4px 6px; display: flex; flex-direction: column; align-items: center; gap: 2px; position: relative; }
+.cell .c { font-size: 30px; line-height: 1.1; color: var(--jade); }
+.cell .j { font-size: 13px; color: var(--indigo); }
+.cell.known::after { content: ""; position: absolute; top: 6px; right: 6px; width: 7px; height: 7px; border-radius: 50%; background: var(--good); }
+.cell[aria-expanded="true"] { border-color: var(--jade); }
+.detail { background: var(--sheet); border: 1px solid var(--jade); border-radius: 12px; padding: 14px 16px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+.detail .big { font-size: 56px; line-height: 1; }
+.detail .txt { flex: 1; min-width: 160px; display: flex; flex-direction: column; gap: 2px; }
+.legend { font-size: 12px; color: var(--ink-soft); display: flex; gap: 14px; flex-wrap: wrap; }
+.legend span::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--good); margin-right: 5px; vertical-align: middle; }
+
+/* Rules */
+.intro { color: var(--ink-soft); font-size: 14px; margin: 0; max-width: 60ch; }
+.rules { display: flex; flex-direction: column; gap: 10px; }
+.rule { background: var(--sheet); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; align-items: center; }
+.rad { display: flex; align-items: center; gap: 8px; font-size: 32px; line-height: 1; }
+.rad .jp { color: var(--indigo); }
+.rad .cn { color: var(--jade); }
+.rad small { font-size: 16px; color: var(--ink-soft); }
+.ex { display: flex; flex-wrap: wrap; gap: 6px 12px; font-size: 17px; }
+.ex button { border: 0; background: none; padding: 0; }
+.ex .jp { color: var(--indigo); }
+.ex .cn { color: var(--jade); }
+.ex .to { color: var(--ink-soft); font-size: 12px; margin: 0 2px; }
+.rule .note { grid-column: 1 / -1; font-size: 12px; color: var(--ink-soft); }
+.tip { border-left: 3px solid var(--grid); padding: 6px 12px; font-size: 13px; color: var(--ink-soft); background: var(--sheet); border-radius: 0 8px 8px 0; }
+
+@media (max-width: 460px) {
+  .pair { gap: 8px; }
+  .arrow { font-size: 16px; }
+  .card { padding: 16px 12px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <h1><span class="cn">简体字</span>ノート</h1>
+      <p>日本の漢字から、中国の简体字へ。</p>
+    </div>
+    <div class="progress" aria-live="polite">
+      覚えた字 <b id="knownCount">0</b> / <b id="totalCount">0</b>
+      <div class="bar"><i id="knownBar"></i></div>
+    </div>
+  </header>
+
+  <nav role="tablist" aria-label="モード">
+    <button role="tab" id="tab-card" data-view="card" aria-selected="true">カード</button>
+    <button role="tab" id="tab-quiz" data-view="quiz" aria-selected="false">クイズ</button>
+    <button role="tab" id="tab-list" data-view="list" aria-selected="false">一覧</button>
+    <button role="tab" id="tab-rules" data-view="rules" aria-selected="false">部首ルール</button>
+  </nav>
+
+  <div class="toolbar" id="filterBar">
+    <div class="chips" id="groupChips"></div>
+    <label class="toggle"><input type="checkbox" id="onlyUnknown"> まだ覚えていない字だけ</label>
+  </div>
+
+  <section id="view-card"></section>
+  <section id="view-quiz" hidden></section>
+  <section id="view-list" hidden></section>
+  <section id="view-rules" hidden></section>
+</div>
+
+<script>
+// [日本漢字, 简体字, pinyin, 意味, グループ(r=部首 / w=形が大きく違う / s=少しだけ違う), 部首キー]
+const RAW = `
+語|语|yǔ|言葉|r|言
+話|话|huà|話す・話|r|言
+説|说|shuō|言う・話す|r|言
+読|读|dú|読む|r|言
+請|请|qǐng|どうぞ・頼む|r|言
+謝|谢|xiè|感謝する|r|言
+認|认|rèn|認める・見分ける|r|言
+識|识|shí|知る|r|言
+記|记|jì|記す・覚える|r|言
+試|试|shì|試す|r|言
+誰|谁|shéi|誰|r|言
+課|课|kè|授業・課|r|言
+調|调|diào|調べる|r|言
+議|议|yì|議論する|r|言
+銀|银|yín|銀|r|金
+鉄|铁|tiě|鉄|r|金
+鏡|镜|jìng|鏡|r|金
+銭|钱|qián|お金|r|金
+錯|错|cuò|間違い|r|金
+鍋|锅|guō|鍋|r|金
+飯|饭|fàn|ご飯|r|食
+飲|饮|yǐn|飲む|r|食
+館|馆|guǎn|館・店|r|食
+餃|饺|jiǎo|ギョーザ|r|食
+餓|饿|è|お腹がすく|r|食
+紙|纸|zhǐ|紙|r|糸
+線|线|xiàn|線|r|糸
+経|经|jīng|経る・経済|r|糸
+結|结|jié|結ぶ|r|糸
+給|给|gěi|あげる・〜に|r|糸
+練|练|liàn|練習する|r|糸
+級|级|jí|等級・学年|r|糸
+紅|红|hóng|赤い|r|糸
+緑|绿|lǜ|緑|r|糸
+細|细|xì|細い|r|糸
+終|终|zhōng|終わる|r|糸
+絵|绘|huì|絵を描く|r|糸
+門|门|mén|門・ドア|r|門
+問|问|wèn|問う|r|門
+間|间|jiān|間・部屋|r|門
+聞|闻|wén|嗅ぐ・聞く|r|門
+閉|闭|bì|閉じる|r|門
+貝|贝|bèi|貝|r|貝
+貴|贵|guì|値段が高い|r|貝
+費|费|fèi|費用|r|貝
+員|员|yuán|人員|r|貝
+質|质|zhì|質|r|貝
+財|财|cái|財産|r|貝
+車|车|chē|車|r|車
+転|转|zhuǎn|回る・転送する|r|車
+軽|轻|qīng|軽い|r|車
+輸|输|shū|負ける・運ぶ|r|車
+軍|军|jūn|軍|r|車
+連|连|lián|連なる|r|車
+見|见|jiàn|見る・会う|r|見
+現|现|xiàn|現在|r|見
+覚|觉|jué|感じる|r|見
+規|规|guī|規則|r|見
+観|观|guān|見る・観光|r|見
+題|题|tí|問題|r|頁
+顔|颜|yán|色・顔|r|頁
+順|顺|shùn|順調|r|頁
+頼|赖|lài|頼る|r|頁
+預|预|yù|預ける・予め|r|頁
+馬|马|mǎ|馬|r|馬
+験|验|yàn|試験・検査|r|馬
+駐|驻|zhù|駐在する|r|馬
+騎|骑|qí|乗る（自転車など）|r|馬
+魚|鱼|yú|魚|r|魚
+鮮|鲜|xiān|新鮮|r|魚
+鳥|鸟|niǎo|鳥|r|鳥
+鶏|鸡|jī|鶏|r|鳥
+鳴|鸣|míng|鳴く|r|鳥
+長|长|cháng|長い|w|
+東|东|dōng|東|w|
+楽|乐|lè|楽しい|w|
+書|书|shū|本|w|
+電|电|diàn|電気|w|
+気|气|qì|気・ガス|w|
+発|发|fā|発する・送る|w|
+髪|发|fà|髪（「発」と同じ字に）|w|
+対|对|duì|正しい・〜に対して|w|
+時|时|shí|時|w|
+動|动|dòng|動く|w|
+場|场|chǎng|場|w|
+業|业|yè|業・仕事|w|
+両|两|liǎng|2つ|w|
+個|个|gè|〜個（量詞）|w|
+図|图|tú|図|w|
+歳|岁|suì|〜歳|w|
+飛|飞|fēi|飛ぶ|w|
+習|习|xí|習う|w|
+衛|卫|wèi|守る|w|
+産|产|chǎn|生産する|w|
+厳|严|yán|厳しい|w|
+郷|乡|xiāng|故郷・田舎|w|
+億|亿|yì|億|w|
+進|进|jìn|入る・進む|w|
+遠|远|yuǎn|遠い|w|
+運|运|yùn|運ぶ・運|w|
+過|过|guò|過ぎる|w|
+還|还|hái|まだ・さらに|w|
+辺|边|biān|辺・そば|w|
+適|适|shì|適する|w|
+様|样|yàng|様子|w|
+機|机|jī|機械|w|
+極|极|jí|極めて|w|
+歴|历|lì|歴史|w|
+層|层|céng|階・層|w|
+園|园|yuán|園|w|
+実|实|shí|実際|w|
+処|处|chù|所|w|
+応|应|yīng|〜すべき|w|
+単|单|dān|単一|w|
+戦|战|zhàn|戦う|w|
+価|价|jià|価格|w|
+優|优|yōu|優れた|w|
+雲|云|yún|雲|w|
+隊|队|duì|隊・チーム|w|
+陽|阳|yáng|太陽|w|
+陰|阴|yīn|曇り・陰|w|
+際|际|jì|際・国際|w|
+陸|陆|lù|陸|w|
+葉|叶|yè|葉|w|
+薬|药|yào|薬|w|
+芸|艺|yì|芸術|w|
+華|华|huá|華やか・中国|w|
+夢|梦|mèng|夢|w|
+筆|笔|bǐ|筆・ペン|w|
+節|节|jié|節・祝日|w|
+漢|汉|hàn|漢|w|
+湯|汤|tāng|スープ|w|
+熱|热|rè|暑い・熱い|w|
+無|无|wú|ない|w|
+為|为|wèi|〜のために|w|
+龍|龙|lóng|竜|w|
+亀|龟|guī|亀|w|
+歯|齿|chǐ|歯|w|
+広|广|guǎng|広い|w|
+買|买|mǎi|買う|w|
+売|卖|mài|売る|w|
+頭|头|tóu|頭|w|
+願|愿|yuàn|願う|w|
+類|类|lèi|種類|w|
+開|开|kāi|開ける|w|
+関|关|guān|閉める・関わる|w|
+親|亲|qīn|親しい・親|w|
+報|报|bào|新聞・報告|w|
+興|兴|xìng|興味|w|
+劇|剧|jù|劇|w|
+圧|压|yā|押す・圧|w|
+涙|泪|lèi|涙|w|
+聴|听|tīng|聞く|w|
+帰|归|guī|帰る|w|
+帯|带|dài|持って行く・帯|w|
+師|师|shī|先生|w|
+島|岛|dǎo|島|w|
+後|后|hòu|後ろ・後|w|
+麺|面|miàn|麺（「面」と同じ字に）|w|
+雑|杂|zá|雑多|w|
+幾|几|jǐ|いくつ|w|
+衆|众|zhòng|大勢|w|
+豊|丰|fēng|豊か|w|
+隻|只|zhī|〜匹（量詞）|w|
+準|准|zhǔn|正確な・許す|w|
+決|决|jué|決める|s|
+減|减|jiǎn|減る|s|
+涼|凉|liáng|涼しい|s|
+況|况|kuàng|状況|s|
+歩|步|bù|歩く・歩|s|
+強|强|qiáng|強い|s|
+収|收|shōu|収める・受け取る|s|
+黒|黑|hēi|黒い|s|
+拝|拜|bài|拝む|s|
+渉|涉|shè|渉る|s|
+呉|吴|wú|呉（姓）|s|
+換|换|huàn|換える|s|
+戸|户|hù|戸・世帯|s|
+冊|册|cè|〜冊|s|
+毎|每|měi|毎|s|
+剣|剑|jiàn|剣|s|
+舎|舍|shè|宿舎|s|
+隠|隐|yǐn|隠れる|s|
+恵|惠|huì|恵み|s|
+徳|德|dé|徳・ドイツ|s|
+険|险|xiǎn|危ない|s|
+検|检|jiǎn|検査する|s|
+`.trim().split("\n").map((l, i) => {
+  const [jp, cn, py, mean, g, rad] = l.split("|");
+  return { id: i, jp, cn, py, mean, g, rad };
+});
+
+const GROUPS = [
+  { key: "all", name: "すべて" },
+  { key: "r", name: "部首が簡略化" },
+  { key: "w", name: "形が大きく違う" },
+  { key: "s", name: "少しだけ違う" },
+];
+const GROUP_TAG = { r: "部首が簡略化", w: "形が大きく違う", s: "少しだけ違う" };
+const RULES = [
+  { jp: "言", cn: "讠", name: "ごんべん", note: "単独の「言」はそのまま。" },
+  { jp: "金", cn: "钅", name: "かねへん", note: "単独の「金」はそのまま。" },
+  { jp: "食", cn: "饣", name: "しょくへん", note: "単独の「食」はそのまま。" },
+  { jp: "糸", cn: "纟", name: "いとへん", note: "単独の「糸」は「丝 sī」になる。" },
+  { jp: "門", cn: "门", name: "もんがまえ", note: "ただし 開→开、関→关 は門ごと消える。" },
+  { jp: "貝", cn: "贝", name: "かいへん", note: "買→买、売→卖 は全体が別の形に。" },
+  { jp: "車", cn: "车", name: "くるまへん", note: "" },
+  { jp: "見", cn: "见", name: "みる", note: "親→亲 は「見」が消える例外。" },
+  { jp: "頁", cn: "页", name: "おおがい", note: "頭→头、願→愿、類→类 は例外。" },
+  { jp: "馬", cn: "马", name: "うまへん", note: "" },
+  { jp: "魚", cn: "鱼", name: "うおへん", note: "" },
+  { jp: "鳥", cn: "鸟", name: "とり", note: "" },
+];
+
+// ---- per-viewer progress (browser only) ----
+let known = new Set();
+try { known = new Set(JSON.parse(localStorage.getItem("jianti-known") || "[]")); } catch (e) {}
+function saveKnown() { try { localStorage.setItem("jianti-known", JSON.stringify([...known])); } catch (e) {} updateProgress(); }
+function key(x) { return x.jp + x.cn; }
+
+const state = { view: "card", group: "all", onlyUnknown: false, deck: [], pos: 0, flipped: false, quiz: null, listOpen: null };
+
+const $ = (s) => document.querySelector(s);
+const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const shuffle = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+const MIZI_SVG = '<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><line x1="50" y1="0" x2="50" y2="100"/><line x1="0" y1="50" x2="100" y2="50"/><line x1="0" y1="0" x2="100" y2="100"/><line x1="100" y1="0" x2="0" y2="100"/></svg>';
+const SPEAK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>';
+const canSpeak = typeof window.speechSynthesis !== "undefined";
+function speak(text) {
+  if (!canSpeak) return;
+  try {
+    speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "zh-CN"; u.rate = 0.8;
+    const v = speechSynthesis.getVoices().find((v) => /zh[-_]CN/i.test(v.lang));
+    if (v) u.voice = v;
+    speechSynthesis.speak(u);
+  } catch (e) {}
+}
+function speakBtn(text) { return canSpeak ? `<button class="speak" data-speak="${esc(text)}" aria-label="発音を聞く">${SPEAK_SVG}</button>` : ""; }
+
+function pool() {
+  return RAW.filter((x) => (state.group === "all" || x.g === state.group) && (!state.onlyUnknown || !known.has(key(x))));
+}
+
+function updateProgress() {
+  $("#knownCount").textContent = RAW.filter((x) => known.has(key(x))).length;
+  $("#totalCount").textContent = RAW.length;
+  $("#knownBar").style.width = (100 * RAW.filter((x) => known.has(key(x))).length / RAW.length) + "%";
+}
+
+function renderChips() {
+  $("#groupChips").innerHTML = GROUPS.map((g) => {
+    const n = g.key === "all" ? RAW.length : RAW.filter((x) => x.g === g.key).length;
+    return `<button class="chip" data-group="${g.key}" aria-pressed="${state.group === g.key}">${g.name} ${n}</button>`;
+  }).join("");
+}
+
+// ---- Card view ----
+function newDeck() { state.deck = shuffle(pool()); state.pos = 0; state.flipped = false; }
+function renderCard() {
+  const el = $("#view-card");
+  if (!state.deck.length) {
+    el.innerHTML = `<div class="card result"><p>この条件の字はすべて覚えました。</p><button class="btn primary" data-act="clearFilter">フィルターを外す</button></div>`;
+    return;
+  }
+  const x = state.deck[state.pos];
+  const isKnown = known.has(key(x));
+  el.innerHTML = `
+  <div class="card">
+    <div class="pair">
+      <div class="side jpside">
+        <span class="label">日本の漢字</span>
+        <div class="mizi">${MIZI_SVG}<span class="jp" lang="ja">${x.jp}</span></div>
+      </div>
+      <span class="arrow" aria-hidden="true">→</span>
+      <div class="side cnside">
+        <span class="label">简体字</span>
+        <div class="mizi">${MIZI_SVG}${state.flipped ? `<span class="cn" lang="zh-Hans">${x.cn}</span>` : `<span class="hidden-char">?</span>`}</div>
+      </div>
+    </div>
+    <div class="meta">
+      ${state.flipped
+        ? `<div style="display:flex;gap:10px;align-items:center"><span class="py" lang="zh-Latn-pinyin">${x.py}</span>${speakBtn(x.cn)}</div>
+           <div class="mean">${esc(x.mean)}</div>
+           <span class="tag">${GROUP_TAG[x.g]}${x.rad ? `：${x.rad} → ${RULES.find((r) => r.jp === x.rad).cn}` : ""}</span>`
+        : `<div class="mean">意味：${esc(x.mean)}</div><div class="mean">简体字の形を思い浮かべてから、めくってください。</div>`}
+    </div>
+    <div class="actions">
+      ${state.flipped
+        ? `<button class="btn" data-act="again">もう一度</button><button class="btn primary" data-act="got">覚えた</button>`
+        : `<button class="btn primary full" data-act="flip">めくる</button>`}
+    </div>
+    <div class="cardfoot">
+      <span>${state.pos + 1} / ${state.deck.length}${isKnown ? "　・覚えた字" : ""}</span>
+      <span style="display:flex;gap:6px">
+        <button class="btn ghost" style="padding:4px 10px;font-size:12px" data-act="prev">前へ</button>
+        <button class="btn ghost" style="padding:4px 10px;font-size:12px" data-act="skip">次へ</button>
+        <button class="btn ghost" style="padding:4px 10px;font-size:12px" data-act="reshuffle">シャッフル</button>
+      </span>
+    </div>
+  </div>`;
+}
+function nextCard() {
+  state.flipped = false;
+  if (state.pos < state.deck.length - 1) state.pos++;
+  else newDeck();
+  renderCard();
+}
+
+// ---- Quiz view ----
+const QLEN = 10;
+function newQuiz(dir) {
+  const p = shuffle(pool());
+  const qs = p.slice(0, QLEN).map((x) => {
+    const field = dir === "jp2cn" ? "cn" : "jp";
+    const same = shuffle(RAW.filter((y) => y.cn !== x.cn && y.jp !== x.jp && (y.g === x.g || y.rad && y.rad === x.rad)));
+    const others = shuffle(RAW.filter((y) => y.cn !== x.cn && y.jp !== x.jp));
+    const picks = [];
+    for (const y of [...same, ...others]) { if (picks.length >= 3) break; if (!picks.includes(y[field])) picks.push(y[field]); }
+    return { x, options: shuffle([x[field], ...picks]), answer: x[field], picked: null };
+  });
+  state.quiz = { dir, qs, i: 0, done: false };
+}
+function renderQuiz() {
+  const el = $("#view-quiz");
+  const q = state.quiz;
+  const dirSwitch = `<div class="chips" style="justify-content:center">
+      <button class="chip" data-qdir="jp2cn" aria-pressed="${!q || q.dir === "jp2cn"}">日本漢字 → 简体字</button>
+      <button class="chip" data-qdir="cn2jp" aria-pressed="${q && q.dir === "cn2jp"}">简体字 → 日本漢字</button></div>`;
+  if (!q || !q.qs.length) {
+    el.innerHTML = `<div class="card result">${dirSwitch}<p>この条件では出題できる字がありません。</p><button class="btn primary" data-act="clearFilter">フィルターを外す</button></div>`;
+    return;
+  }
+  const dots = `<div class="dots">${q.qs.map((c, k) => `<i class="${c.picked == null ? "" : c.picked === c.answer ? "ok" : "ng"} ${k === q.i && !q.done ? "now" : ""}"></i>`).join("")}</div>`;
+  if (q.done) {
+    const ok = q.qs.filter((c) => c.picked === c.answer).length;
+    const miss = q.qs.filter((c) => c.picked !== c.answer);
+    el.innerHTML = `<div class="card result">${dots}
+      <div class="score">${ok} / ${q.qs.length}</div>
+      <p style="margin:0;color:var(--ink-soft)">${ok === q.qs.length ? "全問正解です。" : "間違えた字は「まだ覚えていない字」に戻しました。"}</p>
+      ${miss.length ? `<div class="misslist">${miss.map((c) => `<span class="miss"><span class="jp" lang="ja" style="color:var(--indigo)">${c.x.jp}</span> → <span class="cn" lang="zh-Hans" style="color:var(--jade)">${c.x.cn}</span> <span class="py" style="font-size:13px">${c.x.py}</span></span>`).join("")}</div>` : ""}
+      <button class="btn primary" data-act="newQuiz" style="min-width:200px">もう一回</button></div>`;
+    return;
+  }
+  const c = q.qs[q.i];
+  const prompt = q.dir === "jp2cn"
+    ? `<span class="label">この漢字の简体字は？</span><div class="mizi" style="border-color:var(--line)">${MIZI_SVG.replace(/<line/g, '<line style="stroke:var(--line)"')}<span class="jp" lang="ja" style="color:var(--indigo)">${c.x.jp}</span></div>`
+    : `<span class="label">この简体字の日本漢字は？</span><div class="mizi">${MIZI_SVG}<span class="cn" lang="zh-Hans" style="color:var(--jade)">${c.x.cn}</span></div>`;
+  const optCls = q.dir === "jp2cn" ? "cn" : "jp";
+  const optLang = q.dir === "jp2cn" ? "zh-Hans" : "ja";
+  let fb = "";
+  if (c.picked != null) {
+    fb = `${c.picked === c.answer ? `<strong class="ok">正解</strong>` : `<strong class="ng">不正解</strong>`}
+      <span class="jp" lang="ja">${c.x.jp}</span> → <span class="cn" lang="zh-Hans">${c.x.cn}</span>
+      <span class="py">${c.x.py}</span>　${esc(c.x.mean)}`;
+  }
+  el.innerHTML = `<div class="card">${dirSwitch}${dots}
+    <div class="qprompt">${prompt}</div>
+    <div class="options">${c.options.map((o) => {
+      let cls = "";
+      if (c.picked != null) { if (o === c.answer) cls = "right"; else if (o === c.picked) cls = "wrong"; }
+      return `<button class="opt ${optCls} ${cls}" lang="${optLang}" data-opt="${o}" ${c.picked != null ? "disabled" : ""}>${o}</button>`;
+    }).join("")}</div>
+    <div class="feedback" aria-live="polite">${fb}${c.picked != null && canSpeak ? ` ${speakBtn(c.x.cn)}` : ""}</div>
+    ${c.picked != null ? `<button class="btn primary" data-act="nextQ">${q.i < q.qs.length - 1 ? "次の問題" : "結果を見る"}</button>` : ""}
+  </div>`;
+}
+
+// ---- List view ----
+function renderList() {
+  const el = $("#view-list");
+  const items = pool();
+  const open = state.listOpen != null ? RAW[state.listOpen] : null;
+  el.innerHTML = `<div style="display:flex;flex-direction:column;gap:12px">
+    <div class="legend"><span>覚えた字</span><em style="font-style:normal">字をタップすると詳細と発音</em></div>
+    ${open ? `<div class="detail">
+        <div class="big"><span class="jp" lang="ja" style="color:var(--indigo)">${open.jp}</span> <span style="color:var(--ink-soft);font-size:22px">→</span> <span class="cn" lang="zh-Hans" style="color:var(--jade)">${open.cn}</span></div>
+        <div class="txt"><div style="display:flex;gap:8px;align-items:center"><span class="py" style="font-size:20px">${open.py}</span>${speakBtn(open.cn)}</div>
+          <span style="color:var(--ink-soft)">${esc(open.mean)}</span>
+          <span><span class="tag">${GROUP_TAG[open.g]}</span></span></div>
+        <button class="btn ${known.has(key(open)) ? "" : "primary"}" data-act="toggleKnown">${known.has(key(open)) ? "覚えた印を外す" : "覚えた"}</button>
+      </div>` : ""}
+    <div class="grid">${items.map((x) => `<button class="cell ${known.has(key(x)) ? "known" : ""}" data-cell="${x.id}" aria-expanded="${state.listOpen === x.id}">
+        <span class="c cn" lang="zh-Hans">${x.cn}</span><span class="j jp" lang="ja">${x.jp}</span></button>`).join("")}</div>
+    ${items.length ? "" : `<p class="intro">この条件の字はありません。</p>`}
+  </div>`;
+}
+
+// ---- Rules view ----
+function renderRules() {
+  $("#view-rules").innerHTML = `<div style="display:flex;flex-direction:column;gap:12px">
+    <p class="intro">偏（へん）の簡略化を覚えると、知らない字でも简体字がかなり予想できます。例の字をタップすると一覧で詳細を開きます。</p>
+    <div class="rules">${RULES.map((r) => {
+      const ex = RAW.filter((x) => x.rad === r.jp);
+      return `<div class="rule">
+        <div class="rad"><span class="jp" lang="ja">${r.jp}</span><small>→</small><span class="cn" lang="zh-Hans">${r.cn}</span></div>
+        <div class="ex">${ex.map((x) => `<button data-jump="${x.id}"><span class="jp" lang="ja">${x.jp}</span><span class="to">→</span><span class="cn" lang="zh-Hans">${x.cn}</span></button>`).join("")}</div>
+        <div class="note">${r.name}${r.note ? "。" + r.note : ""}</div>
+      </div>`;
+    }).join("")}</div>
+    <div class="tip">簡略化の他のパターン：草書体から（書→书、東→东、長→长）、一部だけ残す（飛→飞、習→习、業→业）、同音の簡単な字で代用（後→后、髪→发、麺→面、幾→几）。</div>
+  </div>`;
+}
+
+// ---- view switching ----
+function render() {
+  for (const v of ["card", "quiz", "list", "rules"]) {
+    $("#view-" + v).hidden = state.view !== v;
+    $("#tab-" + v).setAttribute("aria-selected", state.view === v);
+  }
+  $("#filterBar").hidden = state.view === "rules";
+  renderChips();
+  $("#onlyUnknown").checked = state.onlyUnknown;
+  if (state.view === "card") renderCard();
+  if (state.view === "quiz") renderQuiz();
+  if (state.view === "list") renderList();
+  if (state.view === "rules") renderRules();
+}
+function filtersChanged() {
+  newDeck();
+  newQuiz(state.quiz ? state.quiz.dir : "jp2cn");
+  state.listOpen = null;
+  render();
+}
+
+document.addEventListener("click", (e) => {
+  const t = e.target.closest("button");
+  if (!t) return;
+  if (t.dataset.speak) { speak(t.dataset.speak); return; }
+  if (t.dataset.view) { state.view = t.dataset.view; render(); return; }
+  if (t.dataset.group) { state.group = t.dataset.group; filtersChanged(); return; }
+  if (t.dataset.qdir) { newQuiz(t.dataset.qdir); renderQuiz(); return; }
+  if (t.dataset.cell) { const id = +t.dataset.cell; state.listOpen = state.listOpen === id ? null : id; renderList(); if (state.listOpen != null) speak(RAW[id].cn); return; }
+  if (t.dataset.jump) { state.view = "list"; state.group = "all"; state.onlyUnknown = false; state.listOpen = +t.dataset.jump; render(); window.scrollTo({ top: 0 }); return; }
+  if (t.dataset.opt != null && state.quiz) {
+    const c = state.quiz.qs[state.quiz.i];
+    if (c.picked != null) return;
+    c.picked = t.dataset.opt;
+    if (c.picked === c.answer) known.add(key(c.x)); else known.delete(key(c.x));
+    saveKnown(); renderQuiz(); return;
+  }
+  const act = t.dataset.act;
+  if (!act) return;
+  if (act === "flip") { state.flipped = true; renderCard(); speak(state.deck[state.pos].cn); }
+  else if (act === "got") { known.add(key(state.deck[state.pos])); saveKnown(); nextCard(); }
+  else if (act === "again") { known.delete(key(state.deck[state.pos])); saveKnown(); const x = state.deck.splice(state.pos, 1)[0]; state.deck.splice(Math.min(state.deck.length, state.pos + 4), 0, x); state.flipped = false; renderCard(); }
+  else if (act === "skip") nextCard();
+  else if (act === "prev") { state.flipped = false; state.pos = Math.max(0, state.pos - 1); renderCard(); }
+  else if (act === "reshuffle") { newDeck(); renderCard(); }
+  else if (act === "clearFilter") { state.group = "all"; state.onlyUnknown = false; filtersChanged(); }
+  else if (act === "nextQ") { const q = state.quiz; if (q.i < q.qs.length - 1) q.i++; else q.done = true; renderQuiz(); }
+  else if (act === "newQuiz") { newQuiz(state.quiz.dir); renderQuiz(); }
+  else if (act === "toggleKnown") { const x = RAW[state.listOpen]; known.has(key(x)) ? known.delete(key(x)) : known.add(key(x)); saveKnown(); renderList(); }
+});
+$("#onlyUnknown").addEventListener("change", (e) => { state.onlyUnknown = e.target.checked; filtersChanged(); });
+document.addEventListener("keydown", (e) => {
+  if (state.view !== "card" || e.target.closest("input")) return;
+  if (e.key === " " || e.key === "Enter") { if (!state.flipped && state.deck.length) { e.preventDefault(); state.flipped = true; renderCard(); speak(state.deck[state.pos].cn); } }
+  else if (e.key === "ArrowRight") nextCard();
+  else if (e.key === "ArrowLeft") { state.flipped = false; state.pos = Math.max(0, state.pos - 1); renderCard(); }
+});
+if (canSpeak) { try { speechSynthesis.getVoices(); } catch (e) {} }
+
+updateProgress();
+newDeck();
+newQuiz("jp2cn");
+render();
+</script>
+</body>
+</html>

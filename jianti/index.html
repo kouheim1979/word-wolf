@@ -68,6 +68,11 @@ nav button[aria-selected="true"] { background: var(--jade-wash); color: var(--ja
 
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chip { border: 1px solid var(--line); background: var(--sheet); border-radius: 999px; padding: 4px 12px; font-size: 13px; color: var(--ink-soft); }
+.chiprow { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; width: 100%; }
+.chiplabel { font-size: 11px; letter-spacing: .1em; font-weight: 700; color: var(--ink-soft); margin-right: 2px; }
+.origin { display: flex; flex-direction: column; gap: 8px; padding-top: 14px; border-top: 1px solid var(--line); }
+.originhead { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.originhead h2 { margin: 0; font-size: 18px; text-wrap: balance; }
 .chip[aria-pressed="true"] { border-color: var(--jade); color: var(--jade); background: var(--jade-wash); font-weight: 700; }
 .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
 .toggle { display: inline-flex; gap: 6px; align-items: center; font-size: 13px; color: var(--ink-soft); }
@@ -190,7 +195,7 @@ nav button[aria-selected="true"] { background: var(--jade-wash); color: var(--ja
   <header>
     <div class="brand">
       <h1><span class="cn">简体字</span>ノート</h1>
-      <p>日本の漢字から、中国の简体字へ。よく使う字と、意味の違う語も。</p>
+      <p>日本の漢字から、中国の简体字へ。作り方の由来、よく使う字、意味の違う語も。</p>
     </div>
     <div class="progress" aria-live="polite">
       覚えた字 <b id="knownCount">0</b> / <b id="totalCount">0</b>
@@ -202,7 +207,7 @@ nav button[aria-selected="true"] { background: var(--jade-wash); color: var(--ja
     <button role="tab" id="tab-card" data-view="card" aria-selected="true">カード</button>
     <button role="tab" id="tab-quiz" data-view="quiz" aria-selected="false">クイズ</button>
     <button role="tab" id="tab-list" data-view="list" aria-selected="false">一覧</button>
-    <button role="tab" id="tab-rules" data-view="rules" aria-selected="false">部首ルール</button>
+    <button role="tab" id="tab-rules" data-view="rules" aria-selected="false">由来</button>
   </nav>
 
   <div class="toolbar" id="filterBar">
@@ -292,98 +297,98 @@ const RAW = `
 鳥|鸟|niǎo|鳥|r|鳥
 鶏|鸡|jī|鶏|r|鳥
 鳴|鸣|míng|鳴く|r|鳥
-長|长|cháng|長い|w|
-東|东|dōng|東|w|
-楽|乐|lè|楽しい|w|
-書|书|shū|本|w|
-電|电|diàn|電気|w|
-気|气|qì|気・ガス|w|
-発|发|fā|発する・送る|w|
-髪|发|fà|髪（「発」と同じ字に）|w|
-対|对|duì|正しい・〜に対して|w|
-時|时|shí|時|w|
-動|动|dòng|動く|w|
-場|场|chǎng|場|w|
-業|业|yè|業・仕事|w|
-両|两|liǎng|2つ|w|
-個|个|gè|〜個（量詞）|w|
-図|图|tú|図|w|
-歳|岁|suì|〜歳|w|
-飛|飞|fēi|飛ぶ|w|
-習|习|xí|習う|w|
-衛|卫|wèi|守る|w|
-産|产|chǎn|生産する|w|
-厳|严|yán|厳しい|w|
-郷|乡|xiāng|故郷・田舎|w|
-億|亿|yì|億|w|
-進|进|jìn|入る・進む|w|
-遠|远|yuǎn|遠い|w|
-運|运|yùn|運ぶ・運|w|
-過|过|guò|過ぎる|w|
-還|还|hái|まだ・さらに|w|
-辺|边|biān|辺・そば|w|
-適|适|shì|適する|w|
-様|样|yàng|様子|w|
-機|机|jī|機械|w|
-極|极|jí|極めて|w|
-歴|历|lì|歴史|w|
-層|层|céng|階・層|w|
-園|园|yuán|園|w|
-実|实|shí|実際|w|
-処|处|chù|所|w|
-応|应|yīng|〜すべき|w|
-単|单|dān|単一|w|
-戦|战|zhàn|戦う|w|
-価|价|jià|価格|w|
-優|优|yōu|優れた|w|
-雲|云|yún|雲|w|
-隊|队|duì|隊・チーム|w|
-陽|阳|yáng|太陽|w|
-陰|阴|yīn|曇り・陰|w|
-際|际|jì|際・国際|w|
-陸|陆|lù|陸|w|
-葉|叶|yè|葉|w|
-薬|药|yào|薬|w|
-芸|艺|yì|芸術|w|
-華|华|huá|華やか・中国|w|
-夢|梦|mèng|夢|w|
-筆|笔|bǐ|筆・ペン|w|
-節|节|jié|節・祝日|w|
-漢|汉|hàn|漢|w|
-湯|汤|tāng|スープ|w|
-熱|热|rè|暑い・熱い|w|
-無|无|wú|ない|w|
-為|为|wèi|〜のために|w|
-龍|龙|lóng|竜|w|
-亀|龟|guī|亀|w|
-歯|齿|chǐ|歯|w|
-広|广|guǎng|広い|w|
-買|买|mǎi|買う|w|
-売|卖|mài|売る|w|
-頭|头|tóu|頭|w|
-願|愿|yuàn|願う|w|
-類|类|lèi|種類|w|
-開|开|kāi|開ける|w|
-関|关|guān|閉める・関わる|w|
-親|亲|qīn|親しい・親|w|
-報|报|bào|新聞・報告|w|
-興|兴|xìng|興味|w|
-劇|剧|jù|劇|w|
-圧|压|yā|押す・圧|w|
-涙|泪|lèi|涙|w|
-聴|听|tīng|聞く|w|
-帰|归|guī|帰る|w|
-帯|带|dài|持って行く・帯|w|
-師|师|shī|先生|w|
-島|岛|dǎo|島|w|
-後|后|hòu|後ろ・後|w|
-麺|面|miàn|麺（「面」と同じ字に）|w|
-雑|杂|zá|雑多|w|
-幾|几|jǐ|いくつ|w|
-衆|众|zhòng|大勢|w|
-豊|丰|fēng|豊か|w|
-隻|只|zhī|〜匹（量詞）|w|
-準|准|zhǔn|正確な・許す|w|
+長|长|cháng|長い|cs|
+東|东|dōng|東|cs|
+楽|乐|lè|楽しい|cs|
+書|书|shū|本|cs|
+電|电|diàn|電気|pt|
+気|气|qì|気・ガス|pt|
+発|发|fā|発する・送る|cs|
+髪|发|fà|髪（「発」と同じ字に）|hm|
+対|对|duì|正しい・〜に対して|sy|
+時|时|shí|時|an|
+動|动|dòng|動く|sy|
+場|场|chǎng|場|cs|
+業|业|yè|業・仕事|pt|
+両|两|liǎng|2つ|s|
+個|个|gè|〜個（量詞）|an|
+図|图|tú|図|cs|
+歳|岁|suì|〜歳|an|
+飛|飞|fēi|飛ぶ|pt|
+習|习|xí|習う|pt|
+衛|卫|wèi|守る|cs|
+産|产|chǎn|生産する|pt|
+厳|严|yán|厳しい|pt|
+郷|乡|xiāng|故郷・田舎|pt|
+億|亿|yì|億|ph|
+進|进|jìn|入る・進む|ph|
+遠|远|yuǎn|遠い|ph|
+運|运|yùn|運ぶ・運|ph|
+過|过|guò|過ぎる|sy|
+還|还|hái|まだ・さらに|sy|
+辺|边|biān|辺・そば|sy|
+適|适|shì|適する|hm|
+様|样|yàng|様子|ph|
+機|机|jī|機械|hm|
+極|极|jí|極めて|ph|
+歴|历|lì|歴史|ph|
+層|层|céng|階・層|sy|
+園|园|yuán|園|ph|
+実|实|shí|実際|cs|
+処|处|chù|所|an|
+応|应|yīng|〜すべき|cs|
+単|单|dān|単一|cs|
+戦|战|zhàn|戦う|ph|
+価|价|jià|価格|ph|
+優|优|yōu|優れた|ph|
+雲|云|yún|雲|an|
+隊|队|duì|隊・チーム|hy|
+陽|阳|yáng|太陽|hy|
+陰|阴|yīn|曇り・陰|hy|
+際|际|jì|際・国際|pt|
+陸|陆|lù|陸|sy|
+葉|叶|yè|葉|hm|
+薬|药|yào|薬|ph|
+芸|艺|yì|芸術|ph|
+華|华|huá|華やか・中国|ph|
+夢|梦|mèng|夢|an|
+筆|笔|bǐ|筆・ペン|hy|
+節|节|jié|節・祝日|cs|
+漢|汉|hàn|漢|sy|
+湯|汤|tāng|スープ|cs|
+熱|热|rè|暑い・熱い|ph|
+無|无|wú|ない|an|
+為|为|wèi|〜のために|cs|
+龍|龙|lóng|竜|cs|
+亀|龟|guī|亀|pt|
+歯|齿|chǐ|歯|pt|
+広|广|guǎng|広い|pt|
+買|买|mǎi|買う|cs|
+売|卖|mài|売る|cs|
+頭|头|tóu|頭|cs|
+願|愿|yuàn|願う|hm|
+類|类|lèi|種類|pt|
+開|开|kāi|開ける|pt|
+関|关|guān|閉める・関わる|pt|
+親|亲|qīn|親しい・親|pt|
+報|报|bào|新聞・報告|cs|
+興|兴|xìng|興味|cs|
+劇|剧|jù|劇|ph|
+圧|压|yā|押す・圧|pt|
+涙|泪|lèi|涙|hy|
+聴|听|tīng|聞く|hm|
+帰|归|guī|帰る|cs|
+帯|带|dài|持って行く・帯|cs|
+師|师|shī|先生|cs|
+島|岛|dǎo|島|cs|
+後|后|hòu|後ろ・後|hm|
+麺|面|miàn|麺（「面」と同じ字に）|hm|
+雑|杂|zá|雑多|an|
+幾|几|jǐ|いくつ|hm|
+衆|众|zhòng|大勢|an|
+豊|丰|fēng|豊か|hm|
+隻|只|zhī|〜匹（量詞）|hm|
+準|准|zhǔn|正確な・許す|hm|
 決|决|jué|決める|s|
 減|减|jiǎn|減る|s|
 涼|凉|liáng|涼しい|s|
@@ -507,15 +512,24 @@ const FALSE_FRIENDS = `
 
 const ALL = [...RAW, ...CN_ONLY, ...FALSE_FRIENDS].map((x, i) => ({ ...x, id: i }));
 
-const GROUPS = [
-  { key: "all", name: "すべて" },
-  { key: "r", name: "部首が簡略化" },
-  { key: "w", name: "形が大きく違う" },
-  { key: "s", name: "少しだけ違う" },
+// 简体字の作り方（由来）。分類は代表的な説明に沿ったもので、複数の由来が重なる字もある。
+const ORIGINS = [
+  { key: "r", name: "部首の類推", desc: "偏として使う部首をまとめて簡略化したもの。部首を覚えれば、知らない字でもかなり予想できます。" },
+  { key: "cs", name: "草書から", desc: "筆で崩して書いた草書の形を、楷書の形に直したもの。書→书、東→东、長→长、為→为 など、元の字と見た目が大きく変わります。" },
+  { key: "pt", name: "一部を残す", desc: "字の特徴的な部分や輪郭だけを残したもの。飛→飞、習→习、業→业、開→开（門を外す）、歯→齿 など。" },
+  { key: "hm", name: "同音で代用", desc: "画数の少ない既存の字を当てたもの。多くは同じか近い発音です。後→后、麺→面、幾→几、葉→叶。元は別の字だったので、1字に2つの意味が合流しています。" },
+  { key: "an", name: "古字・俗字", desc: "昔から手書きなどで使われていた簡単な字体を、正式な字にしたもの。雲→云、衆→众、無→无、個→个 など。" },
+  { key: "ph", name: "音符を交換", desc: "発音を表す部分（音符）を、同じか近い音の簡単な字に替えたもの。遠→远（元 yuán）、運→运（云 yún）、億→亿（乙 yì）、戦→战（占 zhàn）、華→华（化 huà）。" },
+  { key: "sy", name: "記号に置換", desc: "複雑な部分を「又」「寸」「不」などの単純な形に置き換えたもの。発音とは関係しません。漢→汉、対→对、過→过、還→还。" },
+  { key: "hy", name: "新しい会意", desc: "意味を表す部品を組み合わせて作り直したもの。涙→泪（水＋目）、陽→阳（日）、陰→阴（月）、筆→笔（竹＋毛）、隊→队（人）。" },
+  { key: "s", name: "字体の小差", desc: "简体字化というより、日本の新字体と中国の字体で細部が違うもの。点や画の有無に注意。歩/步、黒/黑、決/决、強/强。" },
+];
+const VOCAB = [
   { key: "c", name: "中国語だけの字" },
   { key: "f", name: "意味が違う語" },
 ];
-const GROUP_TAG = { r: "部首が簡略化", w: "形が大きく違う", s: "少しだけ違う", c: "中国語だけの字", f: "意味が違う語" };
+const GROUPS = [{ key: "all", name: "すべて" }, ...ORIGINS, ...VOCAB];
+const GROUP_TAG = Object.fromEntries([...ORIGINS, ...VOCAB].map((g) => [g.key, g.name]));
 const RULES = [
   { jp: "言", cn: "讠", name: "ごんべん", note: "単独の「言」はそのまま。" },
   { jp: "金", cn: "钅", name: "かねへん", note: "単独の「金」はそのまま。" },
@@ -577,10 +591,13 @@ function updateProgress() {
 }
 
 function renderChips() {
-  $("#groupChips").innerHTML = GROUPS.map((g) => {
+  const chip = (g) => {
     const n = g.key === "all" ? ALL.length : ALL.filter((x) => x.g === g.key).length;
     return `<button class="chip" data-group="${g.key}" aria-pressed="${state.group === g.key}">${g.name} ${n}</button>`;
-  }).join("");
+  };
+  $("#groupChips").innerHTML = `
+    <div class="chiprow">${chip(GROUPS[0])}${VOCAB.map(chip).join("")}</div>
+    <div class="chiprow"><span class="chiplabel">作り方</span>${ORIGINS.map(chip).join("")}</div>`;
 }
 
 // ---- Card view ----
@@ -790,19 +807,26 @@ function renderList() {
   </div>`;
 }
 
-// ---- Rules view ----
+// ---- Origins view ----
+function exampleBtns(items) {
+  return items.map((x) => `<button data-jump="${x.id}"><span class="jp" lang="ja">${x.jp}</span><span class="to">→</span><span class="cn" lang="zh-Hans">${x.cn}</span></button>`).join("");
+}
 function renderRules() {
-  $("#view-rules").innerHTML = `<div style="display:flex;flex-direction:column;gap:12px">
-    <p class="intro">偏（へん）の簡略化を覚えると、知らない字でも简体字がかなり予想できます。例の字をタップすると一覧で詳細を開きます。</p>
-    <div class="rules">${RULES.map((r) => {
-      const ex = ALL.filter((x) => x.rad === r.jp);
-      return `<div class="rule">
+  const sections = ORIGINS.map((o) => {
+    const items = ALL.filter((x) => x.g === o.key);
+    const radTable = o.key !== "r" ? "" : `<div class="rules">${RULES.map((r) => `<div class="rule">
         <div class="rad"><span class="jp" lang="ja">${r.jp}</span><small>→</small><span class="cn" lang="zh-Hans">${r.cn}</span></div>
-        <div class="ex">${ex.map((x) => `<button data-jump="${x.id}"><span class="jp" lang="ja">${x.jp}</span><span class="to">→</span><span class="cn" lang="zh-Hans">${x.cn}</span></button>`).join("")}</div>
-        <div class="note">${r.name}${r.note ? "。" + r.note : ""}</div>
-      </div>`;
-    }).join("")}</div>
-    <div class="tip">簡略化の他のパターン：草書体から（書→书、東→东、長→长）、一部だけ残す（飛→飞、習→习、業→业）、同音の簡単な字で代用（後→后、髪→发、麺→面、幾→几）。</div>
+        <div class="ex">${exampleBtns(items.filter((x) => x.rad === r.jp))}</div>
+        <div class="note">${r.name}${r.note ? "。" + r.note : ""}</div></div>`).join("")}</div>`;
+    return `<section class="origin">
+      <div class="originhead"><h2>${o.name}</h2><button class="chip" data-practice="${o.key}">この${items.length}字を練習</button></div>
+      <p class="intro">${o.desc}</p>
+      ${radTable || `<div class="ex">${exampleBtns(items)}</div>`}
+    </section>`;
+  }).join("");
+  $("#view-rules").innerHTML = `<div style="display:flex;flex-direction:column;gap:20px">
+    <p class="intro">简体字は、いくつかの決まった方法で作られています。作り方ごとにまとめました。字をタップすると一覧で詳細を開きます。分類は代表的な説明に沿ったもので、複数の由来が重なる字もあります。</p>
+    ${sections}
     <div class="tip">字の形のほかに、会話でよく使うのに日本には無い字（们・这・吗・吃 など）と、形は同じでも意味が違う語（手纸・汽车・走 など）も押さえておくと安心です。カードやクイズの「中国語だけの字」「意味が違う語」で練習できます。</div>
   </div>`;
 }
@@ -836,6 +860,7 @@ document.addEventListener("click", (e) => {
   if (t.dataset.group) { state.group = t.dataset.group; filtersChanged(); return; }
   if (t.dataset.qdir) { newQuiz(t.dataset.qdir); renderQuiz(); return; }
   if (t.dataset.cell) { const id = +t.dataset.cell; state.listOpen = state.listOpen === id ? null : id; renderList(); if (state.listOpen != null) speak(sayText(ALL[id])); return; }
+  if (t.dataset.practice) { state.view = "card"; state.group = t.dataset.practice; state.onlyUnknown = false; filtersChanged(); window.scrollTo({ top: 0 }); return; }
   if (t.dataset.jump) { state.view = "list"; state.group = "all"; state.onlyUnknown = false; state.listOpen = +t.dataset.jump; render(); window.scrollTo({ top: 0 }); return; }
   if (t.dataset.opt != null && state.quiz) {
     const c = state.quiz.qs[state.quiz.i];

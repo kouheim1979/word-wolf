@@ -161,6 +161,27 @@ nav button[aria-selected="true"] { background: var(--jade-wash); color: var(--ja
   .card { padding: 16px 12px; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* 中国語だけの字・意味が違う語 */
+.glossbox { width: min(100%, 170px); aspect-ratio: 1; max-width: 100%; border: 2px solid var(--line); background: var(--sheet); display: grid; place-items: center; text-align: center; padding: 10px; font-size: clamp(16px, 4.6vw, 22px); font-weight: 700; color: var(--indigo); line-height: 1.4; }
+.qprompt .glossbox { width: 150px; }
+.word { font-size: clamp(56px, 17vw, 92px); color: var(--jade); line-height: 1.15; text-align: center; letter-spacing: .06em; }
+.wordbox { display: flex; flex-direction: column; align-items: center; gap: 8px; padding-block: 10px; border-block: 1px dashed var(--grid); }
+.trapnote { color: var(--ink-soft); font-size: 14px; text-align: center; }
+.trapnote b { color: var(--indigo); }
+.compare { display: grid; gap: 8px; width: 100%; text-align: left; }
+.compare > div { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; padding: 10px 12px; border-radius: 10px; background: var(--jade-wash); }
+.compare > div.jprow { background: var(--indigo-wash); }
+.compare .k { font-size: 11px; letter-spacing: .1em; font-weight: 700; color: var(--ink-soft); min-width: 7em; }
+.compare .v { font-weight: 700; }
+.example { font-size: 14px; color: var(--ink-soft); display: flex; flex-wrap: wrap; gap: 4px 10px; justify-content: center; align-items: baseline; }
+.example .cn { font-size: 20px; color: var(--ink); }
+.meta .example .py, .example .py { font-size: 15px; }
+.options.textopts { grid-template-columns: 1fr 1fr; }
+.opt.text { aspect-ratio: auto; font-family: var(--font-ui); font-size: 15px; line-height: 1.4; padding: 14px 10px; min-height: 64px; }
+.cell .j.small { font-size: 11px; line-height: 1.3; text-align: center; padding-inline: 2px; overflow-wrap: anywhere; }
+.cell.wordcell .c { font-size: 22px; padding-block: 4px; }
+.cell.wordcell .j { color: var(--bad); }
 </style>
 </head>
 <body>
@@ -169,7 +190,7 @@ nav button[aria-selected="true"] { background: var(--jade-wash); color: var(--ja
   <header>
     <div class="brand">
       <h1><span class="cn">简体字</span>ノート</h1>
-      <p>日本の漢字から、中国の简体字へ。</p>
+      <p>日本の漢字から、中国の简体字へ。よく使う字と、意味の違う語も。</p>
     </div>
     <div class="progress" aria-live="polite">
       覚えた字 <b id="knownCount">0</b> / <b id="totalCount">0</b>
@@ -385,18 +406,116 @@ const RAW = `
 徳|德|dé|徳・ドイツ|s|
 険|险|xiǎn|危ない|s|
 検|检|jiǎn|検査する|s|
-`.trim().split("\n").map((l, i) => {
+`.trim().split("\n").map((l) => {
   const [jp, cn, py, mean, g, rad] = l.split("|");
-  return { id: i, jp, cn, py, mean, g, rad };
+  return { kind: "pair", jp, cn, py, mean, g, rad };
 });
+
+// 日本ではほとんど使わないが、中国語では頻出の字: [简体字, pinyin, 意味, 例, 例のpinyin, 例の意味]
+const CN_ONLY = `
+们|men|〜たち（複数）|我们|wǒmen|私たち
+这|zhè|これ・この|这个|zhège|これ
+那|nà|あれ・あの|那个|nàge|あれ
+哪|nǎ|どれ・どの|哪里|nǎlǐ|どこ
+么|me|（疑問・語調の字）|什么|shénme|何
+吗|ma|〜か？（疑問）|你好吗？|nǐ hǎo ma|元気ですか
+呢|ne|〜は？・〜ね|你呢？|nǐ ne|あなたは？
+吧|ba|〜しよう・〜でしょう|走吧|zǒu ba|行こう
+啊|a|ああ・〜よ（感嘆）|好啊|hǎo a|いいよ
+你|nǐ|あなた|你好|nǐ hǎo|こんにちは
+您|nín|あなた（丁寧）|您贵姓？|nín guìxìng|お名前は？
+她|tā|彼女|她是老师|tā shì lǎoshī|彼女は先生です
+它|tā|それ（人以外）|它很可爱|tā hěn kě'ài|それはかわいい
+咱|zán|（相手を含む）私たち|咱们走吧|zánmen zǒu ba|一緒に行こう
+俩|liǎ|二人|我们俩|wǒmen liǎ|私たち二人
+啥|shá|何（口語）|干啥？|gàn shá|何してるの
+很|hěn|とても|很好|hěn hǎo|とても良い
+没|méi|ない（所有・過去の否定）|没有|méiyǒu|ない・なかった
+别|bié|〜するな・ほかの|别走|bié zǒu|行かないで
+跟|gēn|〜と・ついて行く|跟我来|gēn wǒ lái|ついて来て
+把|bǎ|〜を（処置の文）|把门关上|bǎ mén guānshang|ドアを閉める
+吃|chī|食べる|吃饭|chīfàn|ご飯を食べる
+喝|hē|飲む|喝茶|hē chá|お茶を飲む
+找|zhǎo|探す|找工作|zhǎo gōngzuò|仕事を探す
+拿|ná|持つ・取る|拿着|názhe|持っている
+扔|rēng|投げる・捨てる|扔垃圾|rēng lājī|ゴミを捨てる
+躺|tǎng|横になる|躺下|tǎngxià|横になる
+玩|wán|遊ぶ|玩游戏|wán yóuxì|ゲームで遊ぶ
+聊|liáo|おしゃべりする|聊天|liáotiān|おしゃべりする
+逛|guàng|ぶらつく|逛街|guàngjiē|街をぶらぶらする
+懂|dǒng|わかる|我不懂|wǒ bù dǒng|わかりません
+干|gàn|する・やる|你干什么？|nǐ gàn shénme|何してるの
+搞|gǎo|やる・する（口語）|搞错了|gǎocuò le|間違えた
+累|lèi|疲れた|我很累|wǒ hěn lèi|とても疲れた
+吵|chǎo|うるさい・口げんか|太吵了|tài chǎo le|うるさすぎる
+帅|shuài|かっこいい|很帅|hěn shuài|かっこいい
+胖|pàng|太っている|有点胖|yǒudiǎn pàng|少し太っている
+瘦|shòu|やせている|太瘦了|tài shòu le|やせすぎ
+嘴|zuǐ|口|张嘴|zhāng zuǐ|口を開ける
+脸|liǎn|顔|洗脸|xǐ liǎn|顔を洗う
+肚|dù|お腹|肚子|dùzi|お腹
+腿|tuǐ|脚（ももからすね）|腿疼|tuǐ téng|脚が痛い
+爸|bà|父|爸爸|bàba|お父さん
+妈|mā|母|妈妈|māma|お母さん
+哥|gē|兄|哥哥|gēge|お兄さん
+狗|gǒu|犬|小狗|xiǎogǒu|子犬
+鸭|yā|アヒル|北京烤鸭|Běijīng kǎoyā|北京ダック
+蛋|dàn|卵|鸡蛋|jīdàn|鶏の卵
+筷|kuài|箸|筷子|kuàizi|箸
+碗|wǎn|お椀|一碗饭|yì wǎn fàn|ご飯一杯
+块|kuài|かたまり・元（お金）|三块钱|sān kuài qián|3元
+咖|kā|（音訳の字）|咖啡|kāfēi|コーヒー
+啤|pí|（音訳の字）|啤酒|píjiǔ|ビール
+`.trim().split("\n").map((l) => {
+  const [cn, py, mean, ex, expy, exmean] = l.split("|");
+  return { kind: "c", g: "c", cn, py, mean, ex, expy, exmean };
+});
+
+// 形は日本語と同じ（または似ている）のに意味が違う語: [中国語, pinyin, 中国語の意味, 日本語での意味, 日本語の意味を中国語で, そのpinyin]
+const FALSE_FRIENDS = `
+手纸|shǒuzhǐ|トイレットペーパー|手紙|信|xìn
+汽车|qìchē|自動車|汽車（列車）|火车|huǒchē
+走|zǒu|歩く・出かける|走る|跑|pǎo
+去|qù|行く|去る|离开|líkāi
+娘|niáng|母（方言）|娘|女儿|nǚ'ér
+丈夫|zhàngfu|夫|丈夫（じょうぶ）|结实|jiēshi
+大丈夫|dàzhàngfu|立派な男|大丈夫（問題ない）|没关系|méi guānxi
+老婆|lǎopo|妻（口語）|老婆（年老いた女性）|老太太|lǎotàitai
+爱人|àiren|配偶者|愛人|情人|qíngrén
+新闻|xīnwén|ニュース|新聞|报纸|bàozhǐ
+勉强|miǎnqiǎng|無理に・しぶしぶ|勉強|学习|xuéxí
+工作|gōngzuò|仕事|工作（図工）|手工|shǒugōng
+高校|gāoxiào|大学（高等教育機関）|高校|高中|gāozhōng
+床|chuáng|ベッド|床（ゆか）|地板|dìbǎn
+人参|rénshēn|朝鮮人参|人参（にんじん）|胡萝卜|húluóbo
+邪魔|xiémó|悪魔|邪魔|打扰|dǎrǎo
+怪我|guài wǒ|私のせいだ|怪我（けが）|受伤|shòushāng
+颜色|yánsè|色|顔色|脸色|liǎnsè
+看病|kànbìng|診察を受ける・する|看病（かんびょう）|护理|hùlǐ
+先生|xiānsheng|〜さん（男性）・夫|先生（教師）|老师|lǎoshī
+猪|zhū|ブタ|猪（いのしし）|野猪|yězhū
+汤|tāng|スープ|湯（お湯）|热水|rèshuǐ
+迷惑|míhuò|戸惑う・惑わす|迷惑|麻烦|máfan
+深刻|shēnkè|印象深い・深い|深刻|严重|yánzhòng
+结束|jiéshù|終わる|結束（団結）|团结|tuánjié
+便宜|piányi|安い|便宜（べんぎ）|方便|fāngbiàn
+暗算|ànsuàn|陰謀で人を陥れる|暗算|心算|xīnsuàn
+`.trim().split("\n").map((l) => {
+  const [cn, py, mean, trap, jpword, jpwordpy] = l.split("|");
+  return { kind: "f", g: "f", cn, py, mean, trap, jpword, jpwordpy };
+});
+
+const ALL = [...RAW, ...CN_ONLY, ...FALSE_FRIENDS].map((x, i) => ({ ...x, id: i }));
 
 const GROUPS = [
   { key: "all", name: "すべて" },
   { key: "r", name: "部首が簡略化" },
   { key: "w", name: "形が大きく違う" },
   { key: "s", name: "少しだけ違う" },
+  { key: "c", name: "中国語だけの字" },
+  { key: "f", name: "意味が違う語" },
 ];
-const GROUP_TAG = { r: "部首が簡略化", w: "形が大きく違う", s: "少しだけ違う" };
+const GROUP_TAG = { r: "部首が簡略化", w: "形が大きく違う", s: "少しだけ違う", c: "中国語だけの字", f: "意味が違う語" };
 const RULES = [
   { jp: "言", cn: "讠", name: "ごんべん", note: "単独の「言」はそのまま。" },
   { jp: "金", cn: "钅", name: "かねへん", note: "単独の「金」はそのまま。" },
@@ -416,12 +535,12 @@ const RULES = [
 let known = new Set();
 try { known = new Set(JSON.parse(localStorage.getItem("jianti-known") || "[]")); } catch (e) {}
 function saveKnown() { try { localStorage.setItem("jianti-known", JSON.stringify([...known])); } catch (e) {} updateProgress(); }
-function key(x) { return x.jp + x.cn; }
+function key(x) { return x.kind === "pair" ? x.jp + x.cn : x.kind + ":" + x.cn; }
 
 const state = { view: "card", group: "all", onlyUnknown: false, deck: [], pos: 0, flipped: false, quiz: null, listOpen: null };
 
 const $ = (s) => document.querySelector(s);
-const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const shuffle = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 
 const MIZI_SVG = '<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><line x1="50" y1="0" x2="50" y2="100"/><line x1="0" y1="50" x2="100" y2="50"/><line x1="0" y1="0" x2="100" y2="100"/><line x1="100" y1="0" x2="0" y2="100"/></svg>';
@@ -439,26 +558,74 @@ function speak(text) {
   } catch (e) {}
 }
 function speakBtn(text) { return canSpeak ? `<button class="speak" data-speak="${esc(text)}" aria-label="発音を聞く">${SPEAK_SVG}</button>` : ""; }
+function sayText(x) { return x.kind === "c" ? x.ex : x.cn; }
+
+const cnSpan = (s, style = "") => `<span class="cn" lang="zh-Hans"${style ? ` style="${style}"` : ""}>${esc(s)}</span>`;
+const jpSpan = (s, style = "") => `<span class="jp" lang="ja"${style ? ` style="${style}"` : ""}>${esc(s)}</span>`;
+const pySpan = (s, style = "") => `<span class="py" lang="zh-Latn-pinyin"${style ? ` style="${style}"` : ""}>${esc(s)}</span>`;
+const mizi = (inner, jpStyle) => `<div class="mizi"${jpStyle ? ' style="border-color:var(--line)"' : ""}>${jpStyle ? MIZI_SVG.replace(/<line/g, '<line style="stroke:var(--line)"') : MIZI_SVG}${inner}</div>`;
 
 function pool() {
-  return RAW.filter((x) => (state.group === "all" || x.g === state.group) && (!state.onlyUnknown || !known.has(key(x))));
+  return ALL.filter((x) => (state.group === "all" || x.g === state.group) && (!state.onlyUnknown || !known.has(key(x))));
 }
 
 function updateProgress() {
-  $("#knownCount").textContent = RAW.filter((x) => known.has(key(x))).length;
-  $("#totalCount").textContent = RAW.length;
-  $("#knownBar").style.width = (100 * RAW.filter((x) => known.has(key(x))).length / RAW.length) + "%";
+  const n = ALL.filter((x) => known.has(key(x))).length;
+  $("#knownCount").textContent = n;
+  $("#totalCount").textContent = ALL.length;
+  $("#knownBar").style.width = (100 * n / ALL.length) + "%";
 }
 
 function renderChips() {
   $("#groupChips").innerHTML = GROUPS.map((g) => {
-    const n = g.key === "all" ? RAW.length : RAW.filter((x) => x.g === g.key).length;
+    const n = g.key === "all" ? ALL.length : ALL.filter((x) => x.g === g.key).length;
     return `<button class="chip" data-group="${g.key}" aria-pressed="${state.group === g.key}">${g.name} ${n}</button>`;
   }).join("");
 }
 
 // ---- Card view ----
 function newDeck() { state.deck = shuffle(pool()); state.pos = 0; state.flipped = false; }
+
+function cardBody(x) {
+  const f = state.flipped;
+  if (x.kind === "pair") {
+    return `<div class="pair">
+      <div class="side jpside"><span class="label">日本の漢字</span>${mizi(`<span class="jp" lang="ja">${x.jp}</span>`, true)}</div>
+      <span class="arrow" aria-hidden="true">→</span>
+      <div class="side cnside"><span class="label">简体字</span>${mizi(f ? `<span class="cn" lang="zh-Hans">${x.cn}</span>` : `<span class="hidden-char">?</span>`)}</div>
+    </div>
+    <div class="meta">${f
+      ? `<div style="display:flex;gap:10px;align-items:center">${pySpan(x.py)}${speakBtn(x.cn)}</div>
+         <div class="mean">${esc(x.mean)}</div>
+         <span class="tag">${GROUP_TAG[x.g]}${x.rad ? `：${x.rad} → ${RULES.find((r) => r.jp === x.rad).cn}` : ""}</span>`
+      : `<div class="mean">意味：${esc(x.mean)}</div><div class="mean">简体字の形を思い浮かべてから、めくってください。</div>`}</div>`;
+  }
+  if (x.kind === "c") {
+    return `<div class="pair">
+      <div class="side jpside"><span class="label">日本語の意味</span><div class="glossbox">${esc(x.mean)}</div></div>
+      <span class="arrow" aria-hidden="true">→</span>
+      <div class="side cnside"><span class="label">简体字</span>${mizi(f ? `<span class="cn" lang="zh-Hans">${x.cn}</span>` : `<span class="hidden-char">?</span>`)}</div>
+    </div>
+    <div class="meta">${f
+      ? `<div style="display:flex;gap:10px;align-items:center">${pySpan(x.py)}${speakBtn(x.ex)}</div>
+         <div class="example">例 ${cnSpan(x.ex)}${pySpan(x.expy)}<span>${esc(x.exmean)}</span></div>
+         <span class="tag">中国語でよく使う字</span>`
+      : `<div class="mean">日本語ではあまり使わないが、中国語ではよく出る字です。</div><div class="mean">この意味の简体字を思い浮かべてから、めくってください。</div>`}</div>`;
+  }
+  // false friend
+  return `<div class="wordbox">
+      <span class="label">中国語での意味は？</span>
+      <div class="word cn" lang="zh-Hans">${esc(x.cn)}</div>
+      ${f ? `<div style="display:flex;gap:10px;align-items:center">${pySpan(x.py, "font-size:20px")}${speakBtn(x.cn)}</div>` : ""}
+    </div>
+    <div class="meta">${f
+      ? `<div class="compare">
+           <div><span class="k">中国語の意味</span><span class="v" style="color:var(--jade)">${esc(x.mean)}</span></div>
+           <div class="jprow"><span class="k">日本語の「${esc(x.trap.replace(/（.*）/, ""))}」は</span>${cnSpan(x.jpword, "font-size:20px;color:var(--indigo)")}${pySpan(x.jpwordpy)}</div>
+         </div>`
+      : `<div class="trapnote">日本語なら <b>${esc(x.trap)}</b> ですが、中国語では？</div>`}</div>`;
+}
+
 function renderCard() {
   const el = $("#view-card");
   if (!state.deck.length) {
@@ -469,24 +636,7 @@ function renderCard() {
   const isKnown = known.has(key(x));
   el.innerHTML = `
   <div class="card">
-    <div class="pair">
-      <div class="side jpside">
-        <span class="label">日本の漢字</span>
-        <div class="mizi">${MIZI_SVG}<span class="jp" lang="ja">${x.jp}</span></div>
-      </div>
-      <span class="arrow" aria-hidden="true">→</span>
-      <div class="side cnside">
-        <span class="label">简体字</span>
-        <div class="mizi">${MIZI_SVG}${state.flipped ? `<span class="cn" lang="zh-Hans">${x.cn}</span>` : `<span class="hidden-char">?</span>`}</div>
-      </div>
-    </div>
-    <div class="meta">
-      ${state.flipped
-        ? `<div style="display:flex;gap:10px;align-items:center"><span class="py" lang="zh-Latn-pinyin">${x.py}</span>${speakBtn(x.cn)}</div>
-           <div class="mean">${esc(x.mean)}</div>
-           <span class="tag">${GROUP_TAG[x.g]}${x.rad ? `：${x.rad} → ${RULES.find((r) => r.jp === x.rad).cn}` : ""}</span>`
-        : `<div class="mean">意味：${esc(x.mean)}</div><div class="mean">简体字の形を思い浮かべてから、めくってください。</div>`}
-    </div>
+    ${cardBody(x)}
     <div class="actions">
       ${state.flipped
         ? `<button class="btn" data-act="again">もう一度</button><button class="btn primary" data-act="got">覚えた</button>`
@@ -502,6 +652,7 @@ function renderCard() {
     </div>
   </div>`;
 }
+function flipCard() { state.flipped = true; renderCard(); speak(sayText(state.deck[state.pos])); }
 function nextCard() {
   state.flipped = false;
   if (state.pos < state.deck.length - 1) state.pos++;
@@ -511,79 +662,130 @@ function nextCard() {
 
 // ---- Quiz view ----
 const QLEN = 10;
+function pickDistinct(cands, exclude, n) {
+  const out = [];
+  for (const c of cands) { if (out.length >= n) break; if (!exclude.includes(c) && !out.includes(c)) out.push(c); }
+  return out;
+}
+function makeQuestion(x, dir) {
+  if (x.kind === "f") {
+    const others = shuffle(FALSE_FRIENDS.filter((y) => y.cn !== x.cn)).map((y) => y.mean);
+    const opts = [x.mean, x.trap, ...pickDistinct(others, [x.mean, x.trap], 2)];
+    return { x, type: "text", options: shuffle(opts), answer: x.mean, picked: null };
+  }
+  if (x.kind === "c") {
+    const others = shuffle(CN_ONLY.filter((y) => y.cn !== x.cn && y.mean !== x.mean));
+    if (dir === "jp2cn") return { x, type: "cn", options: shuffle([x.cn, ...pickDistinct(others.map((y) => y.cn), [x.cn], 3)]), answer: x.cn, picked: null };
+    return { x, type: "text", options: shuffle([x.mean, ...pickDistinct(others.map((y) => y.mean), [x.mean], 3)]), answer: x.mean, picked: null };
+  }
+  const field = dir === "jp2cn" ? "cn" : "jp";
+  const pairs = RAW.filter((y) => y.cn !== x.cn && y.jp !== x.jp);
+  const near = shuffle(pairs.filter((y) => y.g === x.g || (y.rad && y.rad === x.rad))).map((y) => y[field]);
+  const rest = shuffle(pairs).map((y) => y[field]);
+  return { x, type: field, options: shuffle([x[field], ...pickDistinct([...near, ...rest], [x[field]], 3)]), answer: x[field], picked: null };
+}
 function newQuiz(dir) {
-  const p = shuffle(pool());
-  const qs = p.slice(0, QLEN).map((x) => {
-    const field = dir === "jp2cn" ? "cn" : "jp";
-    const same = shuffle(RAW.filter((y) => y.cn !== x.cn && y.jp !== x.jp && (y.g === x.g || y.rad && y.rad === x.rad)));
-    const others = shuffle(RAW.filter((y) => y.cn !== x.cn && y.jp !== x.jp));
-    const picks = [];
-    for (const y of [...same, ...others]) { if (picks.length >= 3) break; if (!picks.includes(y[field])) picks.push(y[field]); }
-    return { x, options: shuffle([x[field], ...picks]), answer: x[field], picked: null };
-  });
-  state.quiz = { dir, qs, i: 0, done: false };
+  state.quiz = { dir, qs: shuffle(pool()).slice(0, QLEN).map((x) => makeQuestion(x, dir)), i: 0, done: false };
+}
+function quizPrompt(c, dir) {
+  const x = c.x;
+  if (x.kind === "f") return `<span class="label">中国語での意味は？</span><div class="word cn" lang="zh-Hans" style="font-size:64px">${esc(x.cn)}</div>`;
+  if (x.kind === "c") {
+    return dir === "jp2cn"
+      ? `<span class="label">この意味の简体字は？</span><div class="glossbox">${esc(x.mean)}</div>`
+      : `<span class="label">この字の意味は？</span>${mizi(cnSpan(x.cn, "color:var(--jade)"))}`;
+  }
+  return dir === "jp2cn"
+    ? `<span class="label">この漢字の简体字は？</span>${mizi(jpSpan(x.jp, "color:var(--indigo)"), true)}`
+    : `<span class="label">この简体字の日本漢字は？</span>${mizi(cnSpan(x.cn, "color:var(--jade)"))}`;
+}
+function answerLine(x) {
+  if (x.kind === "pair") return `${jpSpan(x.jp)} → ${cnSpan(x.cn)} ${pySpan(x.py)}　${esc(x.mean)}`;
+  if (x.kind === "c") return `${cnSpan(x.cn)} ${pySpan(x.py)}　${esc(x.mean)}（${cnSpan(x.ex)}：${esc(x.exmean)}）`;
+  return `${cnSpan(x.cn)} ${pySpan(x.py)}＝${esc(x.mean)}。日本語の「${esc(x.trap.replace(/（.*）/, ""))}」は ${cnSpan(x.jpword)}`;
+}
+function missLine(x) {
+  if (x.kind === "pair") return `${jpSpan(x.jp, "color:var(--indigo)")} → ${cnSpan(x.cn, "color:var(--jade)")} ${pySpan(x.py, "font-size:13px")}`;
+  return `${cnSpan(x.cn, "color:var(--jade)")} ${pySpan(x.py, "font-size:13px")} <span style="font-size:13px">${esc(x.mean)}</span>`;
 }
 function renderQuiz() {
   const el = $("#view-quiz");
   const q = state.quiz;
   const dirSwitch = `<div class="chips" style="justify-content:center">
-      <button class="chip" data-qdir="jp2cn" aria-pressed="${!q || q.dir === "jp2cn"}">日本漢字 → 简体字</button>
-      <button class="chip" data-qdir="cn2jp" aria-pressed="${q && q.dir === "cn2jp"}">简体字 → 日本漢字</button></div>`;
+      <button class="chip" data-qdir="jp2cn" aria-pressed="${!q || q.dir === "jp2cn"}">日本語 → 简体字</button>
+      <button class="chip" data-qdir="cn2jp" aria-pressed="${!!q && q.dir === "cn2jp"}">简体字 → 日本語</button></div>`;
   if (!q || !q.qs.length) {
     el.innerHTML = `<div class="card result">${dirSwitch}<p>この条件では出題できる字がありません。</p><button class="btn primary" data-act="clearFilter">フィルターを外す</button></div>`;
     return;
   }
-  const dots = `<div class="dots">${q.qs.map((c, k) => `<i class="${c.picked == null ? "" : c.picked === c.answer ? "ok" : "ng"} ${k === q.i && !q.done ? "now" : ""}"></i>`).join("")}</div>`;
+  const dots = `<div class="dots">${q.qs.map((c, k) => `<i class="${c.picked == null ? "" : c.options[c.picked] === c.answer ? "ok" : "ng"} ${k === q.i && !q.done ? "now" : ""}"></i>`).join("")}</div>`;
   if (q.done) {
-    const ok = q.qs.filter((c) => c.picked === c.answer).length;
-    const miss = q.qs.filter((c) => c.picked !== c.answer);
+    const ok = q.qs.filter((c) => c.options[c.picked] === c.answer).length;
+    const miss = q.qs.filter((c) => c.options[c.picked] !== c.answer);
     el.innerHTML = `<div class="card result">${dots}
       <div class="score">${ok} / ${q.qs.length}</div>
       <p style="margin:0;color:var(--ink-soft)">${ok === q.qs.length ? "全問正解です。" : "間違えた字は「まだ覚えていない字」に戻しました。"}</p>
-      ${miss.length ? `<div class="misslist">${miss.map((c) => `<span class="miss"><span class="jp" lang="ja" style="color:var(--indigo)">${c.x.jp}</span> → <span class="cn" lang="zh-Hans" style="color:var(--jade)">${c.x.cn}</span> <span class="py" style="font-size:13px">${c.x.py}</span></span>`).join("")}</div>` : ""}
+      ${miss.length ? `<div class="misslist">${miss.map((c) => `<span class="miss">${missLine(c.x)}</span>`).join("")}</div>` : ""}
       <button class="btn primary" data-act="newQuiz" style="min-width:200px">もう一回</button></div>`;
     return;
   }
   const c = q.qs[q.i];
-  const prompt = q.dir === "jp2cn"
-    ? `<span class="label">この漢字の简体字は？</span><div class="mizi" style="border-color:var(--line)">${MIZI_SVG.replace(/<line/g, '<line style="stroke:var(--line)"')}<span class="jp" lang="ja" style="color:var(--indigo)">${c.x.jp}</span></div>`
-    : `<span class="label">この简体字の日本漢字は？</span><div class="mizi">${MIZI_SVG}<span class="cn" lang="zh-Hans" style="color:var(--jade)">${c.x.cn}</span></div>`;
-  const optCls = q.dir === "jp2cn" ? "cn" : "jp";
-  const optLang = q.dir === "jp2cn" ? "zh-Hans" : "ja";
+  const answered = c.picked != null;
+  const optCls = c.type === "text" ? "text" : c.type;
+  const optLang = c.type === "cn" ? "zh-Hans" : "ja";
   let fb = "";
-  if (c.picked != null) {
-    fb = `${c.picked === c.answer ? `<strong class="ok">正解</strong>` : `<strong class="ng">不正解</strong>`}
-      <span class="jp" lang="ja">${c.x.jp}</span> → <span class="cn" lang="zh-Hans">${c.x.cn}</span>
-      <span class="py">${c.x.py}</span>　${esc(c.x.mean)}`;
+  if (answered) {
+    const right = c.options[c.picked] === c.answer;
+    fb = `${right ? `<strong class="ok">正解</strong>` : `<strong class="ng">不正解</strong>`}　${answerLine(c.x)} ${speakBtn(sayText(c.x))}`;
   }
   el.innerHTML = `<div class="card">${dirSwitch}${dots}
-    <div class="qprompt">${prompt}</div>
-    <div class="options">${c.options.map((o) => {
+    <div class="qprompt">${quizPrompt(c, q.dir)}</div>
+    <div class="options ${c.type === "text" ? "textopts" : ""}">${c.options.map((o, k) => {
       let cls = "";
-      if (c.picked != null) { if (o === c.answer) cls = "right"; else if (o === c.picked) cls = "wrong"; }
-      return `<button class="opt ${optCls} ${cls}" lang="${optLang}" data-opt="${o}" ${c.picked != null ? "disabled" : ""}>${o}</button>`;
+      if (answered) { if (o === c.answer) cls = "right"; else if (k === c.picked) cls = "wrong"; }
+      return `<button class="opt ${optCls} ${cls}" lang="${optLang}" data-opt="${k}" ${answered ? "disabled" : ""}>${esc(o)}</button>`;
     }).join("")}</div>
-    <div class="feedback" aria-live="polite">${fb}${c.picked != null && canSpeak ? ` ${speakBtn(c.x.cn)}` : ""}</div>
-    ${c.picked != null ? `<button class="btn primary" data-act="nextQ">${q.i < q.qs.length - 1 ? "次の問題" : "結果を見る"}</button>` : ""}
+    <div class="feedback" aria-live="polite">${fb}</div>
+    ${answered ? `<button class="btn primary" data-act="nextQ">${q.i < q.qs.length - 1 ? "次の問題" : "結果を見る"}</button>` : ""}
   </div>`;
 }
 
 // ---- List view ----
+function detailHtml(x) {
+  let big, sub;
+  if (x.kind === "pair") {
+    big = `${jpSpan(x.jp, "color:var(--indigo)")} <span style="color:var(--ink-soft);font-size:22px">→</span> ${cnSpan(x.cn, "color:var(--jade)")}`;
+    sub = `<span style="color:var(--ink-soft)">${esc(x.mean)}</span>`;
+  } else if (x.kind === "c") {
+    big = cnSpan(x.cn, "color:var(--jade)");
+    sub = `<span style="color:var(--ink-soft)">${esc(x.mean)}</span><span class="example" style="justify-content:flex-start">例 ${cnSpan(x.ex)}${pySpan(x.expy)}<span>${esc(x.exmean)}</span></span>`;
+  } else {
+    big = cnSpan(x.cn, "color:var(--jade);font-size:44px");
+    sub = `<span><b>中国語：</b>${esc(x.mean)}</span><span style="color:var(--ink-soft)">日本語の「${esc(x.trap.replace(/（.*）/, ""))}」は ${cnSpan(x.jpword)} ${pySpan(x.jpwordpy)}</span>`;
+  }
+  return `<div class="detail">
+    <div class="big">${big}</div>
+    <div class="txt"><div style="display:flex;gap:8px;align-items:center">${pySpan(x.py, "font-size:20px")}${speakBtn(sayText(x))}</div>
+      ${sub}<span><span class="tag">${GROUP_TAG[x.g]}</span></span></div>
+    <button class="btn ${known.has(key(x)) ? "" : "primary"}" data-act="toggleKnown">${known.has(key(x)) ? "覚えた印を外す" : "覚えた"}</button>
+  </div>`;
+}
+function cellHtml(x) {
+  const cls = `cell ${known.has(key(x)) ? "known" : ""} ${x.kind === "f" ? "wordcell" : ""}`;
+  let sub;
+  if (x.kind === "pair") sub = `<span class="j jp" lang="ja">${x.jp}</span>`;
+  else if (x.kind === "c") sub = `<span class="j small">${esc(x.mean)}</span>`;
+  else sub = `<span class="j small">≠${esc(x.trap.replace(/（.*）/, ""))}</span>`;
+  return `<button class="${cls}" data-cell="${x.id}" aria-expanded="${state.listOpen === x.id}"><span class="c cn" lang="zh-Hans">${esc(x.cn)}</span>${sub}</button>`;
+}
 function renderList() {
   const el = $("#view-list");
   const items = pool();
-  const open = state.listOpen != null ? RAW[state.listOpen] : null;
+  const open = state.listOpen != null ? ALL[state.listOpen] : null;
   el.innerHTML = `<div style="display:flex;flex-direction:column;gap:12px">
     <div class="legend"><span>覚えた字</span><em style="font-style:normal">字をタップすると詳細と発音</em></div>
-    ${open ? `<div class="detail">
-        <div class="big"><span class="jp" lang="ja" style="color:var(--indigo)">${open.jp}</span> <span style="color:var(--ink-soft);font-size:22px">→</span> <span class="cn" lang="zh-Hans" style="color:var(--jade)">${open.cn}</span></div>
-        <div class="txt"><div style="display:flex;gap:8px;align-items:center"><span class="py" style="font-size:20px">${open.py}</span>${speakBtn(open.cn)}</div>
-          <span style="color:var(--ink-soft)">${esc(open.mean)}</span>
-          <span><span class="tag">${GROUP_TAG[open.g]}</span></span></div>
-        <button class="btn ${known.has(key(open)) ? "" : "primary"}" data-act="toggleKnown">${known.has(key(open)) ? "覚えた印を外す" : "覚えた"}</button>
-      </div>` : ""}
-    <div class="grid">${items.map((x) => `<button class="cell ${known.has(key(x)) ? "known" : ""}" data-cell="${x.id}" aria-expanded="${state.listOpen === x.id}">
-        <span class="c cn" lang="zh-Hans">${x.cn}</span><span class="j jp" lang="ja">${x.jp}</span></button>`).join("")}</div>
+    ${open ? detailHtml(open) : ""}
+    <div class="grid">${items.map(cellHtml).join("")}</div>
     ${items.length ? "" : `<p class="intro">この条件の字はありません。</p>`}
   </div>`;
 }
@@ -593,7 +795,7 @@ function renderRules() {
   $("#view-rules").innerHTML = `<div style="display:flex;flex-direction:column;gap:12px">
     <p class="intro">偏（へん）の簡略化を覚えると、知らない字でも简体字がかなり予想できます。例の字をタップすると一覧で詳細を開きます。</p>
     <div class="rules">${RULES.map((r) => {
-      const ex = RAW.filter((x) => x.rad === r.jp);
+      const ex = ALL.filter((x) => x.rad === r.jp);
       return `<div class="rule">
         <div class="rad"><span class="jp" lang="ja">${r.jp}</span><small>→</small><span class="cn" lang="zh-Hans">${r.cn}</span></div>
         <div class="ex">${ex.map((x) => `<button data-jump="${x.id}"><span class="jp" lang="ja">${x.jp}</span><span class="to">→</span><span class="cn" lang="zh-Hans">${x.cn}</span></button>`).join("")}</div>
@@ -601,6 +803,7 @@ function renderRules() {
       </div>`;
     }).join("")}</div>
     <div class="tip">簡略化の他のパターン：草書体から（書→书、東→东、長→长）、一部だけ残す（飛→飞、習→习、業→业）、同音の簡単な字で代用（後→后、髪→发、麺→面、幾→几）。</div>
+    <div class="tip">字の形のほかに、会話でよく使うのに日本には無い字（们・这・吗・吃 など）と、形は同じでも意味が違う語（手纸・汽车・走 など）も押さえておくと安心です。カードやクイズの「中国語だけの字」「意味が違う語」で練習できます。</div>
   </div>`;
 }
 
@@ -632,18 +835,18 @@ document.addEventListener("click", (e) => {
   if (t.dataset.view) { state.view = t.dataset.view; render(); return; }
   if (t.dataset.group) { state.group = t.dataset.group; filtersChanged(); return; }
   if (t.dataset.qdir) { newQuiz(t.dataset.qdir); renderQuiz(); return; }
-  if (t.dataset.cell) { const id = +t.dataset.cell; state.listOpen = state.listOpen === id ? null : id; renderList(); if (state.listOpen != null) speak(RAW[id].cn); return; }
+  if (t.dataset.cell) { const id = +t.dataset.cell; state.listOpen = state.listOpen === id ? null : id; renderList(); if (state.listOpen != null) speak(sayText(ALL[id])); return; }
   if (t.dataset.jump) { state.view = "list"; state.group = "all"; state.onlyUnknown = false; state.listOpen = +t.dataset.jump; render(); window.scrollTo({ top: 0 }); return; }
   if (t.dataset.opt != null && state.quiz) {
     const c = state.quiz.qs[state.quiz.i];
     if (c.picked != null) return;
-    c.picked = t.dataset.opt;
-    if (c.picked === c.answer) known.add(key(c.x)); else known.delete(key(c.x));
+    c.picked = +t.dataset.opt;
+    if (c.options[c.picked] === c.answer) known.add(key(c.x)); else known.delete(key(c.x));
     saveKnown(); renderQuiz(); return;
   }
   const act = t.dataset.act;
   if (!act) return;
-  if (act === "flip") { state.flipped = true; renderCard(); speak(state.deck[state.pos].cn); }
+  if (act === "flip") flipCard();
   else if (act === "got") { known.add(key(state.deck[state.pos])); saveKnown(); nextCard(); }
   else if (act === "again") { known.delete(key(state.deck[state.pos])); saveKnown(); const x = state.deck.splice(state.pos, 1)[0]; state.deck.splice(Math.min(state.deck.length, state.pos + 4), 0, x); state.flipped = false; renderCard(); }
   else if (act === "skip") nextCard();
@@ -652,12 +855,12 @@ document.addEventListener("click", (e) => {
   else if (act === "clearFilter") { state.group = "all"; state.onlyUnknown = false; filtersChanged(); }
   else if (act === "nextQ") { const q = state.quiz; if (q.i < q.qs.length - 1) q.i++; else q.done = true; renderQuiz(); }
   else if (act === "newQuiz") { newQuiz(state.quiz.dir); renderQuiz(); }
-  else if (act === "toggleKnown") { const x = RAW[state.listOpen]; known.has(key(x)) ? known.delete(key(x)) : known.add(key(x)); saveKnown(); renderList(); }
+  else if (act === "toggleKnown") { const x = ALL[state.listOpen]; known.has(key(x)) ? known.delete(key(x)) : known.add(key(x)); saveKnown(); renderList(); }
 });
 $("#onlyUnknown").addEventListener("change", (e) => { state.onlyUnknown = e.target.checked; filtersChanged(); });
 document.addEventListener("keydown", (e) => {
   if (state.view !== "card" || e.target.closest("input")) return;
-  if (e.key === " " || e.key === "Enter") { if (!state.flipped && state.deck.length) { e.preventDefault(); state.flipped = true; renderCard(); speak(state.deck[state.pos].cn); } }
+  if (e.key === " " || e.key === "Enter") { if (!state.flipped && state.deck.length) { e.preventDefault(); flipCard(); } }
   else if (e.key === "ArrowRight") nextCard();
   else if (e.key === "ArrowLeft") { state.flipped = false; state.pos = Math.max(0, state.pos - 1); renderCard(); }
 });
